@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gratitude Wall - KATA-KITA</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/gratitude.css">
+    <script src="../js/main.js" defer></script>
+    <script src="../js/gratitude.js" defer></script>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                KATA-KITA
+            </div>
+
+            <div class="nav-section">
+                <p class="nav-label">My Projects</p>
+                <ul class="sidebar-nav">
+                    <li>
+                        <a href="myspace.html">
+                            <span class="dot green"></span>
+                            <span>My Space</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="library.html">
+                            <span class="dot orange"></span>
+                            <span>Education</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="gratitude.html" class="active">
+                            <span class="dot purple"></span>
+                            <span>Gratitude Wall</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="comfort.html">
+                            <span class="dot blue"></span>
+                            <span>Comfort Zone</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="beranda.html">
+                            <span class="dot pink"></span>
+                            <span>Kindness Feed</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-footer">
+                <p class="nav-label">Utilities</p>
+                <ul class="sidebar-nav">
+                    <li><a href="#"><span class="dot"></span><span>Tasks</span></a></li>
+                    <li><a href="#"><span class="dot"></span><span>Settings</span></a></li>
+                    <li><a href="#"><span class="dot"></span><span>Rules</span></a></li>
+                    <li><a href="#" class="logout-btn" id="logoutBtn"><span>Logout</span></a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-view">
+            <header class="top-header">
+                <div class="header-center header-title">
+                    <span class="text-secondary" style="font-family: 'Caveat', cursive; font-size: 1.8rem; color: #4A154B; margin-right: 6px;">Express Feelings,</span> 
+                    <span class="text-primary" style="font-size: 1.4rem; font-weight: 800; color: #E93B81;">Nurture the Soul.</span>
+                    <span class="emoji-large" style="font-size: 1.5rem; margin-left: 4px;">🌱</span>
+                </div>
+                <div class="header-right">
+                    <div class="header-icons">
+                        <span title="Calendar">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        </span>
+                        <span title="Chat">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                        </span>
+                        <span title="Notifications">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                        </span>
+                    </div>
+                    <div class="user-profile">
+                        <div class="user-info">
+                            <div class="user-name" id="userNameProfile">User</div>
+                            <div class="points-badge">
+                                <span>⭐</span>
+                                <span id="userPoints">0</span> Stars
+                            </div>
+                        </div>
+                        <div class="profile-avatar">👤</div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-text-muted); margin-left: -4px;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-container animate-fade-in">
+                <!-- Page Header matching dashboard style -->
+                <header class="gratitude-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; text-align: left; max-width: 100%;">
+                    <div>
+                        <h1 style="color: #1A202C; font-size: 2.2rem; font-weight: 800; margin: 0 0 4px 0;">Gratitude Wall</h1>
+                        <p style="color: #4A5568; font-size: 1.25rem; font-weight: 500; margin: 0;">Come on, share your moments of gratitude here!</p>
+                    </div>
+                </header>
+
+                <section class="gratitude-wall board-background" id="gratitudeWall">
+                    <!-- Wall items injected by JS -->
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Floating Action Button for Gratitude -->
+    <button class="fab" id="openGratitudeBtn">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+    </button>
+    <!-- Modal for Gratitude Form -->
+    <div id="gratitudeModal" class="modal" style="display: none;">
+        <div class="modal-content card" style="max-width: 500px;">
+            <h2 class="modal-title">Gratitude Wall</h2>
+            <p class="modal-subtitle">Write one thing you are grateful for today.</p>
+            <form id="gratitudeForm" class="gratitude-form mt-4">
+                <div class="input-group">
+                    <textarea id="gratitudeContent" placeholder="Today I am grateful because..." rows="3" required></textarea>
+                </div>
+                <div class="modal-actions" style="margin-top: 16px;">
+                    <button type="button" class="btn btn-secondary" id="closeGratitudeModal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="background:#E93B81; border:none; padding:10px 24px; border-radius:20px; color:white; font-weight:600;">Post (+5 pts)</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/gratitude.js"></script>
+</body>
+</html>

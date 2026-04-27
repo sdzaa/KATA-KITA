@@ -1,0 +1,122 @@
+.text-center {
+    text-align: center;
+}
+
+.mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.mt-4 {
+    margin-top: 32px;
+}
+
+.gratitude-header {
+    margin-bottom: 48px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.gratitude-header h2 {
+    font-size: 2.2rem;
+    color: var(--color-primary);
+    margin-bottom: 12px;
+}
+
+.gratitude-header p {
+    color: var(--color-text-muted);
+    font-size: 1.1rem;
+}
+
+.gratitude-form {
+    padding: 24px;
+    text-align: left;
+}
+
+.gratitude-form .w-full {
+    width: 100%;
+}
+
+/* Board Background */
+.board-background {
+    background-color: #d4b486;
+    background-image: url('https://www.transparenttextures.com/patterns/cork-board.png'); /* Safe fallback pattern */
+    border-radius: 24px;
+    padding: 40px;
+    min-height: 60vh;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+    position: relative;
+    /* Remove column count, use flex wrap to place notes arbitrarily */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.note {
+    width: 200px;
+    height: 200px;
+    padding: 24px;
+    background: #FEF3C7; /* yellow default */
+    box-shadow: 2px 4px 10px rgba(0,0,0,0.15);
+    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Caveat', cursive; /* Use handwriting font */
+    font-size: 1.2rem;
+    transition: transform 0.3s;
+    /* Soft slightly rotated look */
+}
+
+/* Red Pushpin */
+.note::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 14px;
+    height: 14px;
+    background: #E53E3E;
+    border-radius: 50%;
+    box-shadow: inset -2px -2px 4px rgba(0,0,0,0.3), 1px 2px 3px rgba(0,0,0,0.4);
+}
+
+.note:nth-child(even) {
+    transform: rotate(2deg);
+    background: #DCFCE7; /* green */
+}
+
+.note:nth-child(3n) {
+    transform: rotate(-3deg);
+    background: #FCE7F3; /* pink */
+}
+
+.note:nth-child(4n) {
+    transform: rotate(1deg);
+    background: #E0F2FE; /* blue */
+}
+
+.note:hover {
+    transform: scale(1.05) rotate(0deg);
+    z-index: 10;
+}
+
+.note-content {
+    font-size: 1.1rem;
+    line-height: 1.4;
+    color: #333;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.note-footer {
+    display: none; /* Hide date and reaction to match Figma Image 3 exactly */
+}

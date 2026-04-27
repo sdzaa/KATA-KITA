@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - KATA-KITA</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/beranda.css">
+</head>
+
+<body>
+    <div class="dashboard-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                KATA-KITA
+            </div>
+
+            <div class="nav-section">
+                <p class="nav-label">My Projects</p>
+                <ul class="sidebar-nav">
+                    <li>
+                        <a href="myspace.html">
+                            <span class="dot green"></span>
+                            <span>My Space</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="library.html">
+                            <span class="dot orange"></span>
+                            <span>Education</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="gratitude.html">
+                            <span class="dot purple"></span>
+                            <span>Gratitude Wall</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="comfort.html">
+                            <span class="dot blue"></span>
+                            <span>Comfort Zone</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="beranda.html" class="active">
+                            <span class="dot pink"></span>
+                            <span>Kindness Feed</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-footer">
+                <p class="nav-label">Utilities</p>
+                <ul class="sidebar-nav">
+                    <li><a href="#"><span class="dot"></span><span>Tasks</span></a></li>
+                    <li><a href="#"><span class="dot"></span><span>Settings</span></a></li>
+                    <li><a href="#"><span class="dot"></span><span>Rules</span></a></li>
+                    <li><a href="#" class="logout-btn" id="logoutBtn"><span>Logout</span></a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-view">
+            <header class="top-header">
+                <div class="header-center header-title">
+                    <span class="text-secondary" style="font-family: 'Caveat', cursive; font-size: 1.8rem; color: #4A154B; margin-right: 6px;">Express Feelings,</span> 
+                    <span class="text-primary" style="font-size: 1.4rem; font-weight: 800; color: #E93B81;">Nurture the Soul.</span>
+                    <span class="emoji-large" style="font-size: 1.5rem; margin-left: 4px;">🌱</span>
+                </div>
+                <div class="header-right">
+                    <div class="header-icons">
+                        <span title="Calendar">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        </span>
+                        <span title="Chat">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                        </span>
+                        <span title="Notifications">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                        </span>
+                    </div>
+                    <div class="user-profile">
+                        <div class="user-info">
+                            <div class="user-name" id="userNameProfile">User</div>
+                            <div class="points-badge">
+                                <span>⭐</span>
+                                <span id="userPoints">0</span> Stars
+                            </div>
+                        </div>
+                        <div class="profile-avatar">👤</div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-text-muted); margin-left: -4px;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-container animate-fade-in">
+                <div class="feed-intro">
+                    <h1>Kindness Feed</h1>
+                    <p>A small space full of kindness</p>
+                </div>
+
+                <div class="feed-filters">
+                    <div class="filter-group">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="popular">Popular</button>
+                        <button class="filter-btn" data-filter="happy">Happy</button>
+                        <button class="filter-btn" data-filter="sad">Sad</button>
+                    </div>
+                </div>
+
+                <div id="feedPosts" class="feed-posts">
+                    <!-- Posts populated via JS -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button class="fab" id="openComposeBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    </button>
+
+    <!-- Modal for Post Creation -->
+    <div id="composeModal" class="modal">
+        <div class="modal-content card">
+            <h2 class="modal-title">Send Kindness</h2>
+            <p class="modal-subtitle">Share words of encouragement anonymously.</p>
+            <form id="postForm" class="compose-form">
+                <div class="input-group">
+                    <label>Post Mood</label>
+                    <select id="postMood" required>
+                        <option value="happy">Happy ✨</option>
+                        <option value="sad">Sad 🌧️</option>
+                        <option value="anxious">Anxious 🌪️</option>
+                        <option value="comfort">Comforting 🌻</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Kindness Message</label>
+                    <textarea id="postContent" placeholder="Write here..." required rows="4"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="closeModal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Send (+10 pts)</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/forum.js"></script>
+</body>
+</html>

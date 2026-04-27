@@ -1,0 +1,109 @@
+.library-header {
+    margin-bottom: 48px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.library-header h2 {
+    font-size: 2.2rem;
+    color: var(--color-primary);
+    margin-bottom: 12px;
+}
+
+.library-header p {
+    color: var(--color-text-muted);
+    font-size: 1.1rem;
+}
+
+.library-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 32px;
+    text-align: left;
+}
+
+.article-card {
+    padding: 16px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    border-radius: 12px;
+    border: none;
+    box-shadow: none;
+}
+
+.article-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+/* Soft Pastel Backgrounds matching Figma */
+.article-card:nth-child(6n+1) { background: #FDE8E8; } /* Soft Pink */
+.article-card:nth-child(6n+2) { background: #FEF3C7; } /* Soft Yellow */
+.article-card:nth-child(6n+3) { background: #E0F2FE; } /* Soft Blue */
+.article-card:nth-child(6n+4) { background: #F3E8FF; } /* Soft Purple */
+.article-card:nth-child(6n+5) { background: #FFEDD5; } /* Soft Orange */
+.article-card:nth-child(6n+6) { background: #DCFCE7; } /* Soft Green */
+
+.img-gradient-1, .img-gradient-2, .img-gradient-3, .img-gradient-4 {
+    background: url('../assets/placeholder.jpg') center/cover;
+    background-color: #ddd; /* Fallback */
+}
+
+.article-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.article-tag {
+    display: none; /* Figma design doesn't show tag in Education cards */
+}
+
+.article-content h3 {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #1A202C;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.article-summary {
+    font-size: 0.8rem;
+    color: #718096;
+    margin-bottom: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.article-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.article-summary {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+    flex: 1;
+}
+
+.article-link {
+    display: inline-block;
+    color: var(--color-text-main);
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.3s, transform 0.3s;
+}
+
+.article-link:hover {
+    color: var(--color-primary);
+    transform: translateX(4px);
+}

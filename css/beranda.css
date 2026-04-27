@@ -1,0 +1,178 @@
+/* beranda.css - Specific styles for the Kindness Feed Dashboard */
+
+.feed-intro h1 {
+    font-size: 2rem;
+    color: var(--color-primary);
+    margin-bottom: 4px;
+}
+
+.feed-intro p {
+    color: var(--color-text-muted);
+    font-size: 1.1rem;
+}
+
+.filter-btn {
+    font-family: inherit;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    color: var(--color-text-muted);
+    border: none;
+    background: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.feed-filters {
+    margin-top: 24px;
+}
+
+.filter-group {
+    display: flex;
+    gap: 10px;
+    background: white;
+    padding: 5px;
+    border-radius: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    width: fit-content;
+}
+
+
+.filter-btn:hover {
+    color: var(--color-primary);
+}
+
+.filter-btn.active {
+    background: var(--color-primary) !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(233, 59, 129, 0.2);
+}
+
+.feed-posts {
+    /* Responsive Masonry-like grid */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+}
+
+/* Post Card Styling to match screenshot */
+.post {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    position: relative;
+    border-radius: var(--radius-md);
+    background: white;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-height: 200px;
+}
+
+.post:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.04);
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.post-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #FFDDEE;
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+}
+
+.post-author {
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.post-time {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+}
+
+.post-content {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #4A5568;
+    margin-bottom: 24px;
+    flex-grow: 1;
+}
+
+.post-footer {
+    border-top: 1px solid #F0F2F5;
+    padding-top: 16px;
+    display: flex;
+    gap: 20px;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    transition: color 0.2s;
+}
+
+.action-btn:hover {
+    color: var(--color-primary);
+}
+
+.action-btn.liked {
+    color: var(--color-primary);
+}
+
+.action-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Specific Sidebar indicator for active page */
+.sidebar-nav a.active .dot {
+    box-shadow: 0 0 0 4px rgba(233, 59, 129, 0.1);
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Responsive Grid */
+@media (max-width: 768px) {
+    .feed-posts {
+        grid-template-columns: 1fr;
+    }
+}
