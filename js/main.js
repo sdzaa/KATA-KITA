@@ -38,6 +38,16 @@ const AppState = {
         if (nameEl && user) {
             nameEl.textContent = user;
         }
+    },
+
+    getTheme: () => localStorage.getItem(`${APP_PREFIX}theme`) || 'light',
+    setTheme: (theme) => {
+        localStorage.setItem(`${APP_PREFIX}theme`, theme);
+        AppState.applyTheme();
+    },
+    applyTheme: () => {
+        const theme = AppState.getTheme();
+        document.documentElement.setAttribute('data-theme', theme);
     }
 };
 
@@ -85,12 +95,25 @@ function setupGlobals() {
         });
     });
 
+    // Setup Theme Toggle Listeners
+    const themeToggles = document.querySelectorAll('.theme-toggle-btn');
+    themeToggles.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const currentTheme = AppState.getTheme();
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            AppState.setTheme(newTheme);
+        });
+    });
+
     // Page fade in effect
     document.body.style.opacity = '1';
 }
 
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', () => {
+    // Apply theme immediately
+    AppState.applyTheme();
+    
     // Smooth transition trigger
     document.body.style.opacity = '1';
     checkAuth();
