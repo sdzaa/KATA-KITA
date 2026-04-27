@@ -281,10 +281,10 @@ const FeedUI = {
     createHighlightNode(post) {
         const div = document.createElement('div');
         div.className = 'card post highlight-post';
-        div.style.cssText = 'background-color: #FDF2F2; border: 1px solid #FCE4E4;';
+        div.style.cssText = 'background-color: var(--color-bg-primary); border: 1px solid var(--color-border);';
         div.innerHTML = `
             <div style="font-weight: 700; margin-bottom: 16px; color: var(--color-text-main);">Your last story</div>
-            <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); margin-bottom: 16px;">
+            <div style="background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: var(--shadow-sm); margin-bottom: 16px;">
                 <div class="post-content" style="margin-bottom: 12px; font-style: italic;">${post.content}</div>
                 <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--color-text-muted);">
                     <div>Private Post • Recently</div>
@@ -333,7 +333,7 @@ const FeedUI = {
                     ${this.templateCommentList(post.comments || [])}
                 </div>
                 <form class="comment-form" data-id="${post.id}" style="display: flex; gap: 8px; margin-top: 12px;">
-                    <input type="text" placeholder="Write a comment..." required style="flex:1; padding: 10px; border-radius: 20px; border: 1px solid #ddd;">
+                    <input type="text" placeholder="Write a comment..." required style="flex:1; padding: 10px; border-radius: 20px; border: 1px solid var(--color-border); background: var(--color-bg-light); color: var(--color-text-main);">
                     <button type="submit" class="btn btn-primary" style="padding: 10px 20px; border-radius: 20px; font-weight: 600;">Send</button>
                 </form>
             </div>`;
@@ -345,7 +345,7 @@ const FeedUI = {
             return '<p class="no-comments" style="text-align: center; color: #aaa; font-size: 0.85rem;">No comments yet.</p>';
         }
         return comments.map(c => `
-            <div class="comment-item" style="background: #F9F9F9; padding: 12px; border-radius: 12px; margin-bottom: 8px;">
+            <div class="comment-item" style="background: var(--color-bg-light); padding: 12px; border-radius: 12px; margin-bottom: 8px;">
                 <div style="font-weight: 600; color: var(--color-text-main); font-size: 0.9rem;">Anonymous</div>
                 <div style="color: var(--color-text-muted); font-size: 0.9rem; margin: 4px 0;">${c.content}</div>
                 <div style="font-size: 0.75rem; color: #aaa;">Just now</div>

@@ -1,29 +1,66 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
 :root {
-  /* Dashboard Color Palette */
-  --color-primary: #E93B81; /* Main Pink */
+  /* Dashboard Color Palette - Shared/Constant */
+  --color-primary: #E93B81;
+  /* Main Pink */
+  --font-heading: 'Plus Jakarta Sans', sans-serif;
+
+  --sidebar-width: 240px;
+  --header-height: 72px;
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+
+  --transition-speed: 0.3s;
+}
+
+/* Light Theme (Default) */
+[data-theme="light"],
+:root:not([data-theme="dark"]) {
   --color-bg-sidebar: #FFFFFF;
   --color-bg-page: #FDFBFC;
   --color-border: #F0F2F5;
   --color-text-main: #2D3748;
   --color-text-muted: #718096;
-  
+
   /* Additional theme colors for landing/login pages */
   --color-bg-primary: #FFF0F5;
   --color-secondary: #FFE4E1;
   --color-accent: #FFB6C1;
-  
-  /* Fonts */
-  --font-heading: 'Plus Jakarta Sans', sans-serif;
-  
-  --sidebar-width: 240px;
-  --header-height: 72px;
-  
-  --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
+
+  /* Missing variables used in components */
+  --color-bg-light: #F7FAFC;
+  --color-white: #FFFFFF;
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --header-bg: rgba(255, 255, 255, 0.9);
+  --card-bg: #FFFFFF;
+  --color-secondary-brand: #4A154B;
 }
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --color-bg-sidebar: #1A202C;
+  --color-bg-page: #171923;
+  --color-border: #2D3748;
+  --color-text-main: #EDF2F7;
+  --color-text-muted: #A0AEC0;
+
+  --color-bg-primary: #2D1B24;
+  --color-secondary: #3D2B32;
+  --color-accent: #4D3B40;
+
+  --color-bg-light: #2D3748;
+  --color-white: #2D3748;
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.5);
+  --header-bg: rgba(26, 32, 44, 0.9);
+  --card-bg: #2D3748;
+  --color-secondary-brand: #E9D8FD;
+}
+
 
 * {
   margin: 0;
@@ -36,7 +73,9 @@ body {
   background-color: var(--color-bg-page);
   color: var(--color-text-main);
   line-height: 1.5;
-  overflow: hidden; /* Main wrapper handles scrolling */
+  overflow: hidden;
+  /* Main wrapper handles scrolling */
+  transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
 }
 
 /* Dashboard Wrapper */
@@ -126,11 +165,25 @@ body {
   flex-shrink: 0;
 }
 
-.dot.green { background: #48BB78; }
-.dot.orange { background: #ED8936; }
-.dot.purple { background: #9F7AEA; }
-.dot.blue { background: #4299E1; }
-.dot.pink { background: #E93B81; }
+.dot.green {
+  background: #48BB78;
+}
+
+.dot.orange {
+  background: #ED8936;
+}
+
+.dot.purple {
+  background: #9F7AEA;
+}
+
+.dot.blue {
+  background: #4299E1;
+}
+
+.dot.pink {
+  background: #E93B81;
+}
 
 .sidebar-footer {
   padding: 24px 16px 0;
@@ -154,10 +207,12 @@ body {
   justify-content: space-between;
   padding: 0 32px;
   border-bottom: 1px solid var(--color-border);
-  background: white;
+  background: var(--header-bg);
+  backdrop-filter: blur(10px);
   position: sticky;
   top: 0;
   z-index: 90;
+  transition: background var(--transition-speed) ease, border var(--transition-speed) ease;
 }
 
 .header-center {
@@ -229,7 +284,8 @@ body {
 }
 
 .points-badge span:first-child {
-  color: #F6AD55; /* Yellow star */
+  color: #F6AD55;
+  /* Yellow star */
 }
 
 .profile-avatar {
@@ -258,17 +314,25 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Common Card */
 .card {
-  background: white;
+  background: var(--card-bg);
   border-radius: var(--radius-md);
   padding: 24px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  box-shadow: var(--shadow-sm);
   border: 1px solid var(--color-border);
+  transition: background var(--transition-speed) ease, border var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
 }
 
 /* FAB */
@@ -299,18 +363,41 @@ body {
 
 /* Responsive */
 @media (max-width: 1024px) {
-  --sidebar-width: 80px;
-  .nav-label, .sidebar-nav span, .user-name { display: none; }
-  .sidebar-logo { padding: 0; display: flex; justify-content: center; }
+  :root {
+    --sidebar-width: 80px;
+  }
+
+  .nav-label,
+  .sidebar-nav span,
+  .user-name {
+    display: none;
+  }
+
+  .sidebar-logo {
+    padding: 0;
+    display: flex;
+    justify-content: center;
+  }
 }
 
 /* Legacy Navbar Rules for Non-Dashboard Pages (Backwards Compatibility) */
 
 /* Helper Text Classes */
-.text-primary { color: var(--color-primary); }
-.text-secondary { color: #6B46C1; }
-.text-muted { color: var(--color-text-muted); }
-.emoji-large { font-size: 1.8rem; }
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-secondary {
+  color: var(--color-secondary-brand);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.emoji-large {
+  font-size: 1.8rem;
+}
 
 /* Header Formatting */
 .header-title {
@@ -330,7 +417,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1000;
   justify-content: center;
   align-items: center;
@@ -381,9 +468,10 @@ body {
   padding: 12px;
   border-radius: 12px;
   border: 1px solid var(--color-border);
-  background: #f9f9f9;
+  background: var(--color-bg-light);
+  color: var(--color-text-main);
   font-family: inherit;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, background var(--transition-speed) ease, color var(--transition-speed) ease;
 }
 
 .input-group select:focus,
@@ -425,12 +513,32 @@ body {
 }
 
 .btn-secondary {
-  background: white;
-  border: 1px solid #ddd;
+  background: var(--card-bg);
+  border: 1px solid var(--color-border);
   color: var(--color-text-main);
 }
 
 .btn-secondary:hover {
-  background: #f0f0f0;
+  background: var(--color-bg-light);
 }
 
+/* Theme Toggle Specifics */
+.theme-toggle-btn .sun-icon {
+  display: none;
+}
+
+.theme-toggle-btn .moon-icon {
+  display: block;
+}
+
+[data-theme="dark"] .theme-toggle-btn .sun-icon {
+  display: block;
+}
+
+[data-theme="dark"] .theme-toggle-btn .moon-icon {
+  display: none;
+}
+
+[data-theme="dark"] .theme-toggle-btn {
+  color: #F6AD55;
+}
