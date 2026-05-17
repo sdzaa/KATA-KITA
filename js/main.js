@@ -98,6 +98,10 @@ const AppState = {
             }
         });
 
+        const hideStyle = document.getElementById('lang-hide');
+        if (hideStyle) hideStyle.remove();
+        if (document.body) document.body.style.visibility = 'visible';
+
         // Specific updates for complex elements
         const nameGreeting = document.getElementById('homeNameGreeting');
         if (nameGreeting) {
