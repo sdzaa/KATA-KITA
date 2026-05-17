@@ -9,6 +9,13 @@
     <link rel="stylesheet" href="../css/beranda.css">
     <script src="../js/translations.js"></script>
     <script src="../js/main.js" defer></script>
+
+    <script>
+        const theme = localStorage.getItem('katakita_theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        const lang = localStorage.getItem('katakita_language') || 'id';
+        if (lang !== 'en') { document.write('<style id="lang-hide">body { visibility: hidden; }</style>'); }
+    </script>
 </head>
 
 <body>
