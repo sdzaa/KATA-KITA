@@ -17,6 +17,14 @@ const TRANSLATIONS = {
         'header_points': 'Poin',
         'header_pts': 'pts',
         
+        // Login Page (index.html)
+        'login_welcome_to': 'Selamat datang di',
+        'login_nickname_label': 'Nama Panggilan',
+        'login_nickname_placeholder': 'Masukkan nama panggilan Anda',
+        'login_password_label': 'Kata Sandi',
+        'login_password_placeholder': 'Masukkan kata sandi Anda',
+        'login_button': 'Masuk',
+
         // Beranda (Kindness Feed)
         'home_title': 'Kindness Feed',
         'home_subtitle': 'Ruang kecil penuh kebaikan',
@@ -25,6 +33,24 @@ const TRANSLATIONS = {
         'home_filter_happy': 'Senang',
         'home_filter_sad': 'Sedih',
         'home_greeting': 'Halo, ',
+        
+        // Kindness Feed templates
+        'feed_your_last_story': 'Cerita terakhirmu',
+        'feed_private_post': 'Postingan Pribadi • Baru saja',
+        'feed_hugs': 'Pelukan',
+        'feed_see_details': 'Lihat Detail',
+        'feed_send_hug': 'Kirim Pelukan',
+        'feed_no_posts': 'Belum ada postingan. Jadilah yang pertama menyebarkan kebaikan!',
+        'feed_no_comments': 'Belum ada komentar.',
+        'feed_write_comment': 'Tulis komentar...',
+        'feed_write_reply': 'Tulis balasan...',
+        'feed_send_btn': 'Kirim',
+        'feed_reply_btn': 'Balas',
+        'feed_edit_post': 'Edit Postingan',
+        'feed_delete_post': 'Hapus Postingan',
+        'feed_delete_confirm': 'Apakah kamu yakin ingin menghapus postingan ini? Tindakan ini tidak dapat dibatalkan.',
+        'feed_forbidden_title': 'Konten Tidak Pantas',
+        'feed_forbidden_msg': 'Pesanmu mengandung kata-kata yang tidak diperbolehkan di ruang ini. Mari jaga komunitas ini agar tetap ramah dan aman! ❤️',
         
         // Comfort Zone
         'comfort_title': 'Comfort Zone',
@@ -42,6 +68,15 @@ const TRANSLATIONS = {
         'mood_neutral': 'Netral',
         'mood_happy': 'Senang',
         'mood_excited': 'Bersemangat',
+        'comfort_now_playing': 'Sedang Diputar',
+        'comfort_paused': 'Dijeda',
+        'comfort_saved_message_title': 'Pesan Tersimpan',
+        'comfort_saved_track_title': 'Track Tersimpan',
+        'comfort_already_saved': 'Sudah Tersimpan',
+        'comfort_already_saved_msg': 'Item ini sudah ada di daftar simpananmu.',
+        'comfort_saved_success': 'Berhasil Disimpan',
+        'comfort_saved_success_msg': 'telah ditambahkan ke daftar simpananmu.',
+        'comfort_empty_saved': 'Kamu belum menyimpan apa pun. Klik ikon bookmark pada pesan atau track untuk menyimpannya!',
         
         // My Space
         'myspace_title': 'My Space',
@@ -60,14 +95,67 @@ const TRANSLATIONS = {
         'myspace_mood_question': 'Bagaimana perasaanmu?',
         'myspace_btn_save': 'Simpan Mood',
 
+        // Library (Education)
+        'library_title': 'Edukasi',
+        'library_subtitle': 'Saatnya tingkatkan pengetahuanmu!',
+        'library_read_more': 'Baca Selengkapnya',
+        'library_art1_tag': 'Astronomi',
+        'library_art1_title': 'Akhir Misi Bulan Artemis II',
+        'library_art1_summary': 'Misi Artemis II yang ambisius untuk membawa manusia mendekati bulan sekali lagi setelah sekian lama.',
+        'library_art2_tag': 'Kosmologi',
+        'library_art2_title': 'Galaksi Bintang Primitif di Alam Semesta Awal',
+        'library_art2_summary': 'Penemuan galaksi kuno yang mengungkap asal-usul alam semesta kita.',
+        'library_art3_tag': 'Astrofisika',
+        'library_art3_title': 'Struktur Polarisasi Galaksi dan Cakram Bintang',
+        'library_art3_summary': 'Struktur galaksi unik yang membantu para ilmuwan memahami dinamika jutaan bintang.',
+        'library_art4_tag': 'Biologi',
+        'library_art4_title': 'Transplantasi Organ Setiap Makhluk Hidup',
+        'library_art4_summary': 'Peninjauan lebih dekat pada pencapaian ilmiah dalam transplantasi organ yang merevolusi kehidupan.',
+
+        // Gratitude Wall
+        'gratitude_title': 'Gratitude Wall',
+        'gratitude_subtitle': 'Yuk, bagikan momen syukurmu di sini!',
+        'gratitude_history_btn': 'Riwayat',
+        'gratitude_modal_title': 'Gratitude Wall',
+        'gratitude_modal_subtitle': 'Tulis satu hal yang kamu syukuri hari ini.',
+        'gratitude_input_placeholder': 'Hari ini aku bersyukur karena...',
+        'gratitude_post_btn': 'Kirim (+5 poin)',
+        'gratitude_delete_title': 'Hapus Catatan',
+        'gratitude_delete_subtitle': 'Apakah kamu yakin ingin menghapus catatan ini?',
+        'gratitude_empty_wall': 'Belum ada catatan syukur. Gantung yang pertama!',
+        'gratitude_empty_history': 'Belum ada riwayat syukur.',
+        'gratitude_history_title': 'Riwayat Syukur',
+        
         // Tasks
         'tasks_title': 'Daily Tasks',
-        'tasks_education': 'Edukasi',
-        'tasks_gratitude': 'Gratitude Wall',
-        'tasks_comfort': 'Comfort Zone',
-        'tasks_kindness': 'Kindness Challenge',
-        'tasks_btn_do': 'Lakukan',
-        'tasks_btn_done': 'Selesai',
+        'tasks_total_earned': 'Total Bintang Diperoleh:',
+        'tasks_btn_done': 'Selesai! ✨',
+        'tasks_t1_title': 'Baca Artikel Edukasi (dari "Edukasi"): 10 Bintang ⭐',
+        'tasks_t1_sub': 'Selesai: Kekuatan Komunitas',
+        'tasks_t1_btn': 'Buka Edukasi',
+        'tasks_t2_title': 'Bagikan Momen Syukur: 15 Bintang ⭐',
+        'tasks_t2_btn': 'Kirim ke Gratitude Wall',
+        'tasks_t3_title': 'Dengarkan Track Comfort Zone: 25 Bintang ⭐',
+        'tasks_t3_btn': 'Buka Comfort Zone',
+        'tasks_t4_title': 'Selesaikan Kindness Challenge (0/3): 50 Bintang ⭐',
+        'tasks_t4_btn': 'Buka Kindness Feed',
+        'tasks_do': 'Lakukan',
+
+        // Rules
+        'rules_title': 'Aturan Komunitas',
+        'rules_subtitle': 'Untuk menjaga KATA-KITA tetap menjadi ruang kecil yang penuh kebaikan, setiap pengguna wajib mematuhi aturan berikut:',
+        'rule1_title': '1. Menjaga Anonimitas dan Privasi',
+        'rule1_desc': 'Demi kenyamanan bersama, mohon untuk tidak mencantumkan identitas pribadi seperti nama asli, kelas, nomor kamar, maupun detail spesifik lainnya dalam setiap unggahan. Prinsip utama platform ini adalah keanoniman guna memastikan setiap orang dapat berekspresi tanpa rasa terancam oleh penilaian sosial.',
+        'rule2_title': '2. Dukungan Empati dan Validasi Emosional',
+        'rule2_desc': 'Gunakanlah bahasa yang santun dan suportif dalam memberikan tanggapan. Kami sangat menghargai interaksi yang membangun, penuh empati, dan menghargai perasaan sesama teman tanpa adanya penghakiman (no judging).',
+        'rule3_title': '3. Lingkungan Bebas Perundungan (Zero Bullying)',
+        'rule3_desc': 'Kami menerapkan kebijakan toleransi nol terhadap segala bentuk perundungan, kata-kata kasar, hinaan, maupun ancaman. Segala konten yang mengandung unsur tersebut akan secara otomatis dihapus oleh sistem demi menjaga ekosistem komunikasi yang sehat.',
+        'rule4_title': '4. Fokus pada Pengungkapan Diri yang Positif',
+        'rule4_desc': 'Gunakan ruang ini untuk merefleksikan dan mengungkapkan perasaan pribadi Anda secara tulus (self-disclosure). Mohon untuk tidak menggunakan platform ini sebagai sarana menyebarkan rumor, gosip, atau membuka aib pihak lain di lingkungan asrama.',
+        'rule5_title': '5. Keamanan dan Kesejahteraan Subjek',
+        'rule5_desc': 'Demi keselamatan Anda, dilarang keras mengunggah konten yang merujuk pada tindakan menyakiti diri sendiri (self-harm) atau orang lain. Platform ini dilengkapi dengan algoritma deteksi kata kunci darurat untuk memberikan bantuan segera jika ditemukan indikasi bahaya. Apabila Anda dalam kondisi darurat, sangat disarankan untuk segera menghubungi pendamping asrama atau pihak medis terkait.',
+        'rule6_title': '6. Pemanfaatan Fitur Pelaporan (Report)',
+        'rule6_desc': 'Mari bersama-sama menjaga komunitas ini. Jika Anda menemukan unggahan atau interaksi yang melanggar ketentuan di atas, mohon kesediaannya untuk menggunakan fitur pelaporan (Report) agar tim admin dapat segera menindaklanjutinya demi keamanan privasi seluruh siswi.',
 
         // Settings
         'settings_title': 'Pengaturan',
@@ -79,7 +167,8 @@ const TRANSLATIONS = {
         'settings_popup_notif': 'Notifikasi Pop-up',
         'settings_username': 'Username',
         'settings_btn_save': 'Simpan Perubahan',
-        'settings_btn_cancel': 'Batal'
+        'settings_btn_cancel': 'Batal',
+        'settings_avatar_label': 'Ubah Foto Profil'
     },
     en: {
         // Sidebar
@@ -99,6 +188,14 @@ const TRANSLATIONS = {
         'header_points': 'Points',
         'header_pts': 'pts',
 
+        // Login Page (index.html)
+        'login_welcome_to': 'Welcome to',
+        'login_nickname_label': 'Nickname',
+        'login_nickname_placeholder': 'Enter your nickname',
+        'login_password_label': 'Password',
+        'login_password_placeholder': 'Enter your password',
+        'login_button': 'Login',
+
         // Beranda (Kindness Feed)
         'home_title': 'Kindness Feed',
         'home_subtitle': 'A small space full of kindness',
@@ -107,6 +204,24 @@ const TRANSLATIONS = {
         'home_filter_happy': 'Happy',
         'home_filter_sad': 'Sad',
         'home_greeting': 'Hello, ',
+
+        // Kindness Feed templates
+        'feed_your_last_story': 'Your last story',
+        'feed_private_post': 'Private Post • Just now',
+        'feed_hugs': 'Hugs',
+        'feed_see_details': 'See Details',
+        'feed_send_hug': 'Send Hug',
+        'feed_no_posts': 'No posts yet. Be the first to spread kindness!',
+        'feed_no_comments': 'No comments yet.',
+        'feed_write_comment': 'Write a comment...',
+        'feed_write_reply': 'Write a reply...',
+        'feed_send_btn': 'Send',
+        'feed_reply_btn': 'Reply',
+        'feed_edit_post': 'Edit Post',
+        'feed_delete_post': 'Delete Post',
+        'feed_delete_confirm': 'Are you sure you want to delete this post? This action cannot be undone.',
+        'feed_forbidden_title': 'Inappropriate Content',
+        'feed_forbidden_msg': 'Your post contains words that are not allowed in this space. Let\'s keep this community friendly and safe! ❤️',
 
         // Comfort Zone
         'comfort_title': 'Comfort Zone',
@@ -124,6 +239,15 @@ const TRANSLATIONS = {
         'mood_neutral': 'Neutral',
         'mood_happy': 'Happy',
         'mood_excited': 'Excited',
+        'comfort_now_playing': 'Now Playing',
+        'comfort_paused': 'Paused',
+        'comfort_saved_message_title': 'Saved Message',
+        'comfort_saved_track_title': 'Saved Track',
+        'comfort_already_saved': 'Already Saved',
+        'comfort_already_saved_msg': 'This item is already in your saved list.',
+        'comfort_saved_success': 'Saved Successfully',
+        'comfort_saved_success_msg': 'has been added to your saved list.',
+        'comfort_empty_saved': 'You haven\'t saved anything yet. Click the bookmark icon on any message or track to save it!',
 
         // My Space
         'myspace_title': 'My Space',
@@ -142,18 +266,71 @@ const TRANSLATIONS = {
         'myspace_mood_question': 'How are you feeling?',
         'myspace_btn_save': 'Save Mood',
 
+        // Library (Education)
+        'library_title': 'Education',
+        'library_subtitle': 'Time to upgrade your knowledge!',
+        'library_read_more': 'Read More',
+        'library_art1_tag': 'Astronomy',
+        'library_art1_title': 'Artemis II Moon Finale',
+        'library_art1_summary': 'The ambitious Artemis II mission that will bring humans close to the moon once again after a long time.',
+        'library_art2_tag': 'Cosmology',
+        'library_art2_title': 'Primitive Star Galaxy in the Early Universe',
+        'library_art2_summary': 'The discovery of ancient galaxies that unveils the origins of our universe.',
+        'library_art3_tag': 'Astrophysics',
+        'library_art3_title': 'Polar Structure of Galaxies and Stars Disks',
+        'library_art3_summary': 'The unique structure of galaxies that helps scientists understand the dynamics of millions of stars.',
+        'library_art4_tag': 'Biology',
+        'library_art4_title': 'Every Living Creature Organ Transplant',
+        'library_art4_summary': 'A closer look at scientific achievements in organ transplantation that revolutionizes life.',
+
+        // Gratitude Wall
+        'gratitude_title': 'Gratitude Wall',
+        'gratitude_subtitle': 'Share your gratitude moments here!',
+        'gratitude_history_btn': 'History',
+        'gratitude_modal_title': 'Gratitude Wall',
+        'gratitude_modal_subtitle': 'Write one thing you are grateful for today.',
+        'gratitude_input_placeholder': 'Today I am grateful because...',
+        'gratitude_post_btn': 'Post (+5 stars)',
+        'gratitude_delete_title': 'Delete Note',
+        'gratitude_delete_subtitle': 'Are you sure you want to delete this note?',
+        'gratitude_empty_wall': 'No gratitude notes yet. Hang the first one!',
+        'gratitude_empty_history': 'No gratitude history yet.',
+        'gratitude_history_title': 'Gratitude History',
+
         // Tasks
-        'tasks_title': 'Daily Tasks',
-        'tasks_education': 'Education',
-        'tasks_gratitude': 'Gratitude Wall',
-        'tasks_comfort': 'Comfort Zone',
-        'tasks_kindness': 'Kindness Challenge',
-        'tasks_btn_do': 'Do it',
-        'tasks_btn_done': 'Done',
+        'tasks_title': 'Tasks',
+        'tasks_total_earned': 'Total Stars Earned:',
+        'tasks_btn_done': 'Completed! ✨',
+        'tasks_t1_title': 'Read an Education Article (from "Education"): 10 Stars ⭐',
+        'tasks_t1_sub': 'Completed: The Power of Community',
+        'tasks_t1_btn': 'Go to Education',
+        'tasks_t2_title': 'Share a Gratitude Moment: 15 Stars ⭐',
+        'tasks_t2_btn': 'Post to Wall',
+        'tasks_t3_title': 'Listen to a Comfort Zone Track: 25 Stars ⭐',
+        'tasks_t3_btn': 'Go to Comfort Zone',
+        'tasks_t4_title': 'Complete Kindness Challenge (0/3): 50 Stars ⭐',
+        'tasks_t4_btn': 'Go to Kindness Feed',
+        'tasks_do': 'Do it',
+
+        // Rules
+        'rules_title': 'Community Rules',
+        'rules_subtitle': 'To keep KATA-KITA a small space full of kindness, every user must comply with the following rules:',
+        'rule1_title': '1. Maintaining Anonymity and Privacy',
+        'rule1_desc': 'For mutual comfort, please do not include personal identities such as real names, classes, room numbers, or other specific details in any post. The main principle of this platform is anonymity to ensure everyone can express themselves without feeling threatened by social judgment.',
+        'rule2_title': '2. Support with Empathy and Emotional Validation',
+        'rule2_desc': 'Use polite and supportive language in responding. We highly appreciate constructive interaction, empathy, and respecting each other\'s feelings without judgment (no judging).',
+        'rule3_title': '3. Zero Bullying Environment',
+        'rule3_desc': 'We apply a zero-tolerance policy against all forms of bullying, harsh words, insults, or threats. Any content containing such elements will be automatically deleted by the system to maintain a healthy communication ecosystem.',
+        'rule4_title': '4. Focus on Positive Self-Disclosure',
+        'rule4_desc': 'Use this space to sincerely reflect and express your personal feelings (self-disclosure). Please do not use this platform to spread rumors, gossip, or reveal other parties\' privacy in the dormitory environment.',
+        'rule5_title': '5. Subject Safety and Well-being',
+        'rule5_desc': 'For your safety, it is strictly forbidden to post content that refers to acts of self-harm or harming others. This platform is equipped with an emergency keyword detection algorithm to provide immediate help if danger is indicated. If you are in an emergency, it is highly recommended to contact dormitory supervisors or medical professionals immediately.',
+        'rule6_title': '6. Utilizing the Report Feature',
+        'rule6_desc': 'Let\'s guard this community together. If you find any posts or interactions that violate the above terms, please use the Report feature so that the admin team can immediately follow up for the privacy and security of all students.',
 
         // Settings
         'settings_title': 'Settings',
-        'settings_personal': 'Personal Info',
+        'settings_personal': 'Personal Information',
         'settings_language': 'Language',
         'settings_display': 'Display',
         'settings_notifications': 'Notifications',
@@ -161,6 +338,7 @@ const TRANSLATIONS = {
         'settings_popup_notif': 'Pop-up Notifications',
         'settings_username': 'Username',
         'settings_btn_save': 'Save Changes',
-        'settings_btn_cancel': 'Cancel'
+        'settings_btn_cancel': 'Cancel',
+        'settings_avatar_label': 'Edit Profile Picture'
     }
 };

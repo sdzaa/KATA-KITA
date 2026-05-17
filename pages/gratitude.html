@@ -7,6 +7,7 @@
     <title>Gratitude Wall - KATA-KITA</title>
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/gratitude.css">
+    <script src="../js/translations.js"></script>
     <script src="../js/main.js" defer></script>
     <script src="../js/gratitude.js" defer></script>
 </head>
@@ -112,7 +113,7 @@
                             <div class="user-name" id="userNameProfile">User</div>
                             <div class="points-badge">
                                 <span>⭐</span>
-                                <span id="userPoints">0</span> Stars
+                                <span id="userPoints">0</span> <span data-i18n="header_stars">Stars</span>
                             </div>
                         </div>
                         <div class="profile-avatar">👤</div>
@@ -131,13 +132,13 @@
                     style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; text-align: left; max-width: 100%;">
                     <div>
                         <h1
-                            style="color: var(--color-text-main); font-size: 2.2rem; font-weight: 800; margin: 0 0 4px 0;">
+                            style="color: var(--color-text-main); font-size: 2.2rem; font-weight: 800; margin: 0 0 4px 0;" data-i18n="gratitude_title">
                             Gratitude Wall</h1>
-                        <p style="color: var(--color-text-muted); font-size: 1.25rem; font-weight: 500; margin: 0;">Yuk, bagikan momen syukurmu di sini!</p>
+                        <p style="color: var(--color-text-muted); font-size: 1.25rem; font-weight: 500; margin: 0;" data-i18n="gratitude_subtitle">Yuk, bagikan momen syukurmu di sini!</p>
                     </div>
                     <button id="openHistoryBtn" class="btn btn-secondary" style="display: flex; align-items: center; gap: 8px; font-weight: 600; padding: 12px 24px; border-radius: 12px; background: var(--color-bg-light); border: 1px solid var(--color-border); color: var(--color-text-main); font-size: 0.95rem; box-shadow: var(--shadow-sm); cursor: pointer;">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                        History
+                        <span data-i18n="gratitude_history_btn">History</span>
                     </button>
                 </header>
 
@@ -160,8 +161,8 @@
     <div id="historyModal" class="modal" style="display: none;">
         <div class="modal-content card" style="max-width: 600px; max-height: 80vh; display: flex; flex-direction: column;">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border); padding-bottom: 12px; margin-bottom: 16px;">
-                <h2 class="modal-title" style="margin: 0;">Gratitude History</h2>
-                <button type="button" class="btn btn-secondary" id="closeHistoryModal" style="padding: 6px 12px; border-radius: 12px;">Close</button>
+                <h2 class="modal-title" style="margin: 0;" data-i18n="gratitude_history_title">Gratitude History</h2>
+                <button type="button" class="btn btn-secondary" id="closeHistoryModal" style="padding: 6px 12px; border-radius: 12px;" data-i18n="settings_btn_cancel">Close</button>
             </div>
             <div id="historyList" style="overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 12px;">
                 <!-- History items injected by JS -->
@@ -172,17 +173,17 @@
     <!-- Modal for Gratitude Form -->
     <div id="gratitudeModal" class="modal" style="display: none;">
         <div class="modal-content card" style="max-width: 500px;">
-            <h2 class="modal-title">Gratitude Wall</h2>
-            <p class="modal-subtitle">Write one thing you are grateful for today.</p>
+            <h2 class="modal-title" data-i18n="gratitude_modal_title">Gratitude Wall</h2>
+            <p class="modal-subtitle" data-i18n="gratitude_modal_subtitle">Write one thing you are grateful for today.</p>
             <form id="gratitudeForm" class="gratitude-form mt-4">
                 <div class="input-group">
                     <textarea id="gratitudeContent" placeholder="Today I am grateful because..." rows="3"
-                        required></textarea>
+                        required data-i18n="gratitude_input_placeholder"></textarea>
                 </div>
                 <div class="modal-actions" style="margin-top: 16px;">
-                    <button type="button" class="btn btn-secondary" id="closeGratitudeModal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" id="closeGratitudeModal" data-i18n="settings_btn_cancel">Cancel</button>
                     <button type="submit" class="btn btn-primary"
-                        style="background:#E93B81; border:none; padding:10px 24px; border-radius:20px; color:white; font-weight:600;">Post
+                        style="background:#E93B81; border:none; padding:10px 24px; border-radius:20px; color:white; font-weight:600;" data-i18n="gratitude_post_btn">Post
                         (+5 pts)</button>
                 </div>
             </form>
@@ -192,12 +193,12 @@
     <!-- Modal for Delete Confirmation -->
     <div id="deleteConfirmModal" class="modal" style="display: none;">
         <div class="modal-content card" style="max-width: 400px; text-align: center;">
-            <h2 class="modal-title" style="margin-bottom: 8px;">Hapus Catatan</h2>
-            <p class="modal-subtitle" style="margin-bottom: 24px;">Apakah kamu yakin ingin menghapus catatan ini?</p>
+            <h2 class="modal-title" style="margin-bottom: 8px;" data-i18n="gratitude_delete_title">Hapus Catatan</h2>
+            <p class="modal-subtitle" style="margin-bottom: 24px;" data-i18n="gratitude_delete_subtitle">Apakah kamu yakin ingin menghapus catatan ini?</p>
             <div class="modal-actions" style="justify-content: center; gap: 16px; display: flex;">
-                <button type="button" class="btn btn-secondary" id="cancelDeleteBtn" style="padding: 10px 24px; border-radius: 20px;">Batal</button>
+                <button type="button" class="btn btn-secondary" id="cancelDeleteBtn" style="padding: 10px 24px; border-radius: 20px;" data-i18n="settings_btn_cancel">Batal</button>
                 <button type="button" class="btn btn-primary" id="confirmDeleteBtn"
-                    style="background:#ef4444; border:none; padding:10px 24px; border-radius:20px; color:white; font-weight:600;">Hapus</button>
+                    style="background:#ef4444; border:none; padding:10px 24px; border-radius:20px; color:white; font-weight:600;" data-i18n="feed_delete_post">Hapus</button>
             </div>
         </div>
     </div>

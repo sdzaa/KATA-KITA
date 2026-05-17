@@ -192,16 +192,19 @@ const GratitudeUI = {
     renderHistory() {
         if (!this.elements.historyList) return;
         const notes = GratitudeManager.getData().sort((a, b) => b.timestamp - a.timestamp);
+        const lang = (typeof AppState !== 'undefined') ? AppState.getLanguage() : 'id';
+        const locale = lang === 'id' ? 'id-ID' : 'en-US';
         
         if (notes.length === 0) {
-            this.elements.historyList.innerHTML = '<p style="text-align:center; color: var(--color-text-muted); padding: 20px;">No gratitude history yet.</p>';
+            const emptyHistoryMsg = (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[lang]['gratitude_empty_history']) || 'No gratitude history yet.';
+            this.elements.historyList.innerHTML = `<p style="text-align:center; color: var(--color-text-muted); padding: 20px;">${emptyHistoryMsg}</p>`;
             return;
         }
 
         this.elements.historyList.innerHTML = notes.map(note => `
             <div style="background: var(--color-bg-primary); padding: 16px; border-radius: 12px; border: 1px solid var(--color-border); display: flex; flex-direction: column; gap: 8px;">
                 <div style="font-size: 0.85rem; color: var(--color-text-muted);">
-                    ${new Date(note.timestamp).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                    ${new Date(note.timestamp).toLocaleDateString(locale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                 </div>
                 <div style="font-weight: 500; color: var(--color-text-main); font-size: 1.05rem;">
                     "${note.content}"
@@ -213,6 +216,8 @@ const GratitudeUI = {
     render() {
         if (!this.elements.wall) return;
         const notes = GratitudeManager.getData().sort((a, b) => b.timestamp - a.timestamp);
+        const lang = (typeof AppState !== 'undefined') ? AppState.getLanguage() : 'id';
+        const locale = lang === 'id' ? 'id-ID' : 'en-US';
 
         // Dynamic scaling logic
         if (notes.length >= 16) {
@@ -230,7 +235,8 @@ const GratitudeUI = {
         }
 
         if (notes.length === 0) {
-            this.elements.wall.innerHTML = '<p class="text-center w-full" style="color:var(--color-text-muted)">No gratitude notes yet. Hang the first one!</p>';
+            const emptyWallMsg = (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[lang]['gratitude_empty_wall']) || 'No gratitude notes yet. Hang the first one!';
+            this.elements.wall.innerHTML = `<p class="text-center w-full" style="color:var(--color-text-muted)">${emptyWallMsg}</p>`;
             return;
         }
 
@@ -239,7 +245,7 @@ const GratitudeUI = {
                 <button class="delete-btn" data-id="${note.id}" title="Hapus catatan">✕</button>
                 <div class="note-content">"${note.content}"</div>
                 <div class="note-footer">
-                    <span class="note-date">${new Date(note.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                    <span class="note-date">${new Date(note.timestamp).toLocaleDateString(locale, { month: 'short', day: 'numeric' })}</span>
                     <button class="react-btn" data-id="${note.id}">
                         🙏 <span>${note.reactions}</span>
                     </button>
