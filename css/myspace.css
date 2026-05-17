@@ -208,7 +208,6 @@
 }
 
 .calendar-day.has-mood {
-    color: transparent;
     font-size: 1.2rem;
     animation: pulse-entry 0.5s ease-out;
 }
