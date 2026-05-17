@@ -168,6 +168,8 @@ const TRANSLATIONS = {
         'settings_username': 'Username',
         'settings_btn_save': 'Simpan Perubahan',
         'settings_btn_cancel': 'Batal',
+        'settings_light_mode': '?? Mode Terang',
+        'settings_dark_mode': '?? Mode Gelap',
         'settings_avatar_label': 'Ubah Foto Profil'
     },
     en: {
@@ -339,6 +341,8 @@ const TRANSLATIONS = {
         'settings_username': 'Username',
         'settings_btn_save': 'Save Changes',
         'settings_btn_cancel': 'Cancel',
+        'settings_light_mode': '?? Light Mode',
+        'settings_dark_mode': '?? Dark Mode',
         'settings_avatar_label': 'Edit Profile Picture'
     }
 };
