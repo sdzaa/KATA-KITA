@@ -324,10 +324,19 @@ const MySpaceUI = {
         this.elements.gaugeValue.style.strokeDasharray = arcLength;
         this.elements.gaugeValue.style.strokeDashoffset = offset;
 
-        // Color based on index
-        let strokeColor = '#FDE68A'; // Yellow
-        if (weightedIndex < 0.35) strokeColor = '#A7F3D0'; // Green (Cemas)
-        else if (weightedIndex < 0.7) strokeColor = '#7DD3FC'; // Blue (Meh)
+        // Color based on index - cute dynamic colors
+        let strokeColor = '#FF6B8B'; // Strawberry Pink (Bahagia >= 0.75)
+        
+        if (weightedIndex < 0.30) {
+            strokeColor = '#FF4A4A'; // Cute Coral Red (Sedih)
+        } else if (weightedIndex < 0.45) {
+            strokeColor = '#10B981'; // Cute Green (Cemas/Angry)
+        } else if (weightedIndex < 0.60) {
+            strokeColor = '#3B82F6'; // Cute Periwinkle Blue (Biasa)
+        } else if (weightedIndex < 0.75) {
+            strokeColor = '#F59E0B'; // Cute Golden Yellow (Senang)
+        }
+
         this.elements.gaugeValue.style.stroke = strokeColor;
     },
 
@@ -370,7 +379,7 @@ const MySpaceUI = {
             const isToday = (i === today) ? 'is-today' : '';
 
             if (dayMood && dayMood.emoji) {
-                html += `<div class="calendar-day has-mood ${isToday}" title="${dayMood.label}">${dayMood.emoji}</div>`;
+                html += `<div class="calendar-day has-mood mood-${dayMood.label} ${isToday}" title="${dayMood.label}">${dayMood.emoji}</div>`;
             } else {
                 html += `<div class="calendar-day ${isToday}">${i}</div>`;
             }

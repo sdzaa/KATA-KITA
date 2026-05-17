@@ -33,12 +33,11 @@ const ContentFilter = {
 const PostManager = {
     STORAGE_KEY: 'katakita_posts',
     LIKED_KEY_PREFIX: 'katakita_liked_',
-
     getDefaultPosts() {
         return [
             {
                 id: '1',
-                author: 'Sunflower',
+                author: 'Raindrop 🌧️',
                 content: '"Today I feel a bit tired because of school assignments, but luckily a friend invited me to grab some snacks together..."',
                 mood: 'sad',
                 timestamp: Date.now() - 3600000 * 4,
@@ -50,7 +49,7 @@ const PostManager = {
             },
             {
                 id: '2',
-                author: 'Sunflower',
+                author: 'Warm Hug 🧸',
                 content: '"Sometimes the smallest step in the right direction ends up being the biggest step of your life. Tip-toe if you must, but take the step."',
                 mood: 'comfort',
                 timestamp: Date.now() - 3600000 * 8,
@@ -67,7 +66,28 @@ const PostManager = {
             this.savePosts(defaults);
             return defaults;
         }
-        return JSON.parse(raw);
+        let posts = JSON.parse(raw);
+        
+        // Seamless migration: replace old generic 'Sunflower' author names with cute pseudonyms
+        let updated = false;
+        posts = posts.map(post => {
+            if (post.author === 'Sunflower') {
+                updated = true;
+                if (post.mood === 'happy') post.author = 'Sunshine ✨';
+                else if (post.mood === 'sad') post.author = 'Raindrop 🌧️';
+                else if (post.mood === 'anxious') post.author = 'Drifting Cloud ☁️';
+                else if (post.mood === 'comfort') post.author = 'Warm Hug 🧸';
+                else if (post.mood === 'angry') post.author = 'Sparky 🔥';
+                else post.author = 'Anonymous';
+            }
+            return post;
+        });
+
+        if (updated) {
+            this.savePosts(posts);
+        }
+        
+        return posts;
     },
 
     savePosts(posts) {
@@ -76,9 +96,18 @@ const PostManager = {
 
     addPost(mood, content) {
         const posts = this.getPosts();
+        
+        // Cute mood-specific anonymous pseudonyms
+        let authorName = 'Anonymous';
+        if (mood === 'happy') authorName = 'Sunshine ✨';
+        else if (mood === 'sad') authorName = 'Raindrop 🌧️';
+        else if (mood === 'anxious') authorName = 'Drifting Cloud ☁️';
+        else if (mood === 'comfort') authorName = 'Warm Hug 🧸';
+        else if (mood === 'angry') authorName = 'Sparky 🔥';
+
         const newPost = {
             id: Date.now().toString(),
-            author: (typeof AppState !== 'undefined' && AppState.getUser()) || 'Anonymous',
+            author: authorName,
             content: `"${content}"`,
             mood,
             timestamp: Date.now(),
@@ -89,7 +118,6 @@ const PostManager = {
         this.savePosts(posts);
         return newPost;
     },
-
     toggleLike(postId) {
         const posts = this.getPosts();
         const index = posts.findIndex(p => p.id === postId);
@@ -506,7 +534,7 @@ const FeedUI = {
         }
 
         const article = document.createElement('article');
-        article.className = 'card post animate-fade-in';
+        article.className = `card post animate-fade-in post-${post.mood || 'comfort'}`;
         article.innerHTML = `
             <div class="post-header" style="justify-content: space-between; display: flex; width: 100%;">
                 <div style="display: flex; gap: 12px; align-items: center;">

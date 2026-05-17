@@ -14,7 +14,7 @@
 .filter-btn {
     font-family: inherit;
     font-weight: 600;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     color: var(--color-text-muted);
     border: none;
     background: none;
@@ -37,15 +37,49 @@
     width: fit-content;
 }
 
-
 .filter-btn:hover {
     color: var(--color-primary);
+    transform: translateY(-2px);
 }
 
 .filter-btn.active {
-    background: var(--color-primary) !important;
     color: white !important;
-    box-shadow: 0 4px 12px rgba(233, 59, 129, 0.2);
+    transform: translateY(-2px);
+}
+
+.filter-btn[data-filter="all"].active {
+    background: linear-gradient(135deg, #E93B81 0%, #FF8EBC 100%) !important;
+    box-shadow: 0 8px 20px rgba(233, 59, 129, 0.25);
+}
+
+.filter-btn[data-filter="popular"].active {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%) !important;
+    box-shadow: 0 8px 20px rgba(255, 107, 107, 0.25);
+}
+
+.filter-btn[data-filter="happy"].active {
+    background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%) !important;
+    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.25);
+}
+
+.filter-btn[data-filter="sad"].active {
+    background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%) !important;
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25);
+}
+
+.filter-btn[data-filter="anxious"].active {
+    background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%) !important;
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25);
+}
+
+.filter-btn[data-filter="comfort"].active {
+    background: linear-gradient(135deg, #EC4899 0%, #F472B6 100%) !important;
+    box-shadow: 0 8px 20px rgba(236, 72, 153, 0.25);
+}
+
+.filter-btn[data-filter="angry"].active {
+    background: linear-gradient(135deg, #EF4444 0%, #F87171 100%) !important;
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.25);
 }
 
 .feed-posts {
@@ -209,4 +243,199 @@
     .feed-posts {
         grid-template-columns: 1fr;
     }
+}
+
+/* --- Kindness Feed Mood-Specific Cards & Highlight --- */
+
+/* Happy Card Theme (Warm Yellow-Gold) */
+.post.post-happy {
+    background: linear-gradient(135deg, #FFFDF2 0%, #FFFCE8 100%);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.08);
+}
+.post.post-happy .post-avatar {
+    background: rgba(245, 158, 11, 0.15) !important;
+    color: #D97706 !important;
+}
+.post.post-happy .post-author {
+    color: #B45309;
+}
+.post.post-happy .post-content {
+    color: #451A03;
+    font-weight: 500;
+}
+.post.post-happy:hover {
+    box-shadow: 0 12px 30px rgba(245, 158, 11, 0.18);
+    transform: translateY(-6px);
+}
+
+/* Sad Card Theme (Calming Sea Blue) */
+.post.post-sad {
+    background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.08);
+}
+.post.post-sad .post-avatar {
+    background: rgba(59, 130, 246, 0.15) !important;
+    color: #2563EB !important;
+}
+.post.post-sad .post-author {
+    color: #1D4ED8;
+}
+.post.post-sad .post-content {
+    color: #1E3A8A;
+    font-weight: 500;
+}
+.post.post-sad:hover {
+    box-shadow: 0 12px 30px rgba(59, 130, 246, 0.18);
+    transform: translateY(-6px);
+}
+
+/* Anxious Card Theme (Soothing Lavender Purple) */
+.post.post-anxious {
+    background: linear-gradient(135deg, #FAF5FF 0%, #F3E8FF 100%);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.08);
+}
+.post.post-anxious .post-avatar {
+    background: rgba(139, 92, 246, 0.15) !important;
+    color: #7C3AED !important;
+}
+.post.post-anxious .post-author {
+    color: #6D28D9;
+}
+.post.post-anxious .post-content {
+    color: #4C1D95;
+    font-weight: 500;
+}
+.post.post-anxious:hover {
+    box-shadow: 0 12px 30px rgba(139, 92, 246, 0.18);
+    transform: translateY(-6px);
+}
+
+/* Comforting / Standard Card Theme (Blooming Rose Pink) */
+.post.post-comfort {
+    background: linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+    box-shadow: 0 6px 20px rgba(244, 63, 94, 0.08);
+}
+.post.post-comfort .post-avatar {
+    background: rgba(244, 63, 94, 0.15) !important;
+    color: #E11D48 !important;
+}
+.post.post-comfort .post-author {
+    color: #BE123C;
+}
+.post.post-comfort .post-content {
+    color: #881337;
+    font-weight: 500;
+}
+.post.post-comfort:hover {
+    box-shadow: 0 12px 30px rgba(244, 63, 94, 0.18);
+    transform: translateY(-6px);
+}
+
+/* Angry Card Theme (Soft Fiery Coral Red) */
+.post.post-angry {
+    background: linear-gradient(135deg, #FFF5F5 0%, #FFEBEB 100%);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.08);
+}
+.post.post-angry .post-avatar {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #EF4444 !important;
+}
+.post.post-angry .post-author {
+    color: #DC2626;
+}
+.post.post-angry .post-content {
+    color: #7F1D1D;
+    font-weight: 500;
+}
+.post.post-angry:hover {
+    box-shadow: 0 12px 30px rgba(239, 68, 68, 0.18);
+    transform: translateY(-6px);
+}
+
+/* Highlight Post Style (Stunning Glowing Pink/Gold Card) */
+.post.highlight-post {
+    background: linear-gradient(135deg, #FFF5F7 0%, #FFF0F5 50%, #FFF9E6 100%) !important;
+    border: 2px solid #FF8EBC !important;
+    box-shadow: 0 12px 30px rgba(233, 59, 129, 0.2) !important;
+    position: relative;
+    overflow: hidden;
+}
+.post.highlight-post::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, transparent 50%, rgba(255, 142, 188, 0.15) 50%);
+    pointer-events: none;
+}
+.post.highlight-post:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 36px rgba(233, 59, 129, 0.3) !important;
+}
+
+/* --- Dark Mode Theme Tuning for Mood Cards & Highlight --- */
+[data-theme="dark"] .post.post-happy {
+    background: linear-gradient(135deg, #251B12 0%, #15100B 100%) !important;
+    border: 1px solid rgba(245, 158, 11, 0.4) !important;
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.15) !important;
+}
+[data-theme="dark"] .post.post-happy .post-author { color: #FCD34D !important; }
+[data-theme="dark"] .post.post-happy .post-content { color: #FFFBEB !important; }
+[data-theme="dark"] .post.post-happy .post-avatar { background: rgba(245, 158, 11, 0.25) !important; color: #FBBF24 !important; }
+[data-theme="dark"] .post.post-happy:hover { box-shadow: 0 12px 30px rgba(245, 158, 11, 0.3) !important; }
+
+[data-theme="dark"] .post.post-sad {
+    background: linear-gradient(135deg, #0C1E30 0%, #06101B 100%) !important;
+    border: 1px solid rgba(59, 130, 246, 0.4) !important;
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.15) !important;
+}
+[data-theme="dark"] .post.post-sad .post-author { color: #93C5FD !important; }
+[data-theme="dark"] .post.post-sad .post-content { color: #EFF6FF !important; }
+[data-theme="dark"] .post.post-sad .post-avatar { background: rgba(59, 130, 246, 0.25) !important; color: #60A5FA !important; }
+[data-theme="dark"] .post.post-sad:hover { box-shadow: 0 12px 30px rgba(59, 130, 246, 0.3) !important; }
+
+[data-theme="dark"] .post.post-anxious {
+    background: linear-gradient(135deg, #181126 0%, #0C0814 100%) !important;
+    border: 1px solid rgba(139, 92, 246, 0.4) !important;
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.15) !important;
+}
+[data-theme="dark"] .post.post-anxious .post-author { color: #C084FC !important; }
+[data-theme="dark"] .post.post-anxious .post-content { color: #FAF5FF !important; }
+[data-theme="dark"] .post.post-anxious .post-avatar { background: rgba(139, 92, 246, 0.25) !important; color: #A78BFA !important; }
+[data-theme="dark"] .post.post-anxious:hover { box-shadow: 0 12px 30px rgba(139, 92, 246, 0.3) !important; }
+
+[data-theme="dark"] .post.post-comfort {
+    background: linear-gradient(135deg, #240C1A 0%, #12060D 100%) !important;
+    border: 1px solid rgba(244, 63, 94, 0.4) !important;
+    box-shadow: 0 6px 20px rgba(244, 63, 94, 0.15) !important;
+}
+[data-theme="dark"] .post.post-comfort .post-author { color: #FDA4AF !important; }
+[data-theme="dark"] .post.post-comfort .post-content { color: #FFF1F2 !important; }
+[data-theme="dark"] .post.post-comfort .post-avatar { background: rgba(244, 63, 94, 0.25) !important; color: #F43F5E !important; }
+[data-theme="dark"] .post.post-comfort:hover { box-shadow: 0 12px 30px rgba(244, 63, 94, 0.3) !important; }
+
+[data-theme="dark"] .post.post-angry {
+    background: linear-gradient(135deg, #2D1414 0%, #1A0A0A 100%) !important;
+    border: 1px solid rgba(239, 68, 68, 0.4) !important;
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.15) !important;
+}
+[data-theme="dark"] .post.post-angry .post-author { color: #FCA5A5 !important; }
+[data-theme="dark"] .post.post-angry .post-content { color: #FEF2F2 !important; }
+[data-theme="dark"] .post.post-angry .post-avatar { background: rgba(239, 68, 68, 0.25) !important; color: #F87171 !important; }
+[data-theme="dark"] .post.post-angry:hover { box-shadow: 0 12px 30px rgba(239, 68, 68, 0.3) !important; }
+
+[data-theme="dark"] .post.highlight-post {
+    background: linear-gradient(135deg, #2A1420 0%, #1A0D18 50%, #201E14 100%) !important;
+    border: 2px solid #E93B81 !important;
+    box-shadow: 0 12px 30px rgba(233, 59, 129, 0.35) !important;
+}
+[data-theme="dark"] .post.highlight-post:hover {
+    box-shadow: 0 16px 40px rgba(233, 59, 129, 0.5) !important;
 }
