@@ -4,11 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gratitude Wall - KATA-KITA</title>
+    <title>Community Rules - KATA-KITA</title>
     <link rel="stylesheet" href="../css/global.css">
-    <link rel="stylesheet" href="../css/gratitude.css">
+    <link rel="stylesheet" href="../css/rules.css">
     <script src="../js/main.js" defer></script>
-    <script src="../js/gratitude.js" defer></script>
 </head>
 
 <body>
@@ -35,7 +34,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="gratitude.html" class="active">
+                        <a href="gratitude.html">
                             <span class="dot purple"></span>
                             <span>Gratitude Wall</span>
                         </a>
@@ -126,84 +125,45 @@
             </header>
 
             <div class="page-container animate-fade-in">
-                <!-- Page Header matching dashboard style -->
-                <header class="gratitude-header"
-                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; text-align: left; max-width: 100%;">
-                    <div>
-                        <h1
-                            style="color: var(--color-text-main); font-size: 2.2rem; font-weight: 800; margin: 0 0 4px 0;">
-                            Gratitude Wall</h1>
-                        <p style="color: var(--color-text-muted); font-size: 1.25rem; font-weight: 500; margin: 0;">Yuk, bagikan momen syukurmu di sini!</p>
-                    </div>
-                    <button id="openHistoryBtn" class="btn btn-secondary" style="display: flex; align-items: center; gap: 8px; font-weight: 600; padding: 12px 24px; border-radius: 12px; background: var(--color-bg-light); border: 1px solid var(--color-border); color: var(--color-text-main); font-size: 0.95rem; box-shadow: var(--shadow-sm); cursor: pointer;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                        History
-                    </button>
+                <header class="rules-header">
+                    <h1>Community Rules</h1>
+                    <p>Untuk menjaga KATA-KITA tetap menjadi ruang kecil yang penuh kebaikan, setiap pengguna wajib mematuhi aturan berikut:</p>
                 </header>
 
-                <section class="gratitude-wall board-background" id="gratitudeWall">
-                    <!-- Wall items injected by JS -->
-                </section>
+                <div class="rules-box">
+                    <div class="rule-item">
+                        <h3>1. Menjaga Anonimitas dan Privasi</h3>
+                        <p>Demi kenyamanan bersama, mohon untuk tidak mencantumkan identitas pribadi seperti nama asli, kelas, nomor kamar, maupun detail spesifik lainnya dalam setiap unggahan. Prinsip utama platform ini adalah keanoniman guna memastikan setiap orang dapat berekspresi tanpa rasa terancam oleh penilaian sosial.</p>
+                    </div>
+
+                    <div class="rule-item">
+                        <h3>2. Dukungan Empati dan Validasi Emosional</h3>
+                        <p>Gunakanlah bahasa yang santun dan suportif dalam memberikan tanggapan. Kami sangat menghargai interaksi yang membangun, penuh empati, dan menghargai perasaan sesama teman tanpa adanya penghakiman (no judging).</p>
+                    </div>
+
+                    <div class="rule-item">
+                        <h3>3. Lingkungan Bebas Perundungan (Zero Bullying)</h3>
+                        <p>Kami menerapkan kebijakan toleransi nol terhadap segala bentuk perundungan, kata-kata kasar, hinaan, maupun ancaman. Segala konten yang mengandung unsur tersebut akan secara otomatis dihapus oleh sistem demi menjaga ekosistem komunikasi yang sehat.</p>
+                    </div>
+
+                    <div class="rule-item">
+                        <h3>4. Fokus pada Pengungkapan Diri yang Positif</h3>
+                        <p>Gunakan ruang ini untuk merefleksikan dan mengungkapkan perasaan pribadi Anda secara tulus (self-disclosure). Mohon untuk tidak menggunakan platform ini sebagai sarana menyebarkan rumor, gosip, atau membuka aib pihak lain di lingkungan asrama.</p>
+                    </div>
+
+                    <div class="rule-item">
+                        <h3>5. Keamanan dan Kesejahteraan Subjek</h3>
+                        <p>Demi keselamatan Anda, dilarang keras mengunggah konten yang merujuk pada tindakan menyakiti diri sendiri (self-harm) atau orang lain. Platform ini dilengkapi dengan algoritma deteksi kata kunci darurat untuk memberikan bantuan segera jika ditemukan indikasi bahaya. Apabila Anda dalam kondisi darurat, sangat disarankan untuk segera menghubungi pendamping asrama atau pihak medis terkait.</p>
+                    </div>
+
+                    <div class="rule-item">
+                        <h3>6. Pemanfaatan Fitur Pelaporan (Report)</h3>
+                        <p>Mari bersama-sama menjaga komunitas ini. Jika Anda menemukan unggahan atau interaksi yang melanggar ketentuan di atas, mohon kesediaannya untuk menggunakan fitur pelaporan (Report) agar tim admin dapat segera menindaklanjutinya demi keamanan privasi seluruh siswi.</p>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
-
-    <!-- Floating Action Button for Gratitude -->
-    <button class="fab" id="openGratitudeBtn">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 20h9"></path>
-            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-        </svg>
-    </button>
-    <!-- Modal for History -->
-    <div id="historyModal" class="modal" style="display: none;">
-        <div class="modal-content card" style="max-width: 600px; max-height: 80vh; display: flex; flex-direction: column;">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border); padding-bottom: 12px; margin-bottom: 16px;">
-                <h2 class="modal-title" style="margin: 0;">Gratitude History</h2>
-                <button type="button" class="btn btn-secondary" id="closeHistoryModal" style="padding: 6px 12px; border-radius: 12px;">Close</button>
-            </div>
-            <div id="historyList" style="overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 12px;">
-                <!-- History items injected by JS -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal for Gratitude Form -->
-    <div id="gratitudeModal" class="modal" style="display: none;">
-        <div class="modal-content card" style="max-width: 500px;">
-            <h2 class="modal-title">Gratitude Wall</h2>
-            <p class="modal-subtitle">Write one thing you are grateful for today.</p>
-            <form id="gratitudeForm" class="gratitude-form mt-4">
-                <div class="input-group">
-                    <textarea id="gratitudeContent" placeholder="Today I am grateful because..." rows="3"
-                        required></textarea>
-                </div>
-                <div class="modal-actions" style="margin-top: 16px;">
-                    <button type="button" class="btn btn-secondary" id="closeGratitudeModal">Cancel</button>
-                    <button type="submit" class="btn btn-primary"
-                        style="background:#E93B81; border:none; padding:10px 24px; border-radius:20px; color:white; font-weight:600;">Post
-                        (+5 pts)</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal for Delete Confirmation -->
-    <div id="deleteConfirmModal" class="modal" style="display: none;">
-        <div class="modal-content card" style="max-width: 400px; text-align: center;">
-            <h2 class="modal-title" style="margin-bottom: 8px;">Hapus Catatan</h2>
-            <p class="modal-subtitle" style="margin-bottom: 24px;">Apakah kamu yakin ingin menghapus catatan ini?</p>
-            <div class="modal-actions" style="justify-content: center; gap: 16px; display: flex;">
-                <button type="button" class="btn btn-secondary" id="cancelDeleteBtn" style="padding: 10px 24px; border-radius: 20px;">Batal</button>
-                <button type="button" class="btn btn-primary" id="confirmDeleteBtn"
-                    style="background:#ef4444; border:none; padding:10px 24px; border-radius:20px; color:white; font-weight:600;">Hapus</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="../js/main.js"></script>
-    <script src="../js/gratitude.js"></script>
 </body>
 
 </html>

@@ -7,6 +7,8 @@
     <title>Home - KATA-KITA</title>
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/beranda.css">
+    <script src="../js/translations.js"></script>
+    <script src="../js/main.js" defer></script>
 </head>
 
 <body>
@@ -14,53 +16,51 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-logo">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                KATA-KITA
+                <img src="../images/KATA-KITA.png" alt="KATA-KITA Logo">
             </div>
 
             <div class="nav-section">
-                <p class="nav-label">My Projects</p>
+                
                 <ul class="sidebar-nav">
                     <li>
                         <a href="myspace.html">
                             <span class="dot green"></span>
-                            <span>My Space</span>
+                            <span data-i18n="nav_myspace">My Space</span>
                         </a>
                     </li>
                     <li>
                         <a href="library.html">
                             <span class="dot orange"></span>
-                            <span>Education</span>
+                            <span data-i18n="nav_library">Education</span>
                         </a>
                     </li>
                     <li>
                         <a href="gratitude.html">
                             <span class="dot purple"></span>
-                            <span>Gratitude Wall</span>
+                            <span data-i18n="nav_gratitude">Gratitude Wall</span>
                         </a>
                     </li>
                     <li>
                         <a href="comfort.html">
                             <span class="dot blue"></span>
-                            <span>Comfort Zone</span>
+                            <span data-i18n="nav_comfort">Comfort Zone</span>
                         </a>
                     </li>
                     <li>
                         <a href="beranda.html" class="active">
                             <span class="dot pink"></span>
-                            <span>Kindness Feed</span>
+                            <span data-i18n="nav_home">Kindness Feed</span>
                         </a>
                     </li>
                 </ul>
             </div>
 
             <div class="sidebar-footer">
-                <p class="nav-label">Utilities</p>
                 <ul class="sidebar-nav">
-                    <li><a href="#"><span class="dot"></span><span>Tasks</span></a></li>
-                    <li><a href="#"><span class="dot"></span><span>Settings</span></a></li>
-                    <li><a href="#"><span class="dot"></span><span>Rules</span></a></li>
-                    <li><a href="#" class="logout-btn" id="logoutBtn"><span>Logout</span></a></li>
+                    <li><a href="settings.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg><span data-i18n="nav_settings">Settings</span></a></li>
+                    <li><a href="rules.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg><span data-i18n="nav_rules">Rules</span></a></li>
+                    <li><a href="tasks.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg><span data-i18n="nav_tasks">Tasks</span></a></li>
+                    <li><a href="#" class="logout-btn" id="logoutBtn"><span data-i18n="nav_logout">Logout</span></a></li>
                 </ul>
             </div>
         </aside>
@@ -69,52 +69,75 @@
         <main class="main-view">
             <header class="top-header">
                 <div class="header-center header-title">
-                    <span class="text-secondary" style="font-family: 'Caveat', cursive; font-size: 1.8rem; margin-right: 6px;">Express Feelings,</span> 
-                    <span class="text-primary" style="font-size: 1.4rem; font-weight: 800;">Nurture the Soul.</span>
-                    <span class="emoji-large" style="font-size: 1.5rem; margin-left: 4px;">🌱</span>
                 </div>
                 <div class="header-right">
                     <div class="header-icons">
                         <span class="theme-toggle-btn" title="Toggle Theme">
-                            <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                            <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                            <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                            </svg>
+                            <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                <line x1="1" y1="12" x2="3" y2="12"></line>
+                                <line x1="21" y1="12" x2="23" y2="12"></line>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                            </svg>
                         </span>
-                        <span title="Calendar">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        <span title="Calendar" id="headerCalendar">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
                         </span>
-                        <span title="Chat">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                        </span>
-                        <span title="Notifications">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                        <span title="Notifications" id="headerNotif">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
                         </span>
                     </div>
-                    <div class="user-profile">
+                    <div class="user-profile" onclick="window.location.href='settings.html'">
                         <div class="user-info">
                             <div class="user-name" id="userNameProfile">User</div>
                             <div class="points-badge">
                                 <span>⭐</span>
-                                <span id="userPoints">0</span> Stars
+                                <span id="userPoints">0</span> <span data-i18n="header_stars">Stars</span>
                             </div>
                         </div>
                         <div class="profile-avatar">👤</div>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-text-muted); margin-left: -4px;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            style="color: var(--color-text-muted); margin-left: -4px;">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                     </div>
                 </div>
             </header>
 
             <div class="page-container animate-fade-in">
                 <div class="feed-intro">
-                    <h1>Kindness Feed</h1>
-                    <p>A small space full of kindness</p>
+                    <h1 style="color: var(--color-text-main); font-size: 3.2rem; font-weight: 800; margin: 0 0 16px 0;" id="homeNameGreeting">
+                        Hello, User!</h1>
+                    <h1 data-i18n="home_title" style="font-size: 1.8rem;">Kindness Feed</h1>
+                    <p data-i18n="home_subtitle">A small space full of kindness</p>
                 </div>
 
                 <div class="feed-filters">
                     <div class="filter-group">
-                        <button class="filter-btn active" data-filter="all">All</button>
-                        <button class="filter-btn" data-filter="popular">Popular</button>
-                        <button class="filter-btn" data-filter="happy">Happy</button>
-                        <button class="filter-btn" data-filter="sad">Sad</button>
+                        <button class="filter-btn active" data-filter="all" data-i18n="home_filter_all">All</button>
+                        <button class="filter-btn" data-filter="popular" data-i18n="home_filter_popular">Popular</button>
+                        <button class="filter-btn" data-filter="happy" data-i18n="home_filter_happy">Happy</button>
+                        <button class="filter-btn" data-filter="sad" data-i18n="home_filter_sad">Sad</button>
                     </div>
                 </div>
 
@@ -127,7 +150,11 @@
 
     <!-- Floating Action Button -->
     <button class="fab" id="openComposeBtn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9" />
+            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+        </svg>
     </button>
 
     <!-- Modal for Post Creation -->
@@ -157,7 +184,37 @@
         </div>
     </div>
 
+    <!-- Modal for Delete Confirmation -->
+    <div id="deleteConfirmModal" class="modal">
+        <div class="modal-content card" style="max-width: 400px; text-align: center;">
+            <h2 class="modal-title" style="color: var(--color-primary); margin-bottom: 12px;">Delete Post</h2>
+            <p class="modal-subtitle" style="margin-bottom: 24px;">Are you sure you want to delete this post? This action cannot be undone.</p>
+            <div class="modal-actions" style="justify-content: center;">
+                <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmDeleteBtn" style="background-color: #ef4444; color: white;">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Edit Post -->
+    <div id="editPostModal" class="modal">
+        <div class="modal-content card">
+            <h2 class="modal-title">Edit Post</h2>
+            <form id="editPostForm" class="compose-form">
+                <div class="input-group">
+                    <label>Kindness Message</label>
+                    <textarea id="editPostContent" required rows="4"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="closeEditModalBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="../js/main.js"></script>
     <script src="../js/forum.js"></script>
 </body>
+
 </html>

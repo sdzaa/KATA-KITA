@@ -1,0 +1,150 @@
+.tasks-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.tasks-header h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--color-text-main);
+}
+
+.points-summary {
+    background-color: #F3F0FF;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    color: var(--color-text-main);
+    font-size: 1.1rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.stars-count {
+    color: var(--color-primary);
+}
+
+.tasks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.task-card {
+    display: flex;
+    align-items: center;
+    padding: 16px 24px;
+    background: white;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 14px;
+    gap: 20px;
+    transition: all 0.2s ease;
+}
+
+.task-card.completed {
+    background-color: #F8F7FF;
+    border-color: #D6BCFA;
+}
+
+.task-checkbox {
+    width: 32px;
+    height: 32px;
+    border: 2px solid #CBD5E0;
+    border-radius: 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+}
+
+.task-checkbox.checked {
+    background-color: #553C9A;
+    border-color: #553C9A;
+    color: white;
+}
+
+.task-content {
+    flex-grow: 1;
+}
+
+.task-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.task-icon {
+    font-size: 1.3rem;
+}
+
+.task-title h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+    margin: 0;
+}
+
+.task-subtitle {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin-top: 4px;
+    margin-left: 36px;
+}
+
+.task-subtasks {
+    margin-top: 8px;
+    margin-left: 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.task-subtasks p {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+.task-btn {
+    padding: 10px 20px;
+    background-color: #553C9A;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 160px;
+    text-align: center;
+}
+
+.task-btn:hover {
+    background-color: #44337A;
+    transform: translateY(-1px);
+}
+
+.task-btn.viewed {
+    background-color: #CBD5E0;
+    color: #718096;
+    cursor: default;
+}
+
+.task-btn.viewed:hover {
+    transform: none;
+}
+
+/* Dark Mode Adjustments */
+[data-theme="dark"] .task-card {
+    background-color: #1A202C;
+}
+
+[data-theme="dark"] .task-card.completed {
+    background-color: #2D3748;
+}
+
+[data-theme="dark"] .points-summary {
+    background-color: #2D3748;
+}

@@ -1,8 +1,7 @@
 .library-header {
     margin-bottom: 48px;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    width: 100%;
+    text-align: left;
 }
 
 .library-header h2 {
@@ -41,17 +40,46 @@
     flex-shrink: 0;
 }
 
-/* Soft Pastel Backgrounds matching Figma */
-.article-card:nth-child(6n+1) { background: #FDE8E8; } /* Soft Pink */
-.article-card:nth-child(6n+2) { background: #FEF3C7; } /* Soft Yellow */
-.article-card:nth-child(6n+3) { background: #E0F2FE; } /* Soft Blue */
-.article-card:nth-child(6n+4) { background: #F3E8FF; } /* Soft Purple */
-.article-card:nth-child(6n+5) { background: #FFEDD5; } /* Soft Orange */
-.article-card:nth-child(6n+6) { background: #DCFCE7; } /* Soft Green */
+/* Soft Pastel Backgrounds matching Figma - Light Mode */
+[data-theme="light"] .article-card:nth-child(6n+1),
+:root:not([data-theme="dark"]) .article-card:nth-child(6n+1) { background: #FDE8E8; }
+[data-theme="light"] .article-card:nth-child(6n+2),
+:root:not([data-theme="dark"]) .article-card:nth-child(6n+2) { background: #FEF3C7; }
+[data-theme="light"] .article-card:nth-child(6n+3),
+:root:not([data-theme="dark"]) .article-card:nth-child(6n+3) { background: #E0F2FE; }
+[data-theme="light"] .article-card:nth-child(6n+4),
+:root:not([data-theme="dark"]) .article-card:nth-child(6n+4) { background: #F3E8FF; }
+[data-theme="light"] .article-card:nth-child(6n+5),
+:root:not([data-theme="dark"]) .article-card:nth-child(6n+5) { background: #FFEDD5; }
+[data-theme="light"] .article-card:nth-child(6n+6),
+:root:not([data-theme="dark"]) .article-card:nth-child(6n+6) { background: #DCFCE7; }
 
-.img-gradient-1, .img-gradient-2, .img-gradient-3, .img-gradient-4 {
-    background: url('../assets/placeholder.jpg') center/cover;
-    background-color: #ddd; /* Fallback */
+/* Dark Mode Backgrounds - Deeper jewel tones for contrast */
+[data-theme="dark"] .article-card:nth-child(6n+1) { background: #3D2222; }
+[data-theme="dark"] .article-card:nth-child(6n+2) { background: #3D351A; }
+[data-theme="dark"] .article-card:nth-child(6n+3) { background: #1A2D3D; }
+[data-theme="dark"] .article-card:nth-child(6n+4) { background: #2D1A3D; }
+[data-theme="dark"] .article-card:nth-child(6n+5) { background: #3D2D1A; }
+[data-theme="dark"] .article-card:nth-child(6n+6) { background: #1A3D24; }
+
+.img-gradient-1 {
+    background: url('https://www.sciencenews.org/wp-content/uploads/sites/2/2026/04/041026_LG_artemis_Fridaysplashdown_main_ac43ab.jpg') center/cover;
+    background-color: #ddd;
+}
+
+.img-gradient-2 {
+    background: url('https://www.sciencenews.org/wp-content/uploads/sites/2/2026/03/031926_JB_star_main.jpg') center/cover;
+    background-color: #ddd;
+}
+
+.img-gradient-3 {
+    background: url('https://www.sciencenews.org/wp-content/uploads/sites/2/2026/01/010525_LG_galaxy_feat.jpg') center/cover;
+    background-color: #ddd;
+}
+
+.img-gradient-4 {
+    background: url('https://www.sciencenews.org/wp-content/uploads/sites/2/2026/03/0426_MR_reviews_living_creature_feat.jpg') center/cover;
+    background-color: #ddd;
 }
 
 .article-content {
@@ -61,13 +89,14 @@
 }
 
 .article-tag {
-    display: none; /* Figma design doesn't show tag in Education cards */
+    display: none;
+    /* Figma design doesn't show tag in Education cards */
 }
 
 .article-content h3 {
     font-size: 1rem;
     font-weight: 800;
-    color: #1A202C;
+    color: var(--color-text-main);
     margin-bottom: 8px;
     line-height: 1.4;
 }
@@ -97,8 +126,8 @@
 
 .article-link {
     display: inline-block;
-    color: var(--color-text-main);
-    font-weight: 600;
+    color: var(--color-primary);
+    font-weight: 700;
     font-size: 0.95rem;
     transition: color 0.3s, transform 0.3s;
 }

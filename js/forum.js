@@ -1,7 +1,34 @@
-/**
- * forum.js - Kindness Feed Logic & Dashboard Integration
- * Refactored for scalability, maintainability, and clean code principles.
- */
+const ContentFilter = {
+    FORBIDDEN_WORDS: [
+        // Profanity & Cyberbullying (Indonesian)
+        'anjing', 'babi', 'monyet', 'tolol', 'goblok', 'bego', 'bodoh', 'idiot',
+        'kontol', 'memek', 'ngentot', 'bangsat', 'brengsek', 'tai', 'asu',
+        'mati saja', 'sampah', 'jelek', 'pecundang', 'cacat', 'bencong',
+        // Profanity & Cyberbullying (English)
+        'fuck', 'shit', 'asshole', 'bitch', 'idiot', 'stupid', 'dumb', 'loser',
+        'kill yourself', 'kys', 'suicide', 'ugly', 'trash', 'hate you',
+        // Harmful Mental Health Phrases
+        'bunuh diri', 'self harm', 'potong nadi', 'lompat gedung'
+    ],
+
+    validate(text) {
+        const lowerText = text.toLowerCase();
+        const foundWord = this.FORBIDDEN_WORDS.find(word => lowerText.includes(word));
+        if (foundWord) {
+            if (typeof showModal === 'function') {
+                showModal(
+                    'Inappropriate Content', 
+                    'Your message contains words that are not allowed in this space. Let\'s keep this community kind and safe! ❤️', 
+                    '⚠️'
+                );
+            } else {
+                alert('Inappropriate content detected. Please be kind!');
+            }
+            return false;
+        }
+        return true;
+    }
+};
 
 const PostManager = {
     STORAGE_KEY: 'katakita_posts',
@@ -91,17 +118,57 @@ const PostManager = {
         const newComment = {
             id: Date.now().toString(),
             content,
-            timestamp: Date.now()
+            timestamp: Date.now(),
+            replies: []
         };
 
         if (!posts[index].comments) posts[index].comments = [];
         posts[index].comments.push(newComment);
         this.savePosts(posts);
         return newComment;
+    },
+
+    deletePost(id) {
+        let posts = this.getPosts();
+        posts = posts.filter(p => p.id !== id);
+        this.savePosts(posts);
+    },
+
+    editPost(id, newContent) {
+        const posts = this.getPosts();
+        const index = posts.findIndex(p => p.id === id);
+        if (index > -1) {
+            posts[index].content = newContent;
+            this.savePosts(posts);
+            return true;
+        }
+        return false;
+    },
+
+    addReply(postId, commentId, content) {
+        const posts = this.getPosts();
+        const post = posts.find(p => p.id === postId);
+        if (!post || !post.comments) return null;
+
+        const comment = post.comments.find(c => c.id === commentId);
+        if (!comment) return null;
+
+        const newReply = {
+            id: Date.now().toString(),
+            content,
+            timestamp: Date.now()
+        };
+
+        if (!comment.replies) comment.replies = [];
+        comment.replies.push(newReply);
+        this.savePosts(posts);
+        return newReply;
     }
 };
 
 const FeedUI = {
+    postToDelete: null,
+    postToEdit: null,
     elements: {
         feedContainer: document.getElementById('feedPosts'),
         postForm: document.getElementById('postForm'),
@@ -110,7 +177,14 @@ const FeedUI = {
         modal: document.getElementById('composeModal'),
         openModalBtn: document.getElementById('openComposeBtn'),
         closeModalBtn: document.getElementById('closeModal'),
-        filterBtns: document.querySelectorAll('.filter-btn')
+        filterBtns: document.querySelectorAll('.filter-btn'),
+        deleteModal: document.getElementById('deleteConfirmModal'),
+        cancelDeleteBtn: document.getElementById('cancelDeleteBtn'),
+        confirmDeleteBtn: document.getElementById('confirmDeleteBtn'),
+        editModal: document.getElementById('editPostModal'),
+        editPostForm: document.getElementById('editPostForm'),
+        editPostContent: document.getElementById('editPostContent'),
+        closeEditModalBtn: document.getElementById('closeEditModalBtn')
     },
 
     init() {
@@ -129,6 +203,12 @@ const FeedUI = {
                 this.handleLike(postId, target);
             } else if (target.classList.contains('comment-btn')) {
                 this.toggleComments(postId);
+            } else if (target.classList.contains('delete-btn')) {
+                this.handleDelete(postId);
+            } else if (target.classList.contains('edit-btn')) {
+                this.handleEdit(postId);
+            } else if (target.classList.contains('reply-btn')) {
+                this.toggleReplyForm(target.dataset.commentId);
             }
         });
 
@@ -137,20 +217,36 @@ const FeedUI = {
             if (e.target.classList.contains('comment-form')) {
                 e.preventDefault();
                 this.handleCommentSubmit(e.target);
+            } else if (e.target.classList.contains('reply-form')) {
+                e.preventDefault();
+                this.handleReplySubmit(e.target);
             }
         });
 
         // Modal Logic
         this.elements.openModalBtn?.addEventListener('click', () => this.toggleModal(true));
         this.elements.closeModalBtn?.addEventListener('click', () => this.toggleModal(false));
+        
+        this.elements.cancelDeleteBtn?.addEventListener('click', () => this.toggleDeleteModal(false));
+        this.elements.confirmDeleteBtn?.addEventListener('click', () => this.confirmDelete());
+        
+        this.elements.closeEditModalBtn?.addEventListener('click', () => this.toggleEditModal(false));
+        
         window.addEventListener('click', (e) => {
             if (e.target === this.elements.modal) this.toggleModal(false);
+            if (e.target === this.elements.deleteModal) this.toggleDeleteModal(false);
+            if (e.target === this.elements.editModal) this.toggleEditModal(false);
         });
 
         // Form Submission
         this.elements.postForm?.addEventListener('submit', (e) => {
             e.preventDefault();
             this.handlePostSubmit();
+        });
+        
+        this.elements.editPostForm?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.confirmEdit();
         });
 
         // Filters
@@ -169,19 +265,105 @@ const FeedUI = {
         if (show) this.elements.contentInput?.focus();
     },
 
+    toggleDeleteModal(show) {
+        if (!this.elements.deleteModal) return;
+        this.elements.deleteModal.style.display = show ? 'flex' : 'none';
+        if (!show) this.postToDelete = null;
+    },
+
+    handleDelete(postId) {
+        this.postToDelete = postId;
+        this.toggleDeleteModal(true);
+    },
+
+    confirmDelete() {
+        if (this.postToDelete) {
+            PostManager.deletePost(this.postToDelete);
+            const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+            this.render(activeFilter);
+        }
+        this.toggleDeleteModal(false);
+    },
+
+    toggleEditModal(show, content = '') {
+        if (!this.elements.editModal) return;
+        this.elements.editModal.style.display = show ? 'flex' : 'none';
+        if (show) {
+            if (this.elements.editPostContent) {
+                this.elements.editPostContent.value = content.replace(/^"|"$/g, '');
+                this.elements.editPostContent.focus();
+            }
+        } else {
+            this.postToEdit = null;
+        }
+    },
+
+    handleEdit(postId) {
+        const posts = PostManager.getPosts();
+        const post = posts.find(p => p.id === postId);
+        if (!post) return;
+        
+        this.postToEdit = postId;
+        this.toggleEditModal(true, post.content);
+    },
+
+    confirmEdit() {
+        if (!this.postToEdit) return;
+        
+        const content = this.elements.editPostContent?.value.trim();
+        if (content) {
+            if (!ContentFilter.validate(content)) return;
+            PostManager.editPost(this.postToEdit, `"${content}"`);
+            const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+            this.render(activeFilter);
+        }
+        
+        this.toggleEditModal(false);
+    },
+
+    toggleReplyForm(commentId) {
+        const form = document.getElementById(`reply-form-${commentId}`);
+        if (form) {
+            form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+            if (form.style.display === 'flex') {
+                form.querySelector('input')?.focus();
+            }
+        }
+    },
+
+    handleReplySubmit(form) {
+        const postId = form.dataset.postId;
+        const commentId = form.dataset.commentId;
+        const input = form.querySelector('input');
+        const content = input.value.trim();
+
+        if (!content) return;
+        if (!ContentFilter.validate(content)) return;
+
+        const newReply = PostManager.addReply(postId, commentId, content);
+        if (newReply) {
+            input.value = '';
+            this.updateCommentListUI(postId);
+        }
+    },
+
     handlePostSubmit() {
         const mood = this.elements.moodSelect.value;
         const content = this.elements.contentInput.value.trim();
 
         if (!content) return;
+        if (!ContentFilter.validate(content)) return;
 
         PostManager.addPost(mood, content);
-        
-        if (typeof AppState !== 'undefined') AppState.addPoints(10);
-        
+
+        if (typeof AppState !== 'undefined') {
+            AppState.addPoints(10);
+            AppState.checkAndCompleteTask('kindness');
+        }
+
         this.elements.postForm.reset();
         this.toggleModal(false);
-        
+
         const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
         this.render(activeFilter);
     },
@@ -216,6 +398,7 @@ const FeedUI = {
         const content = input.value.trim();
 
         if (!content) return;
+        if (!ContentFilter.validate(content)) return;
 
         const newComment = PostManager.addComment(postId, content);
         if (newComment) {
@@ -232,7 +415,7 @@ const FeedUI = {
         const countEl = document.querySelector(`.comment-btn[data-id="${postId}"] .comments-count`);
 
         if (listEl) {
-            listEl.innerHTML = this.templateCommentList(post.comments || []);
+            listEl.innerHTML = this.templateCommentList(postId, post.comments || []);
         }
         if (countEl) {
             countEl.textContent = post.comments.length;
@@ -305,16 +488,36 @@ const FeedUI = {
 
     createPostNode(post) {
         const isLiked = localStorage.getItem(PostManager.LIKED_KEY_PREFIX + post.id);
+        const currentUser = (typeof AppState !== 'undefined' && AppState.getUser()) || null;
+        const isAuthor = currentUser && post.author === currentUser;
+        
+        let actionButtons = '';
+        if (isAuthor) {
+            actionButtons = `
+                <div style="display: flex; gap: 8px;">
+                    <button class="action-btn edit-btn" data-id="${post.id}" title="Edit Post">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    </button>
+                    <button class="action-btn delete-btn" data-id="${post.id}" title="Delete Post" style="color: #ef4444;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    </button>
+                </div>
+            `;
+        }
+
         const article = document.createElement('article');
         article.className = 'card post animate-fade-in';
         article.innerHTML = `
-            <div class="post-header">
-                <div class="post-avatar">
-                   <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> 
+            <div class="post-header" style="justify-content: space-between; display: flex; width: 100%;">
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <div class="post-avatar">
+                       <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> 
+                    </div>
+                    <div>
+                        <div class="post-author">${post.author || 'Anonymous'}</div>
+                    </div>
                 </div>
-                <div>
-                    <div class="post-author">${post.author || 'Anonymous'}</div>
-                </div>
+                ${actionButtons}
             </div>
             <div class="post-content">${post.content}</div>
             <div class="post-time" style="margin-bottom: 16px;">${this.formatTime(post.timestamp)}</div>
@@ -330,7 +533,7 @@ const FeedUI = {
             </div>
             <div class="comment-section" id="comment-section-${post.id}" style="display: none; padding-top: 16px;">
                 <div class="comment-list" id="comment-list-${post.id}">
-                    ${this.templateCommentList(post.comments || [])}
+                    ${this.templateCommentList(post.id, post.comments || [])}
                 </div>
                 <form class="comment-form" data-id="${post.id}" style="display: flex; gap: 8px; margin-top: 12px;">
                     <input type="text" placeholder="Write a comment..." required style="flex:1; padding: 10px; border-radius: 20px; border: 1px solid var(--color-border); background: var(--color-bg-light); color: var(--color-text-main);">
@@ -340,7 +543,7 @@ const FeedUI = {
         return article;
     },
 
-    templateCommentList(comments) {
+    templateCommentList(postId, comments) {
         if (comments.length === 0) {
             return '<p class="no-comments" style="text-align: center; color: #aaa; font-size: 0.85rem;">No comments yet.</p>';
         }
@@ -348,7 +551,27 @@ const FeedUI = {
             <div class="comment-item" style="background: var(--color-bg-light); padding: 12px; border-radius: 12px; margin-bottom: 8px;">
                 <div style="font-weight: 600; color: var(--color-text-main); font-size: 0.9rem;">Anonymous</div>
                 <div style="color: var(--color-text-muted); font-size: 0.9rem; margin: 4px 0;">${c.content}</div>
-                <div style="font-size: 0.75rem; color: #aaa;">Just now</div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="font-size: 0.75rem; color: #aaa;">${this.formatTime(c.timestamp)}</div>
+                    <button class="action-btn reply-btn" data-comment-id="${c.id}" style="font-size: 0.75rem; padding: 0;">Reply</button>
+                </div>
+                
+                ${c.replies && c.replies.length > 0 ? `
+                <div class="replies-list" style="margin-top: 8px; padding-left: 12px; border-left: 2px solid var(--color-border);">
+                    ${c.replies.map(r => `
+                        <div class="reply-item" style="margin-bottom: 6px;">
+                            <div style="font-weight: 600; color: var(--color-text-main); font-size: 0.85rem;">Anonymous</div>
+                            <div style="color: var(--color-text-muted); font-size: 0.85rem; margin: 2px 0;">${r.content}</div>
+                            <div style="font-size: 0.7rem; color: #aaa;">${this.formatTime(r.timestamp)}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                ` : ''}
+                
+                <form class="reply-form" id="reply-form-${c.id}" data-post-id="${postId}" data-comment-id="${c.id}" style="display: none; gap: 8px; margin-top: 8px;">
+                    <input type="text" placeholder="Write a reply..." required style="flex:1; padding: 6px 10px; border-radius: 16px; border: 1px solid var(--color-border); background: var(--color-bg-primary); color: var(--color-text-main); font-size: 0.85rem;">
+                    <button type="submit" class="btn btn-primary" style="padding: 6px 12px; border-radius: 16px; font-weight: 600; font-size: 0.85rem;">Reply</button>
+                </form>
             </div>
         `).join('');
     },

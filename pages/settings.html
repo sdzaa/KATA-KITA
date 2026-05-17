@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - KATA-KITA</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/settings.css">
+    <script src="../js/translations.js"></script>
+    <script src="../js/main.js" defer></script>
+    <script src="../js/settings.js" defer></script>
+</head>
+
+<body>
+    <div class="dashboard-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <img src="../images/KATA-KITA.png" alt="KATA-KITA Logo">
+            </div>
+
+            <div class="nav-section">
+                
+                <ul class="sidebar-nav">
+                    <li>
+                        <a href="myspace.html">
+                            <span class="dot green"></span>
+                            <span>My Space</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="library.html">
+                            <span class="dot orange"></span>
+                            <span>Education</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="gratitude.html">
+                            <span class="dot purple"></span>
+                            <span>Gratitude Wall</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="comfort.html">
+                            <span class="dot blue"></span>
+                            <span>Comfort Zone</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="beranda.html">
+                            <span class="dot pink"></span>
+                            <span>Kindness Feed</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-footer">
+                <ul class="sidebar-nav">
+                    <li><a href="settings.html" class="active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg><span data-i18n="nav_settings">Settings</span></a></li>
+                    <li><a href="rules.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg><span data-i18n="nav_rules">Rules</span></a></li>
+                    <li><a href="tasks.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg><span data-i18n="nav_tasks">Tasks</span></a></li>
+                    <li><a href="#" class="logout-btn" id="logoutBtn"><span data-i18n="nav_logout">Logout</span></a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-view">
+            <header class="top-header">
+                <div class="header-center header-title">
+                </div>
+                <div class="header-right">
+                    <div class="header-icons">
+                        <span class="theme-toggle-btn" title="Toggle Theme">
+                            <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                            </svg>
+                            <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                <line x1="1" y1="12" x2="3" y2="12"></line>
+                                <line x1="21" y1="12" x2="23" y2="12"></line>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                            </svg>
+                        </span>
+                        <span title="Calendar" id="headerCalendar">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                        </span>
+                        <span title="Notifications" id="headerNotif">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="user-profile" onclick="window.location.href='settings.html'">
+                        <div class="user-info">
+                            <div class="user-name" id="userNameProfile">User</div>
+                            <div class="points-badge">
+                                <span>⭐</span>
+                                <span id="userPoints">0</span> Stars
+                            </div>
+                        </div>
+                        <div class="profile-avatar" id="headerAvatar">👤</div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--color-text-muted); margin-left: -4px;">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-container animate-fade-in">
+                <h1 class="page-title" data-i18n="settings_title">Settings</h1>
+
+                <div class="settings-content">
+                    <!-- Left Sidebar (Settings Navigation) -->
+                    <div class="settings-sidebar">
+                        <ul>
+                            <li class="active" data-section="personal" data-i18n="settings_personal">Personal Information</li>
+
+                            <li data-section="language" data-i18n="settings_language">Language</li>
+                            <li data-section="display" data-i18n="settings_display">Display</li>
+                            <li data-section="notifications" data-i18n="settings_notifications">Notifications</li>
+                        </ul>
+                    </div>
+
+                    <!-- Right Content (Settings Form) -->
+                    <div class="settings-form">
+                        <!-- Personal Section -->
+                        <div class="settings-section active" id="section-personal">
+                            <!-- Profile Picture Section -->
+                            <div class="form-section avatar-section">
+                                <label class="section-label" data-i18n="settings_personal">Edit Profile Picture</label>
+                                <div class="avatar-grid" id="avatarGrid">
+                                    <div class="avatar-item selected" data-avatar="avatar1"><img src="../images/avatars/avatar1.jpg" alt="Duck Blue"></div>
+                                    <div class="avatar-item" data-avatar="avatar2"><img src="../images/avatars/avatar2.jpg" alt="Duck Light Blue"></div>
+                                    <div class="avatar-item" data-avatar="avatar3"><img src="../images/avatars/avatar3.jpg" alt="Cow"></div>
+                                    <div class="avatar-item" data-avatar="avatar4"><img src="../images/avatars/avatar4.jpg" alt="Cat"></div>
+                                    <div class="avatar-item" data-avatar="avatar5"><img src="../images/avatars/avatar5.jpg" alt="Frog"></div>
+                                    <div class="avatar-item" data-avatar="avatar6"><img src="../images/avatars/avatar6.jpg" alt="Crocodile"></div>
+                                </div>
+                            </div>
+
+                            <!-- Personal Info -->
+                            <div class="settings-group-wrapper">
+                                <div class="form-group">
+                                    <label data-i18n="settings_username">Username</label>
+                                    <div class="input-with-icon">
+                                        <input type="text" id="usernameInput" value="User">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Language Section -->
+                        <div class="settings-section" id="section-language">
+                            <div class="settings-group-wrapper">
+                                <div class="form-group">
+                                    <label data-i18n="settings_language">Language</label>
+                                    <div class="select-wrapper">
+                                        <div class="select-trigger" id="languageSelect">
+                                            <span id="selectedLanguage">Bahasa Indonesia</span>
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                        </div>
+                                        <div class="select-dropdown" id="languageDropdown" style="display: none;">
+                                            <div class="option" data-lang="id"><span>Bahasa Indonesia</span></div>
+                                            <div class="option" data-lang="en"><span>English (UK)</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Display Section -->
+                        <div class="settings-section" id="section-display">
+                            <div class="settings-group-wrapper">
+                                <div class="form-group">
+                                    <label data-i18n="settings_display">Display</label>
+                                    <div class="segmented-control">
+                                        <button class="segment" id="lightModeBtn">☀️ Light Mode</button>
+                                        <button class="segment" id="darkModeBtn">🌙 Dark Mode</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notifications Section -->
+                        <div class="settings-section" id="section-notifications">
+                            <div class="settings-group-wrapper">
+                                <div class="form-group">
+                                    <label data-i18n="settings_notifications">Notifications</label>
+                                    <div class="notification-options">
+                                        <div class="toggle-item">
+                                            <span data-i18n="settings_email_notif">Email Notification</span>
+                                            <label class="switch">
+                                                <input type="checkbox" id="emailNotifToggle" checked>
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </div>
+                                        <div class="toggle-item">
+                                            <span data-i18n="settings_popup_notif">Pop-up Notifications</span>
+                                            <label class="switch">
+                                                <input type="checkbox" id="pushNotifToggle" checked>
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer Buttons -->
+                        <div class="form-footer">
+                            <button class="btn-primary" id="saveChangesBtn" data-i18n="settings_btn_save">Save Changes</button>
+                            <button class="btn-ghost" id="cancelBtn" data-i18n="settings_btn_cancel">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

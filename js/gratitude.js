@@ -65,6 +65,12 @@ const GratitudeManager = {
             return data[index].reactions;
         }
         return null;
+    },
+
+    deleteNote(id) {
+        let data = this.getData();
+        data = data.filter(n => n.id !== id);
+        this.saveData(data);
     }
 };
 
@@ -75,7 +81,18 @@ const GratitudeUI = {
         modal: document.getElementById('gratitudeModal'),
         openBtn: document.getElementById('openGratitudeBtn'),
         closeBtn: document.getElementById('closeGratitudeModal'),
-        contentInput: document.getElementById('gratitudeContent')
+        contentInput: document.getElementById('gratitudeContent'),
+        deleteModal: document.getElementById('deleteConfirmModal'),
+        cancelDeleteBtn: document.getElementById('cancelDeleteBtn'),
+        confirmDeleteBtn: document.getElementById('confirmDeleteBtn'),
+        historyModal: document.getElementById('historyModal'),
+        openHistoryBtn: document.getElementById('openHistoryBtn'),
+        closeHistoryBtn: document.getElementById('closeHistoryModal'),
+        historyList: document.getElementById('historyList')
+    },
+
+    state: {
+        pendingDeleteId: null
     },
 
     init() {
@@ -87,8 +104,24 @@ const GratitudeUI = {
         // Modal logic
         this.elements.openBtn?.addEventListener('click', () => this.toggleModal(true));
         this.elements.closeBtn?.addEventListener('click', () => this.toggleModal(false));
+        this.elements.openHistoryBtn?.addEventListener('click', () => this.toggleHistoryModal(true));
+        this.elements.closeHistoryBtn?.addEventListener('click', () => this.toggleHistoryModal(false));
+        
         window.addEventListener('click', (e) => {
             if (e.target === this.elements.modal) this.toggleModal(false);
+            if (e.target === this.elements.deleteModal) this.toggleDeleteModal(false);
+            if (e.target === this.elements.historyModal) this.toggleHistoryModal(false);
+        });
+
+        // Delete Modal logic
+        this.elements.cancelDeleteBtn?.addEventListener('click', () => this.toggleDeleteModal(false));
+        this.elements.confirmDeleteBtn?.addEventListener('click', () => {
+            if (this.state.pendingDeleteId) {
+                GratitudeManager.deleteNote(this.state.pendingDeleteId);
+                this.state.pendingDeleteId = null;
+                this.toggleDeleteModal(false);
+                this.render();
+            }
         });
 
         // Form submission
@@ -97,10 +130,13 @@ const GratitudeUI = {
             this.handleSubmit();
         });
 
-        // Event delegation for reactions
+        // Event delegation for reactions and deletions
         this.elements.wall?.addEventListener('click', (e) => {
-            const btn = e.target.closest('.react-btn');
-            if (btn) this.handleReaction(btn);
+            const reactBtn = e.target.closest('.react-btn');
+            const deleteBtn = e.target.closest('.delete-btn');
+            
+            if (reactBtn) this.handleReaction(reactBtn);
+            if (deleteBtn) this.handleDelete(deleteBtn);
         });
     },
 
@@ -110,12 +146,27 @@ const GratitudeUI = {
         if (show) this.elements.contentInput?.focus();
     },
 
+    toggleDeleteModal(show) {
+        if (!this.elements.deleteModal) return;
+        this.elements.deleteModal.style.display = show ? 'flex' : 'none';
+        if (!show) this.state.pendingDeleteId = null;
+    },
+
+    toggleHistoryModal(show) {
+        if (!this.elements.historyModal) return;
+        this.elements.historyModal.style.display = show ? 'flex' : 'none';
+        if (show) this.renderHistory();
+    },
+
     handleSubmit() {
         const content = this.elements.contentInput.value.trim();
         if (!content) return;
 
         GratitudeManager.addNote(content);
-        if (typeof AppState !== 'undefined') AppState.addPoints(5);
+        if (typeof AppState !== 'undefined') {
+            AppState.addPoints(5);
+            AppState.checkAndCompleteTask('gratitude');
+        }
 
         this.elements.form.reset();
         this.toggleModal(false);
@@ -133,10 +184,51 @@ const GratitudeUI = {
         }
     },
 
+    handleDelete(btn) {
+        this.state.pendingDeleteId = btn.dataset.id;
+        this.toggleDeleteModal(true);
+    },
+
+    renderHistory() {
+        if (!this.elements.historyList) return;
+        const notes = GratitudeManager.getData().sort((a, b) => b.timestamp - a.timestamp);
+        
+        if (notes.length === 0) {
+            this.elements.historyList.innerHTML = '<p style="text-align:center; color: var(--color-text-muted); padding: 20px;">No gratitude history yet.</p>';
+            return;
+        }
+
+        this.elements.historyList.innerHTML = notes.map(note => `
+            <div style="background: var(--color-bg-primary); padding: 16px; border-radius: 12px; border: 1px solid var(--color-border); display: flex; flex-direction: column; gap: 8px;">
+                <div style="font-size: 0.85rem; color: var(--color-text-muted);">
+                    ${new Date(note.timestamp).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                </div>
+                <div style="font-weight: 500; color: var(--color-text-main); font-size: 1.05rem;">
+                    "${note.content}"
+                </div>
+            </div>
+        `).join('');
+    },
+
     render() {
         if (!this.elements.wall) return;
         const notes = GratitudeManager.getData().sort((a, b) => b.timestamp - a.timestamp);
-        
+
+        // Dynamic scaling logic
+        if (notes.length >= 16) {
+            this.elements.wall.style.setProperty('--note-size', '140px');
+            this.elements.wall.style.setProperty('--note-padding', '16px 12px 12px');
+            this.elements.wall.style.setProperty('--note-font-size', '1rem');
+        } else if (notes.length >= 8) {
+            this.elements.wall.style.setProperty('--note-size', '180px');
+            this.elements.wall.style.setProperty('--note-padding', '20px 16px 16px');
+            this.elements.wall.style.setProperty('--note-font-size', '1.2rem');
+        } else {
+            this.elements.wall.style.removeProperty('--note-size');
+            this.elements.wall.style.removeProperty('--note-padding');
+            this.elements.wall.style.removeProperty('--note-font-size');
+        }
+
         if (notes.length === 0) {
             this.elements.wall.innerHTML = '<p class="text-center w-full" style="color:var(--color-text-muted)">No gratitude notes yet. Hang the first one!</p>';
             return;
@@ -144,6 +236,7 @@ const GratitudeUI = {
 
         this.elements.wall.innerHTML = notes.map(note => `
             <div class="note animate-fade-in">
+                <button class="delete-btn" data-id="${note.id}" title="Hapus catatan">✕</button>
                 <div class="note-content">"${note.content}"</div>
                 <div class="note-footer">
                     <span class="note-date">${new Date(note.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap');
+
 .text-center {
     text-align: center;
 }
@@ -40,37 +42,47 @@
 
 /* Board Background */
 .board-background {
-    background-color: #d4b486;
-    background-image: url('https://www.transparenttextures.com/patterns/cork-board.png'); /* Safe fallback pattern */
+    background-color: #ba8759; /* Rich brown color */
+    background-image: url('../images/corkboard.jpg'), url('https://www.transparenttextures.com/patterns/cork-board.png');
+    background-size: cover, auto;
+    background-position: center;
+    background-repeat: no-repeat, repeat;
+    background-blend-mode: multiply;
     border-radius: 24px;
-    padding: 40px;
-    min-height: 60vh;
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+    padding: 60px 50px;
+    min-height: 70vh;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.05);
     position: relative;
-    /* Remove column count, use flex wrap to place notes arbitrarily */
     display: flex;
     flex-wrap: wrap;
-    gap: 30px;
+    gap: 32px;
     justify-content: center;
     align-items: flex-start;
+    
+    /* Dynamic scaling variables */
+    --note-size: 200px;
+    --note-padding: 32px 20px 20px;
+    --note-font-size: 1.1rem;
 }
 
+/* Notes */
 .note {
-    width: 200px;
-    height: 200px;
-    padding: 24px;
-    background: #FEF3C7; /* yellow default */
-    box-shadow: 2px 4px 10px rgba(0,0,0,0.15);
+    width: var(--note-size);
+    height: var(--note-size);
+    padding: var(--note-padding);
+    background: #FEF3C7;
+    /* Pale Yellow */
+    box-shadow: 2px 6px 15px rgba(0, 0, 0, 0.12);
     text-align: center;
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-family: 'Caveat', cursive; /* Use handwriting font */
-    font-size: 1.2rem;
-    transition: transform 0.3s;
-    /* Soft slightly rotated look */
+    font-family: 'Caveat', cursive;
+    font-size: var(--note-font-size);
+    color: #2D3748;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, width 0.3s, height 0.3s, font-size 0.3s;
 }
 
 /* Red Pushpin */
@@ -82,41 +94,100 @@
     transform: translateX(-50%);
     width: 14px;
     height: 14px;
-    background: #E53E3E;
+    background: radial-gradient(circle at 30% 30%, #ff4d4d, #cc0000);
     border-radius: 50%;
-    box-shadow: inset -2px -2px 4px rgba(0,0,0,0.3), 1px 2px 3px rgba(0,0,0,0.4);
+    box-shadow:
+        inset -2px -2px 4px rgba(0, 0, 0, 0.4),
+        inset 1px 1px 3px rgba(255, 255, 255, 0.6),
+        3px 5px 6px rgba(0, 0, 0, 0.4);
+    z-index: 2;
 }
 
-.note:nth-child(even) {
+.note::after {
+    content: '';
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    width: 2px;
+    height: 12px;
+    background: rgba(0, 0, 0, 0.15);
+    transform: translateX(-50%) rotate(15deg);
+    z-index: 1;
+}
+
+/* Alternating Colors and Rotations */
+.note:nth-child(5n+1) {
     transform: rotate(2deg);
-    background: #DCFCE7; /* green */
+    background: #FEF3C7;
+    /* Yellow */
 }
 
-.note:nth-child(3n) {
+.note:nth-child(5n+2) {
     transform: rotate(-3deg);
-    background: #FCE7F3; /* pink */
+    background: #DCFCE7;
+    /* Green */
 }
 
-.note:nth-child(4n) {
+.note:nth-child(5n+3) {
     transform: rotate(1deg);
-    background: #E0F2FE; /* blue */
+    background: #FCE7F3;
+    /* Pink */
+}
+
+.note:nth-child(5n+4) {
+    transform: rotate(-2deg);
+    background: #E0F2FE;
+    /* Blue */
+}
+
+.note:nth-child(5n) {
+    transform: rotate(3deg);
+    background: #F3E8FF;
+    /* Purple/Lavender */
 }
 
 .note:hover {
-    transform: scale(1.05) rotate(0deg);
+    transform: scale(1.08) rotate(0deg);
     z-index: 10;
+    box-shadow: 5px 12px 20px rgba(0, 0, 0, 0.18);
 }
 
 .note-content {
-    font-size: 1.1rem;
     line-height: 1.4;
-    color: #333;
     flex-grow: 1;
     display: flex;
     align-items: center;
     justify-content: center;
+    word-break: break-word;
 }
 
 .note-footer {
-    display: none; /* Hide date and reaction to match Figma Image 3 exactly */
+    display: none;
+    /* Hide date and reaction to match Figma Image exactly */
+}
+
+/* Delete Button */
+.delete-btn {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    background: transparent;
+    border: none;
+    color: rgba(0, 0, 0, 0.3);
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s, color 0.2s;
+    z-index: 10;
+    font-family: sans-serif;
+    padding: 4px;
+    line-height: 1;
+}
+
+.note:hover .delete-btn {
+    opacity: 1;
+}
+
+.delete-btn:hover {
+    color: #ef4444; /* red-500 */
 }
