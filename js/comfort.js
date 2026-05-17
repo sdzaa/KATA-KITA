@@ -48,21 +48,23 @@ const SavedManager = {
     showSavedModal() {
         const messages = JSON.parse(localStorage.getItem('katakita_saved_messages') || '[]');
         const tracks = JSON.parse(localStorage.getItem('katakita_saved_tracks') || '[]');
-        
+        const lang = typeof AppState !== 'undefined' ? AppState.getLanguage() : 'en';
+        const trans = typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[lang] ? TRANSLATIONS[lang] : TRANSLATIONS['en'];
+
         let content = '<div style="text-align: left; max-height: 400px; overflow-y: auto;">';
-        
+
         if (messages.length === 0 && tracks.length === 0) {
-            content += '<p style="text-align: center; color: var(--color-text-muted);">You haven\'t saved anything yet. Click the bookmark icon on any message or track to save it!</p>';
+            content += `<p style="text-align: center; color: var(--color-text-muted);">${trans['comfort_empty_saved'] || 'You haven\'t saved anything yet. Click the bookmark icon on any message or track to save it!'}</p>`;
         } else {
             if (messages.length > 0) {
-                content += '<h4 style="margin-bottom: 12px; color: var(--color-primary);">Saved Messages</h4><ul style="padding-left: 20px;">';
+                content += `<h4 style="margin-bottom: 12px; color: var(--color-primary);">${trans['comfort_saved_message_title'] || 'Saved Messages'}</h4><ul style="padding-left: 20px;">`;
                 messages.forEach((m, idx) => {
                     content += `<li onclick="SavedManager.loadMessage('${m.replace(/'/g, "\\'")}')" style="margin-bottom: 12px; font-style: italic; color: var(--color-text-main); cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='var(--color-text-main)'">"${m}"</li>`;
                 });
                 content += '</ul>';
             }
             if (tracks.length > 0) {
-                content += '<h4 style="margin-top: 24px; margin-bottom: 12px; color: var(--color-primary);">Saved Tracks</h4><ul style="padding-left: 20px;">';
+                content += `<h4 style="margin-top: 24px; margin-bottom: 12px; color: var(--color-primary);">${trans['comfort_saved_track_title'] || 'Saved Tracks'}</h4><ul style="padding-left: 20px;">`;
                 tracks.forEach(t => {
                     content += `<li onclick="SavedManager.loadTrack('${t.title.replace(/'/g, "\\'")}')" style="margin-bottom: 12px; color: var(--color-text-main); cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='var(--color-text-main)'"><b>${t.title}</b> <br><small>Narrated by ${t.narrator}</small></li>`;
                 });
@@ -70,7 +72,7 @@ const SavedManager = {
             }
         }
         content += '</div>';
-        
+
         if (typeof showModal === 'function') {
             showModal('Saved Items', content, '🔖');
         }
@@ -225,7 +227,7 @@ const MoodSelector = {
         // 2. Update all mood badges on the page
         const moodKey = clickedSpan.getAttribute('data-mood');
         const moodEmoji = clickedSpan.textContent;
-        
+
         const currentLang = (typeof AppState !== 'undefined' && AppState.getLanguage()) || 'en';
         const moodLabel = (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[currentLang]['comfort_mood_label']) || 'Mood';
         const translatedMoodName = (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[currentLang][`mood_${moodKey}`]) || clickedSpan.getAttribute('title');
