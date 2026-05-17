@@ -77,9 +77,9 @@ const MySpaceUI = {
         const now = new Date();
         const todayMood = history.find(entry => {
             const date = new Date(entry.timestamp);
-            return date.getDate() === now.getDate() && 
-                   date.getMonth() === now.getMonth() && 
-                   date.getFullYear() === now.getFullYear();
+            return date.getDate() === now.getDate() &&
+                date.getMonth() === now.getMonth() &&
+                date.getFullYear() === now.getFullYear();
         });
 
         if (todayMood && this.elements.moodOptions) {
@@ -102,7 +102,7 @@ const MySpaceUI = {
                 day: 'numeric'
             });
         }
-        
+
         if (this.elements.calendarTitle) {
             this.elements.calendarTitle.textContent = new Date().toLocaleDateString('en-US', {
                 month: 'long',
@@ -123,7 +123,7 @@ const MySpaceUI = {
 
         if (pointsEl) pointsEl.textContent = points.toLocaleString();
         if (fillEl) fillEl.style.width = `${progress}%`;
-        
+
         if (hintEl) {
             const lang = typeof AppState !== 'undefined' ? AppState.getLanguage() : 'id';
             if (remaining > 0) {
@@ -143,8 +143,8 @@ const MySpaceUI = {
                 const popupKey = 'katakita_reward_popup_shown';
                 if (!sessionStorage.getItem(popupKey) && typeof showModal === 'function') {
                     const title = lang === 'id' ? 'Target Tercapai! 🏆' : 'Target Reached! 🏆';
-                    const msg = lang === 'id' ? 
-                        'Luar biasa! Kamu telah mengumpulkan <b>2.000 Bintang</b> bulan ini. Kamu hebat dalam menjaga kesehatan mentalmu! ✨' : 
+                    const msg = lang === 'id' ?
+                        'Luar biasa! Kamu telah mengumpulkan <b>2.000 Bintang</b> bulan ini. Kamu hebat dalam menjaga kesehatan mentalmu! ✨' :
                         'Amazing! You have collected <b>2,000 Stars</b> this month. You are doing great taking care of your mental wellbeing! ✨';
                     showModal(title, msg, '🎉');
                     sessionStorage.setItem(popupKey, 'true');
@@ -167,31 +167,31 @@ const MySpaceUI = {
                     emoji: opt.textContent,
                     label: opt.dataset.mood
                 };
-                
+
                 // Visual feedback on the button
                 this.elements.moodOptions.forEach(o => o.classList.remove('selected'));
                 opt.classList.add('selected');
-                
+
                 // Save to history
                 MoodManager.saveMood(mood);
                 if (typeof AppState !== 'undefined') AppState.addPoints(5);
-                
+
                 // Show Confirmation Pop-up
                 if (typeof showModal === 'function') {
                     const currentLang = AppState.getLanguage() || 'id';
                     const title = currentLang === 'id' ? 'Mood Tersimpan! ✨' : 'Mood Saved! ✨';
-                    const msg = currentLang === 'id' ? 
-                        `Perasaan <b>${mood.label}</b> kamu telah dicatat di kalender. Terus semangat ya! ❤️` : 
+                    const msg = currentLang === 'id' ?
+                        `Perasaan <b>${mood.label}</b> kamu telah dicatat di kalender. Terus semangat ya! ❤️` :
                         `Your <b>${mood.label}</b> mood has been recorded in the calendar. Keep going! ❤️`;
-                    
+
                     showModal(title, msg, mood.emoji);
                 }
-                
+
                 // Refresh UI components immediately
                 this.renderCalendar();
                 this.updateGauge();
                 this.updateRewards();
-                
+
                 // Pulse animation effect
                 opt.style.transform = 'scale(1.3) translateY(-10px)';
                 setTimeout(() => opt.style.transform = '', 300);
@@ -233,7 +233,7 @@ const MySpaceUI = {
 
         // Clear input for new stories
         if (this.elements.diaryInput) this.elements.diaryInput.value = '';
-        
+
         this.renderDiaryHistory();
         this.updateRewards();
         this.showButtonFeedback(this.elements.saveDiaryBtn, 'Saved! ✨', 'Save Diary');
@@ -250,7 +250,7 @@ const MySpaceUI = {
 
         this.elements.diaryHistoryList.innerHTML = diary.map(entry => {
             const date = new Date(entry.timestamp);
-            const dateStr = date.toLocaleDateString('en-US', { 
+            const dateStr = date.toLocaleDateString('en-US', {
                 day: 'numeric', month: 'short', year: 'numeric',
                 hour: '2-digit', minute: '2-digit'
             });
@@ -282,18 +282,18 @@ const MySpaceUI = {
 
     updateGauge() {
         if (!this.elements.gaugeValue) return;
-        
+
         const history = MoodManager.getHistory();
         const counts = {
-            'bahagia': 0, 'senang': 0, 'biasa': 0, 
+            'bahagia': 0, 'senang': 0, 'biasa': 0,
             'cemas': 0, 'marah': 0, 'sedih': 0
         };
-        
+
         // Count frequencies in current month
         const now = new Date();
         const currentMonth = now.getMonth();
         const currentYear = now.getFullYear();
-        
+
         history.forEach(entry => {
             const date = new Date(entry.timestamp);
             if (date.getMonth() === currentMonth && date.getFullYear() === currentYear) {
@@ -302,22 +302,25 @@ const MySpaceUI = {
         });
 
         const total = Object.values(counts).reduce((a, b) => a + b, 0);
-        
+
         // Calculate Gauge Value (Happiness Index)
-        // Grouping: (Bahagia+Senang) = 1.0, Biasa = 0.5, (Cemas+Marah+Sedih) = 0.0
-        const bahagiaCount = counts.bahagia + counts.senang;
-        const mehCount = counts.biasa;
-        const cemasCount = counts.cemas + counts.marah + counts.sedih;
-        
+        // Grouping: Bahagia = 1.0, senang = 0.8, Biasa = 0.5, Cemas = 0.3, Marah = 0.1, Sedih = 0.0
+        const bahagiaCount = counts.bahagia;
+        const senangCount = counts.senang;
+        const biasaCount = counts.biasa;
+        const cemasCount = counts.cemas;
+        const marahCount = counts.marah;
+        const sedihCount = counts.sedih;
+
         let weightedIndex = 0.5; // Default middle
         if (total > 0) {
-            weightedIndex = (bahagiaCount * 1 + mehCount * 0.5 + cemasCount * 0) / total;
+            weightedIndex = (bahagiaCount * 1 + senangCount * 0.7 + biasaCount * 0.5 + cemasCount * 0.3 + marahCount * 0.1 + sedihCount * 0) / total;
         }
-        
+
         // Arc length for r=40 is ~125.66
         const arcLength = Math.PI * 40;
         const offset = arcLength - (weightedIndex * arcLength);
-        
+
         this.elements.gaugeValue.style.strokeDasharray = arcLength;
         this.elements.gaugeValue.style.strokeDashoffset = offset;
 
@@ -326,42 +329,23 @@ const MySpaceUI = {
         if (weightedIndex < 0.35) strokeColor = '#A7F3D0'; // Green (Cemas)
         else if (weightedIndex < 0.7) strokeColor = '#7DD3FC'; // Blue (Meh)
         this.elements.gaugeValue.style.stroke = strokeColor;
-
-        // Update Legend Labels with real counts from screenshot grouping
-        const labelsContainer = document.querySelector('.gauge-labels');
-        if (labelsContainer) {
-            labelsContainer.innerHTML = `
-                <div class="gauge-label-item">
-                    <div class="label-dot" style="background: #FDE68A;"></div>
-                    <span>Bahagia (${bahagiaCount})</span>
-                </div>
-                <div class="gauge-label-item">
-                    <div class="label-dot" style="background: #7DD3FC;"></div>
-                    <span>Meh (${mehCount})</span>
-                </div>
-                <div class="gauge-label-item">
-                    <div class="label-dot" style="background: #A7F3D0;"></div>
-                    <span>Cemas (${cemasCount})</span>
-                </div>
-            `;
-        }
     },
 
     renderCalendar() {
         if (!this.elements.calendarGrid) return;
-        
+
         const history = MoodManager.getHistory();
         const now = new Date();
         const year = now.getFullYear();
         const month = now.getMonth();
-        
+
         const firstDay = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         const prevDaysInMonth = new Date(year, month, 0).getDate();
         const today = now.getDate();
-        
+
         let html = '';
-        
+
         // Weekday headers (matching screenshot)
         const weekdays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
         weekdays.forEach(day => {
@@ -378,13 +362,13 @@ const MySpaceUI = {
             // Find most recent mood for this date
             const dayMood = history.find(entry => {
                 const entryDate = new Date(entry.timestamp);
-                return entryDate.getDate() === i && 
-                       entryDate.getMonth() === month && 
-                       entryDate.getFullYear() === year;
+                return entryDate.getDate() === i &&
+                    entryDate.getMonth() === month &&
+                    entryDate.getFullYear() === year;
             });
 
             const isToday = (i === today) ? 'is-today' : '';
-            
+
             if (dayMood && dayMood.emoji) {
                 html += `<div class="calendar-day has-mood ${isToday}" title="${dayMood.label}">${dayMood.emoji}</div>`;
             } else {
@@ -398,7 +382,7 @@ const MySpaceUI = {
         for (let i = 1; i <= (totalCells - usedCells); i++) {
             html += `<div class="calendar-day empty" style="opacity: 0.3;">${i}</div>`;
         }
-        
+
         this.elements.calendarGrid.innerHTML = html;
     }
 };
