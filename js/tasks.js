@@ -32,24 +32,19 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', (e) => {
             const card = btn.closest('.task-card');
             const title = card.querySelector('h3').textContent;
-            const starsMatch = title.match(/(\d+)\s+Stars/);
+            const starsMatch = title.match(/(\d+)\s+(?:Stars|Bintang)/);
             const stars = starsMatch ? parseInt(starsMatch[1]) : 0;
 
-            const btnText = btn.textContent.trim();
-            let taskType = '';
+            let taskType = btn.dataset.task;
             let url = '';
 
-            if (btnText === 'Go to Education') {
-                taskType = 'education';
+            if (taskType === 'education') {
                 url = 'library.html';
-            } else if (btnText === 'Post to Wall') {
-                taskType = 'gratitude';
+            } else if (taskType === 'gratitude') {
                 url = 'gratitude.html';
-            } else if (btnText === 'Go to Comfort Zone') {
-                taskType = 'comfort';
+            } else if (taskType === 'comfort') {
                 url = 'comfort.html';
-            } else if (btnText === 'Go to Kindness Feed') {
-                taskType = 'kindness';
+            } else if (taskType === 'kindness') {
                 url = 'beranda.html';
             }
 
