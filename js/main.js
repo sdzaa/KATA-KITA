@@ -80,7 +80,7 @@ const AppState = {
     applyLanguage: () => {
         const lang = AppState.getLanguage();
         const elements = document.querySelectorAll('[data-i18n]');
-        
+
         if (typeof TRANSLATIONS === 'undefined') {
             console.error('TRANSLATIONS not loaded');
             return;
@@ -90,7 +90,7 @@ const AppState = {
             const key = el.getAttribute('data-i18n');
             if (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) {
                 // If it's an input or placeholder, handle differently if needed
-                if (el.tagName === 'INPUT' && el.placeholder) {
+                if (el.hasAttribute('placeholder')) {
                     el.placeholder = TRANSLATIONS[lang][key];
                 } else {
                     el.innerHTML = TRANSLATIONS[lang][key];
@@ -171,7 +171,7 @@ function setupGlobals() {
 
     // Update Points UI
     AppState.updatePointsDisplay();
-    
+
     // Apply initial language
     AppState.applyLanguage();
 
@@ -203,8 +203,8 @@ function setupGlobals() {
 
     if (calendarBtn) {
         calendarBtn.addEventListener('click', () => {
-            const today = new Date().toLocaleDateString('en-US', { 
-                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+            const today = new Date().toLocaleDateString('en-US', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
             });
             showModal('Your Calendar', `Today is <b>${today}</b>. <br><br>No scheduled activities yet. Take some time for yourself!`, '📅');
         });
@@ -240,7 +240,7 @@ function showModal(title, message, icon = '✨') {
             </div>
         `;
         document.body.appendChild(modalOverlay);
-        
+
         modalOverlay.addEventListener('click', (e) => {
             if (e.target === modalOverlay || e.target.classList.contains('modal-close-btn')) {
                 modalOverlay.classList.remove('active');
