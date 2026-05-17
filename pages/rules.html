@@ -7,7 +7,15 @@
     <title>Community Rules - KATA-KITA</title>
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/rules.css">
+    <script src="../js/translations.js"></script>
     <script src="../js/main.js" defer></script>
+
+    <script>
+        const theme = localStorage.getItem('katakita_theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        const lang = localStorage.getItem('katakita_language') || 'id';
+        if (lang !== 'en') { document.write('<style id="lang-hide">body { visibility: hidden; }</style>'); }
+    </script>
 </head>
 
 <body>
@@ -24,31 +32,31 @@
                     <li>
                         <a href="myspace.html">
                             <span class="dot green"></span>
-                            <span>My Space</span>
+                            <span data-i18n="nav_myspace">My Space</span>
                         </a>
                     </li>
                     <li>
                         <a href="library.html">
                             <span class="dot orange"></span>
-                            <span>Education</span>
+                            <span data-i18n="nav_library">Education</span>
                         </a>
                     </li>
                     <li>
                         <a href="gratitude.html">
                             <span class="dot purple"></span>
-                            <span>Gratitude Wall</span>
+                            <span data-i18n="nav_gratitude">Gratitude Wall</span>
                         </a>
                     </li>
                     <li>
                         <a href="comfort.html">
                             <span class="dot blue"></span>
-                            <span>Comfort Zone</span>
+                            <span data-i18n="nav_comfort">Comfort Zone</span>
                         </a>
                     </li>
                     <li>
                         <a href="beranda.html">
                             <span class="dot pink"></span>
-                            <span>Kindness Feed</span>
+                            <span data-i18n="nav_home">Kindness Feed</span>
                         </a>
                     </li>
                 </ul>
@@ -56,10 +64,10 @@
 
             <div class="sidebar-footer">
                 <ul class="sidebar-nav">
-                    <li><a href="settings.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg><span>Settings</span></a></li>
-                    <li><a href="rules.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg><span>Rules</span></a></li>
-                    <li><a href="tasks.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg><span>Tasks</span></a></li>
-                    <li><a href="#" class="logout-btn" id="logoutBtn"><span>Logout</span></a></li>
+                    <li><a href="settings.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg><span data-i18n="nav_settings">Settings</span></a></li>
+                    <li><a href="rules.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg><span data-i18n="nav_rules">Rules</span></a></li>
+                    <li><a href="tasks.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sidebar-icon"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg><span data-i18n="nav_tasks">Tasks</span></a></li>
+                    <li><a href="#" class="logout-btn" id="logoutBtn"><span data-i18n="nav_logout">Logout</span></a></li>
                 </ul>
             </div>
         </aside>
@@ -111,7 +119,7 @@
                             <div class="user-name" id="userNameProfile">User</div>
                             <div class="points-badge">
                                 <span>⭐</span>
-                                <span id="userPoints">0</span> Stars
+                                <span id="userPoints">0</span> <span data-i18n="header_stars">Stars</span>
                             </div>
                         </div>
                         <div class="profile-avatar">👤</div>
@@ -126,39 +134,39 @@
 
             <div class="page-container animate-fade-in">
                 <header class="rules-header">
-                    <h1>Community Rules</h1>
-                    <p>Untuk menjaga KATA-KITA tetap menjadi ruang kecil yang penuh kebaikan, setiap pengguna wajib mematuhi aturan berikut:</p>
+                    <h1 data-i18n="rules_title">Community Rules</h1>
+                    <p data-i18n="rules_subtitle">Untuk menjaga KATA-KITA tetap menjadi ruang kecil yang penuh kebaikan, setiap pengguna wajib mematuhi aturan berikut:</p>
                 </header>
 
                 <div class="rules-box">
                     <div class="rule-item">
-                        <h3>1. Menjaga Anonimitas dan Privasi</h3>
-                        <p>Demi kenyamanan bersama, mohon untuk tidak mencantumkan identitas pribadi seperti nama asli, kelas, nomor kamar, maupun detail spesifik lainnya dalam setiap unggahan. Prinsip utama platform ini adalah keanoniman guna memastikan setiap orang dapat berekspresi tanpa rasa terancam oleh penilaian sosial.</p>
+                        <h3 data-i18n="rule1_title">1. Menjaga Anonimitas dan Privasi</h3>
+                        <p data-i18n="rule1_desc">Demi kenyamanan bersama, mohon untuk tidak mencantumkan identitas pribadi seperti nama asli, kelas, nomor kamar, maupun detail spesifik lainnya dalam setiap unggahan. Prinsip utama platform ini adalah keanoniman guna memastikan setiap orang dapat berekspresi tanpa rasa terancam oleh penilaian sosial.</p>
                     </div>
 
                     <div class="rule-item">
-                        <h3>2. Dukungan Empati dan Validasi Emosional</h3>
-                        <p>Gunakanlah bahasa yang santun dan suportif dalam memberikan tanggapan. Kami sangat menghargai interaksi yang membangun, penuh empati, dan menghargai perasaan sesama teman tanpa adanya penghakiman (no judging).</p>
+                        <h3 data-i18n="rule2_title">2. Dukungan Empati dan Validasi Emosional</h3>
+                        <p data-i18n="rule2_desc">Gunakanlah bahasa yang santun dan suportif dalam memberikan tanggapan. Kami sangat menghargai interaksi yang membangun, penuh empati, dan menghargai perasaan sesama teman tanpa adanya penghakiman (no judging).</p>
                     </div>
 
                     <div class="rule-item">
-                        <h3>3. Lingkungan Bebas Perundungan (Zero Bullying)</h3>
-                        <p>Kami menerapkan kebijakan toleransi nol terhadap segala bentuk perundungan, kata-kata kasar, hinaan, maupun ancaman. Segala konten yang mengandung unsur tersebut akan secara otomatis dihapus oleh sistem demi menjaga ekosistem komunikasi yang sehat.</p>
+                        <h3 data-i18n="rule3_title">3. Lingkungan Bebas Perundungan (Zero Bullying)</h3>
+                        <p data-i18n="rule3_desc">Kami menerapkan kebijakan toleransi nol terhadap segala bentuk perundungan, kata-kata kasar, hinaan, maupun ancaman. Segala konten yang mengandung unsur tersebut akan secara otomatis dihapus oleh sistem demi menjaga ekosistem komunikasi yang sehat.</p>
                     </div>
 
                     <div class="rule-item">
-                        <h3>4. Fokus pada Pengungkapan Diri yang Positif</h3>
-                        <p>Gunakan ruang ini untuk merefleksikan dan mengungkapkan perasaan pribadi Anda secara tulus (self-disclosure). Mohon untuk tidak menggunakan platform ini sebagai sarana menyebarkan rumor, gosip, atau membuka aib pihak lain di lingkungan asrama.</p>
+                        <h3 data-i18n="rule4_title">4. Fokus pada Pengungkapan Diri yang Positif</h3>
+                        <p data-i18n="rule4_desc">Gunakan ruang ini untuk merefleksikan dan mengungkapkan perasaan pribadi Anda secara tulus (self-disclosure). Mohon untuk tidak menggunakan platform ini sebagai sarana menyebarkan rumor, gosip, atau membuka aib pihak lain di lingkungan asrama.</p>
                     </div>
 
                     <div class="rule-item">
-                        <h3>5. Keamanan dan Kesejahteraan Subjek</h3>
-                        <p>Demi keselamatan Anda, dilarang keras mengunggah konten yang merujuk pada tindakan menyakiti diri sendiri (self-harm) atau orang lain. Platform ini dilengkapi dengan algoritma deteksi kata kunci darurat untuk memberikan bantuan segera jika ditemukan indikasi bahaya. Apabila Anda dalam kondisi darurat, sangat disarankan untuk segera menghubungi pendamping asrama atau pihak medis terkait.</p>
+                        <h3 data-i18n="rule5_title">5. Keamanan dan Kesejahteraan Subjek</h3>
+                        <p data-i18n="rule5_desc">Demi keselamatan Anda, dilarang keras mengunggah konten yang merujuk pada tindakan menyakiti diri sendiri (self-harm) atau orang lain. Platform ini dilengkapi dengan algoritma deteksi kata kunci darurat untuk memberikan bantuan segera jika ditemukan indikasi bahaya. Apabila Anda dalam kondisi darurat, sangat disarankan untuk segera menghubungi pendamping asrama atau pihak medis terkait.</p>
                     </div>
 
                     <div class="rule-item">
-                        <h3>6. Pemanfaatan Fitur Pelaporan (Report)</h3>
-                        <p>Mari bersama-sama menjaga komunitas ini. Jika Anda menemukan unggahan atau interaksi yang melanggar ketentuan di atas, mohon kesediaannya untuk menggunakan fitur pelaporan (Report) agar tim admin dapat segera menindaklanjutinya demi keamanan privasi seluruh siswi.</p>
+                        <h3 data-i18n="rule6_title">6. Pemanfaatan Fitur Pelaporan (Report)</h3>
+                        <p data-i18n="rule6_desc">Mari bersama-sama menjaga komunitas ini. Jika Anda menemukan unggahan atau interaksi yang melanggar ketentuan di atas, mohon kesediaannya untuk menggunakan fitur pelaporan (Report) agar tim admin dapat segera menindaklanjutinya demi keamanan privasi seluruh siswi.</p>
                     </div>
                 </div>
             </div>
