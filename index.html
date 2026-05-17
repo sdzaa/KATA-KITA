@@ -39,7 +39,7 @@
         .illustration-side img {
             max-width: 80%;
             height: auto;
-            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.05));
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.05));
         }
 
         /* Right Side Form */
@@ -50,7 +50,7 @@
             align-items: center;
             justify-content: center;
             padding: 40px;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.02);
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.02);
         }
 
         .login-card {
@@ -91,7 +91,7 @@
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             margin-bottom: 32px;
         }
 
@@ -99,7 +99,7 @@
             background: #fafafa;
             border-color: #ccc;
             transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
         }
 
         .google-icon {
@@ -118,7 +118,8 @@
             font-weight: 600;
         }
 
-        .divider::before, .divider::after {
+        .divider::before,
+        .divider::after {
             content: "";
             flex: 1;
             height: 1px;
@@ -189,11 +190,19 @@
             .illustration-side {
                 display: none;
             }
+
             .form-side {
                 flex: 1;
             }
         }
     </style>
+
+    <script>
+        const theme = localStorage.getItem('katakita_theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        const lang = localStorage.getItem('katakita_language') || 'id';
+        if (lang !== 'en') { document.write('<style id="lang-hide">body { visibility: hidden; }</style>'); }
+    </script>
 </head>
 
 <body>
@@ -213,13 +222,16 @@
                 <form id="loginForm" style="margin-top: 24px;">
                     <div class="input-group">
                         <label for="username" data-i18n="login_nickname_label">Nickname</label>
-                        <input type="text" id="username" placeholder="Enter your nickname" required autocomplete="off" data-i18n="login_nickname_placeholder">
+                        <input type="text" id="username" placeholder="Enter your nickname" required autocomplete="off"
+                            data-i18n="login_nickname_placeholder">
                     </div>
                     <div class="input-group" style="margin-top: 16px;">
                         <label for="password" data-i18n="login_password_label">Password</label>
-                        <input type="password" id="password" placeholder="Enter your password" required autocomplete="off" data-i18n="login_password_placeholder">
+                        <input type="password" id="password" placeholder="Enter your password" required
+                            autocomplete="off" data-i18n="login_password_placeholder">
                     </div>
-                    <button type="submit" class="login-btn" style="margin-top: 24px;" data-i18n="login_button">Login</button>
+                    <button type="submit" class="login-btn" style="margin-top: 24px;"
+                        data-i18n="login_button">Login</button>
                 </form>
             </div>
         </div>
@@ -240,7 +252,7 @@
                 // Smooth transition
                 document.querySelector('.form-side').style.opacity = '0';
                 document.querySelector('.form-side').style.transform = 'translateX(20px)';
-                
+
                 setTimeout(() => {
                     window.location.href = 'pages/myspace.html';
                 }, 400);
