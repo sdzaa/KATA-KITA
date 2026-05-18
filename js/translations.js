@@ -24,6 +24,8 @@ const TRANSLATIONS = {
         'login_password_label': 'Kata Sandi',
         'login_password_placeholder': 'Masukkan kata sandi Anda',
         'login_button': 'Masuk',
+        'login_no_account': 'Belum punya akun?',
+        'login_signup_link': 'Daftar',
 
         // Beranda (Kindness Feed)
         'home_title': 'Kindness Feed',
@@ -197,6 +199,8 @@ const TRANSLATIONS = {
         'login_password_label': 'Password',
         'login_password_placeholder': 'Enter your password',
         'login_button': 'Login',
+        'login_no_account': "Don't have an account?",
+        'login_signup_link': 'Sign Up',
 
         // Beranda (Kindness Feed)
         'home_title': 'Kindness Feed',
