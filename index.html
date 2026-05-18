@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KATA-KITA - Sign In</title>
     <link rel="stylesheet" href="css/global.css">
     <script src="js/translations.js"></script>
     <script src="js/api.js"></script>
@@ -52,6 +53,7 @@
             justify-content: center;
             padding: 40px;
             box-shadow: -10px 0 30px rgba(0, 0, 0, 0.02);
+            transition: all 0.4s ease;
         }
 
         .login-card {
@@ -187,6 +189,23 @@
             box-shadow: 0 15px 30px rgba(233, 59, 129, 0.3);
         }
 
+        .link-text {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        .link-text a {
+            color: var(--color-primary);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .link-text a:hover {
+            text-decoration: underline;
+        }
+
         @media (max-width: 900px) {
             .illustration-side {
                 display: none;
@@ -233,10 +252,10 @@
                     </div>
                     <button type="submit" class="login-btn" style="margin-top: 24px;"
                         data-i18n="login_button">Login</button>
-                    
-                    <div class="link-text" style="text-align: center; margin-top: 24px; font-size: 0.95rem; color: #666;">
-                        <span data-i18n="login_no_account">Don't have an account?</span> 
-                        <a href="pages/signup.html" style="color: var(--color-primary); font-weight: 700; text-decoration: none;" data-i18n="login_signup_link">Sign Up</a>
+
+                    <div class="link-text">
+                        <span data-i18n="login_no_account">Don't have an account?</span>
+                        <a href="pages/signup.html" data-i18n="login_signup_link">Sign Up</a>
                     </div>
                 </form>
             </div>
@@ -254,11 +273,11 @@
             if (username.length > 0 && password.length > 0) {
                 loginBtn.disabled = true;
                 loginBtn.textContent = 'Logging in...';
-                
+
                 try {
                     // Verify with backend
                     const response = await KatakitaAPI.request('login', { username, password });
-                    
+
                     if (response.result === 'success') {
                         const user = response.user;
                         // Save user data to local storage
