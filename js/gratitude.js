@@ -53,6 +53,15 @@ const GratitudeManager = {
         };
         data.unshift(newNote);
         this.saveData(data);
+
+        // Sync gratitude message with Google Sheets backend
+        if (typeof KatakitaAPI !== 'undefined') {
+            KatakitaAPI.sync('insert', {
+                tableName: 'gratitude_wall',
+                message: content
+            });
+        }
+
         return newNote;
     },
 
