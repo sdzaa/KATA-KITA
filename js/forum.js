@@ -87,6 +87,16 @@ const PostManager = {
         };
         posts.unshift(newPost);
         this.savePosts(posts);
+
+        // Sync with Google Sheets backend
+        if (typeof KatakitaAPI !== 'undefined') {
+            KatakitaAPI.sync('insert', {
+                tableName: 'kindness_feeds',
+                username: newPost.author,
+                story: content
+            });
+        }
+
         return newPost;
     },
 
@@ -104,6 +114,13 @@ const PostManager = {
         } else {
             posts[index].likes += 1;
             localStorage.setItem(key, 'true');
+
+            // Sync with Google Sheets backend only when sending a hug
+            if (typeof KatakitaAPI !== 'undefined') {
+                KatakitaAPI.sync('add_hug', {
+                    story_id: postId
+                });
+            }
         }
 
         this.savePosts(posts);
@@ -125,6 +142,16 @@ const PostManager = {
         if (!posts[index].comments) posts[index].comments = [];
         posts[index].comments.push(newComment);
         this.savePosts(posts);
+
+        // Sync comment with Google Sheets backend
+        if (typeof KatakitaAPI !== 'undefined') {
+            KatakitaAPI.sync('insert', {
+                tableName: 'kindness_feeds_comments',
+                story_id: postId,
+                comment: content
+            });
+        }
+
         return newComment;
     },
 
