@@ -32,6 +32,17 @@ const SavedManager = {
         if (!saved.includes(cleanText)) {
             saved.push(cleanText);
             localStorage.setItem('katakita_saved_messages', JSON.stringify(saved));
+
+            // Sync with backend Google Sheet
+            if (typeof KatakitaAPI !== 'undefined') {
+                const user = localStorage.getItem('katakita_user') || 'Friend';
+                KatakitaAPI.sync('insert', {
+                    tableName: 'saved_items',
+                    username: user,
+                    items: cleanText
+                });
+            }
+
             return true;
         }
         return false;
@@ -41,6 +52,17 @@ const SavedManager = {
         if (!saved.some(t => t.title === track.title)) {
             saved.push(track);
             localStorage.setItem('katakita_saved_tracks', JSON.stringify(saved));
+
+            // Sync with backend Google Sheet
+            if (typeof KatakitaAPI !== 'undefined') {
+                const user = localStorage.getItem('katakita_user') || 'Friend';
+                KatakitaAPI.sync('insert', {
+                    tableName: 'saved_items',
+                    username: user,
+                    items: track.title
+                });
+            }
+
             return true;
         }
         return false;
