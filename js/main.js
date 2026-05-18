@@ -107,7 +107,7 @@ const AppState = {
         if (nameGreeting) {
             const greeting = TRANSLATIONS[lang]['home_greeting'] || 'Hello, ';
             const user = AppState.getUser() || 'User';
-            nameGreeting.textContent = `${greeting}${user}!`;
+            nameGreeting.innerHTML = `${greeting}<span class="username-pink">${user}!</span>`;
         }
     },
 

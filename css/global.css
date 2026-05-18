@@ -104,6 +104,11 @@ body {
   overflow-x: hidden;
 }
 
+.username-pink {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
 a {
   text-decoration: none;
   color: inherit;
