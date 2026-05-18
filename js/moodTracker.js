@@ -20,6 +20,26 @@ const MoodManager = {
         history.unshift(newEntry);
         // Keep at least 31 entries to fill a full month calendar
         localStorage.setItem(this.HISTORY_KEY, JSON.stringify(history.slice(0, 50)));
+
+        // Sync with backend Google Sheet
+        const moodMap = {
+            'bahagia': 5,
+            'senang': 4,
+            'biasa': 3,
+            'cemas': 2,
+            'marah': 1,
+            'sedih': 0
+        };
+        const moodInt = moodMap[moodObj.label] !== undefined ? moodMap[moodObj.label] : 3;
+        if (typeof KatakitaAPI !== 'undefined') {
+            const user = localStorage.getItem('katakita_user') || 'Friend';
+            KatakitaAPI.sync('insert', {
+                tableName: 'mood_tracker',
+                username: user,
+                mood: moodInt
+            });
+        }
+
         return newEntry;
     },
 
@@ -35,6 +55,17 @@ const MoodManager = {
         };
         diary.unshift(newEntry);
         localStorage.setItem(this.DIARY_KEY, JSON.stringify(diary.slice(0, 50)));
+
+        // Sync with backend Google Sheet
+        if (typeof KatakitaAPI !== 'undefined') {
+            const user = localStorage.getItem('katakita_user') || 'Friend';
+            KatakitaAPI.sync('insert', {
+                tableName: 'diary',
+                username: user,
+                diary: content
+            });
+        }
+
         return newEntry;
     }
 };
