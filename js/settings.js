@@ -177,6 +177,16 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('katakita_notif_email', pendingState.notif_email);
             localStorage.setItem('katakita_notif_push', pendingState.notif_push);
 
+            // Sync with backend database
+            KatakitaAPI.sync('update_settings', {
+                username: pendingState.username, // using username as the identifier
+                avatar: pendingState.avatar,
+                display_name: pendingState.username,
+                language: pendingState.language,
+                theme: pendingState.theme,
+                notification: pendingState.notif_push ? 1 : 0
+            });
+
             // Refresh displays
             AppState.updatePointsDisplay();
             
