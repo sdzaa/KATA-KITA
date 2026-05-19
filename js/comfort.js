@@ -104,17 +104,15 @@ const SavedManager = {
 
 const AudioPlayerUI = {
     tracks: [
-        { title: "Finding Stillness", narrator: "Exia" },
-        { title: "Peaceful Mind", narrator: "Nayya" },
-        { title: "Calming Breath", narrator: "Exia" },
-        { title: "Inner Strength", narrator: "Nayya" },
-        { title: "Morning Serenity", narrator: "Nayya" },
-        { title: "Deep Sleep Guide", narrator: "Exia" }
+        { title: "Slow Down", narrator: "Exia", file: "../audio/slow down by Exia.m4a", mood: "anxious" },
+        { title: "Quiet Hug", narrator: "Exia", file: "../audio/quiet hug by Exia.m4a", mood: "very_sad" },
+        { title: "Gentle Reset", narrator: "Exia", file: "../audio/gentle reset by Exia.m4a", mood: "angry" }
     ],
     state: {
         isPlaying: false,
         currentTrackIndex: 0
     },
+    audio: null,
 
     elements: {
         playBtn: document.getElementById('playBtn'),
@@ -129,14 +127,57 @@ const AudioPlayerUI = {
     },
 
     init() {
+        this.initAudio();
         this.updateTrackUI();
         this.bindEvents();
+    },
+
+    initAudio() {
+        if (this.audio) {
+            this.audio.pause();
+            this.audio = null;
+        }
+        const track = this.tracks[this.state.currentTrackIndex];
+        this.audio = new Audio(track.file);
+
+        // Listeners for progress bar and completion
+        this.audio.addEventListener('timeupdate', () => {
+            if (this.elements.progressBar && this.audio && this.audio.duration) {
+                const percentage = (this.audio.currentTime / this.audio.duration) * 100;
+                this.elements.progressBar.style.width = `${percentage}%`;
+            }
+        });
+
+        this.audio.addEventListener('ended', () => {
+            this.state.isPlaying = false;
+            this.togglePlaybackUI(false);
+            if (this.elements.progressBar) {
+                this.elements.progressBar.style.width = '0%';
+            }
+        });
     },
 
     bindEvents() {
         this.elements.playBtn?.addEventListener('click', () => this.togglePlayback());
         this.elements.nextTrackBtn?.addEventListener('click', () => this.nextTrack());
         this.elements.saveTrackBtn?.addEventListener('click', () => this.handleSaveTrack());
+
+        const progressContainer = document.querySelector('.progress-container');
+        if (progressContainer) {
+            progressContainer.style.cursor = 'pointer';
+            progressContainer.addEventListener('click', (e) => {
+                if (this.audio && this.audio.duration) {
+                    const rect = progressContainer.getBoundingClientRect();
+                    const padding = 20; // 20px padding left and right
+                    const clickX = e.clientX - rect.left - padding;
+                    const width = rect.width - (padding * 2);
+                    let percentage = clickX / width;
+                    if (percentage < 0) percentage = 0;
+                    if (percentage > 1) percentage = 1;
+                    this.audio.currentTime = percentage * this.audio.duration;
+                }
+            });
+        }
     },
 
     updateTrackUI() {
@@ -144,9 +185,13 @@ const AudioPlayerUI = {
         if (this.elements.audioTitle) {
             this.elements.audioTitle.innerHTML = `"${track.title}" - Narrated by ${track.narrator}`;
         }
-        // Randomize progress for visual effect
         if (this.elements.progressBar) {
-            this.elements.progressBar.style.width = this.state.isPlaying ? '40%' : '0%';
+            if (this.audio && this.audio.duration) {
+                const percentage = (this.audio.currentTime / this.audio.duration) * 100;
+                this.elements.progressBar.style.width = `${percentage}%`;
+            } else {
+                this.elements.progressBar.style.width = '0%';
+            }
         }
         // Reset save icon color
         if (this.elements.saveTrackBtn) {
@@ -169,33 +214,64 @@ const AudioPlayerUI = {
     },
 
     nextTrack() {
+        const wasPlaying = this.state.isPlaying;
+        if (this.audio) {
+            this.audio.pause();
+        }
         this.state.currentTrackIndex = (this.state.currentTrackIndex + 1) % this.tracks.length;
+        this.state.isPlaying = wasPlaying;
+        
+        this.initAudio();
         this.updateTrackUI();
-        this.animateButtonClick(this.elements.nextBtn);
-    },
 
-    prevTrack() {
-        this.state.currentTrackIndex = (this.state.currentTrackIndex - 1 + this.tracks.length) % this.tracks.length;
-        this.updateTrackUI();
-        this.animateButtonClick(this.elements.prevBtn);
+        if (this.state.isPlaying) {
+            this.audio.play().catch(err => console.error(err));
+            this.togglePlaybackUI(true);
+        } else {
+            this.togglePlaybackUI(false);
+        }
+        this.animateButtonClick(this.elements.nextTrackBtn);
     },
 
     togglePlayback() {
+        if (!this.audio) {
+            this.initAudio();
+        }
+
         this.state.isPlaying = !this.state.isPlaying;
-        const { playIcon, pauseIcon, audioStatus, audioCard, progressBar } = this.elements;
 
         if (this.state.isPlaying) {
+            this.audio.play().catch(err => {
+                console.error("Playback failed:", err);
+                this.state.isPlaying = false;
+                this.togglePlaybackUI(false);
+            });
+            this.togglePlaybackUI(true);
+            if (typeof AppState !== 'undefined') AppState.checkAndCompleteTask('comfort');
+        } else {
+            this.audio.pause();
+            this.togglePlaybackUI(false);
+        }
+    },
+
+    togglePlaybackUI(playing) {
+        const { playIcon, pauseIcon, audioStatus, audioCard } = this.elements;
+
+        if (playing) {
             if (playIcon) playIcon.style.display = 'none';
             if (pauseIcon) pauseIcon.style.display = 'block';
-            if (audioStatus) audioStatus.textContent = 'Now Playing';
-            if (progressBar) progressBar.style.width = '45%';
+            if (audioStatus) {
+                audioStatus.style.display = 'block';
+                audioStatus.textContent = 'Now Playing';
+            }
             audioCard?.classList.add('playing');
-            if (typeof AppState !== 'undefined') AppState.checkAndCompleteTask('comfort');
         } else {
             if (playIcon) playIcon.style.display = 'block';
             if (pauseIcon) pauseIcon.style.display = 'none';
-            if (audioStatus) audioStatus.textContent = 'Paused';
-            if (progressBar) progressBar.style.width = '0%';
+            if (audioStatus) {
+                audioStatus.style.display = 'block';
+                audioStatus.textContent = 'Paused';
+            }
             audioCard?.classList.remove('playing');
         }
     },
@@ -241,6 +317,33 @@ const MoodSelector = {
             badge.style.transform = 'scale(1.1)';
             setTimeout(() => badge.style.transform = '', 200);
         });
+
+        // 4. Automatically switch to the corresponding track
+        const moodToTrackIndex = {
+            'very_sad': 1, // Quiet Hug
+            'anxious': 0,  // Slow Down
+            'angry': 2     // Gentle Reset
+        };
+        
+        if (moodToTrackIndex[moodKey] !== undefined) {
+            const targetIndex = moodToTrackIndex[moodKey];
+            if (AudioPlayerUI.state.currentTrackIndex !== targetIndex) {
+                const wasPlaying = AudioPlayerUI.state.isPlaying;
+                if (AudioPlayerUI.audio) {
+                    AudioPlayerUI.audio.pause();
+                }
+                AudioPlayerUI.state.currentTrackIndex = targetIndex;
+                AudioPlayerUI.state.isPlaying = wasPlaying;
+                AudioPlayerUI.initAudio();
+                AudioPlayerUI.updateTrackUI();
+                if (wasPlaying) {
+                    AudioPlayerUI.audio.play().catch(err => console.error(err));
+                    AudioPlayerUI.togglePlaybackUI(true);
+                } else {
+                    AudioPlayerUI.togglePlaybackUI(false);
+                }
+            }
+        }
     }
 };
 
@@ -307,8 +410,5 @@ const ComfortUI = {
         }
     }
 };
-
-document.addEventListener('DOMContentLoaded', () => ComfortUI.init());
-
 
 document.addEventListener('DOMContentLoaded', () => ComfortUI.init());
