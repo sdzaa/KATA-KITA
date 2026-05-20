@@ -1,6 +1,3 @@
-// Replace this with your Google Apps Script Web App URL
-const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL';
-
 document.getElementById('signupForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -12,12 +9,6 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
     
     if (password !== confirmPassword) {
         errorMessage.textContent = 'Passwords do not match.';
-        errorMessage.style.display = 'block';
-        return;
-    }
-    
-    if (scriptURL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') {
-        errorMessage.textContent = 'Please configure the Google Apps Script Web App URL in js/signup.js first.';
         errorMessage.style.display = 'block';
         return;
     }
