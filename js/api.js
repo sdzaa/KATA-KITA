@@ -10,7 +10,7 @@ const KatakitaAPI = {
     /**
      * Send a background sync request to the API without blocking the UI
      */
-    sync: async function(action, payload) {
+    sync: async function (action, payload) {
         if (this.URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') {
             console.warn('KatakitaAPI: Please configure your Apps Script URL in js/api.js');
             return null;
@@ -18,15 +18,15 @@ const KatakitaAPI = {
 
         try {
             const data = { action: action, ...payload };
-            
+
             // Fire and forget (Optimistic Sync)
             fetch(this.URL, {
                 method: 'POST',
                 body: JSON.stringify(data)
             }).then(response => response.json())
-              .then(result => console.log(`[API Sync: ${action}]`, result))
-              .catch(err => console.error(`[API Error: ${action}]`, err));
-              
+                .then(result => console.log(`[API Sync: ${action}]`, result))
+                .catch(err => console.error(`[API Error: ${action}]`, err));
+
             return true;
         } catch (error) {
             console.error('API Error:', error);
@@ -38,13 +38,13 @@ const KatakitaAPI = {
      * Send a synchronous request to the API (wait for response)
      * Used for critical actions like Login or Sign Up
      */
-    request: async function(action, payload) {
+    request: async function (action, payload) {
         if (this.URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') {
             throw new Error('Please configure your Apps Script URL in js/api.js');
         }
 
         const data = { action: action, ...payload };
-        
+
         try {
             const response = await fetch(this.URL, {
                 method: 'POST',
