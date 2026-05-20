@@ -16,7 +16,7 @@ const TRANSLATIONS = {
         'header_stars': 'Bintang',
         'header_points': 'Poin',
         'header_pts': 'pts',
-        
+
         // Login Page (index.html)
         'login_welcome_to': 'Selamat datang di',
         'login_nickname_label': 'Nama Panggilan',
@@ -35,7 +35,7 @@ const TRANSLATIONS = {
         'home_filter_happy': 'Senang',
         'home_filter_sad': 'Sedih',
         'home_greeting': 'Halo, ',
-        
+
         // Kindness Feed templates
         'feed_your_last_story': 'Cerita terakhirmu',
         'feed_private_post': 'Postingan Pribadi • Baru saja',
@@ -53,7 +53,7 @@ const TRANSLATIONS = {
         'feed_delete_confirm': 'Apakah kamu yakin ingin menghapus postingan ini? Tindakan ini tidak dapat dibatalkan.',
         'feed_forbidden_title': 'Konten Tidak Pantas',
         'feed_forbidden_msg': 'Pesanmu mengandung kata-kata yang tidak diperbolehkan di ruang ini. Mari jaga komunitas ini agar tetap ramah dan aman! ❤️',
-        
+
         // Comfort Zone
         'comfort_title': 'Comfort Zone',
         'comfort_subtitle': 'Ruang tenang untuk menenangkan jiwamu.',
@@ -79,7 +79,7 @@ const TRANSLATIONS = {
         'comfort_saved_success': 'Berhasil Disimpan',
         'comfort_saved_success_msg': 'telah ditambahkan ke daftar simpananmu.',
         'comfort_empty_saved': 'Kamu belum menyimpan apa pun. Klik ikon bookmark pada pesan atau track untuk menyimpannya!',
-        
+
         // My Space
         'myspace_title': 'My Space',
         'myspace_subtitle': 'Ini adalah ruang amanmu sendiri. Bagaimana perasaanmu hari ini?',
@@ -127,7 +127,8 @@ const TRANSLATIONS = {
         'gratitude_empty_wall': 'Belum ada catatan syukur. Gantung yang pertama!',
         'gratitude_empty_history': 'Belum ada riwayat syukur.',
         'gratitude_history_title': 'Riwayat Syukur',
-        
+        'forum_empty_feed': 'Belum ada cerita.',
+
         // Tasks
         'tasks_title': 'Daily Tasks',
         'tasks_total_earned': 'Total Bintang Diperoleh:',
@@ -170,9 +171,10 @@ const TRANSLATIONS = {
         'settings_username': 'Username',
         'settings_btn_save': 'Simpan Perubahan',
         'settings_btn_cancel': 'Batal',
-        'settings_light_mode': '?? Mode Terang',
-        'settings_dark_mode': '?? Mode Gelap',
-        'settings_avatar_label': 'Ubah Foto Profil'
+        'settings_light_mode': '☀️ Mode Terang',
+        'settings_dark_mode': '🌙 Mode Gelap',
+        'settings_avatar_label': 'Ubah Foto Profil',
+        'settings_avatar_url': 'URL Foto Profil (Drive / Web)'
     },
     en: {
         // Sidebar
@@ -302,6 +304,7 @@ const TRANSLATIONS = {
         'gratitude_empty_wall': 'No gratitude notes yet. Hang the first one!',
         'gratitude_empty_history': 'No gratitude history yet.',
         'gratitude_history_title': 'Gratitude History',
+        'forum_empty_feed': "There's no story yet.",
 
         // Tasks
         'tasks_title': 'Tasks',
@@ -345,8 +348,9 @@ const TRANSLATIONS = {
         'settings_username': 'Username',
         'settings_btn_save': 'Save Changes',
         'settings_btn_cancel': 'Cancel',
-        'settings_light_mode': '?? Light Mode',
-        'settings_dark_mode': '?? Dark Mode',
-        'settings_avatar_label': 'Edit Profile Picture'
+        'settings_light_mode': '☀️ Light Mode',
+        'settings_dark_mode': '🌙 Dark Mode',
+        'settings_avatar_label': 'Edit Profile Picture',
+        'settings_avatar_url': 'Profile Picture URL (Drive / Web)'
     }
 };
