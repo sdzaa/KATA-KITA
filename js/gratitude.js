@@ -32,9 +32,8 @@ const GratitudeManager = {
     getData() {
         const raw = localStorage.getItem(this.STORAGE_KEY);
         if (!raw) {
-            const defaults = this.getDefaults();
-            this.saveData(defaults);
-            return defaults;
+            this.saveData([]);
+            return [];
         }
         return JSON.parse(raw);
     },
@@ -105,8 +104,41 @@ const GratitudeUI = {
     },
 
     init() {
-        this.render();
-        this.bindEvents();
+        if (this.elements.wall) {
+            this.elements.wall.innerHTML = '<p style="text-align: center; color: var(--color-text-muted); width: 100%; padding: 40px;">Loading gratitude notes...</p>';
+        }
+
+        if (typeof KatakitaAPI !== 'undefined') {
+            KatakitaAPI.request('get_data', { tables: ['gratitude_wall'] })
+                .then(response => {
+                    if (response && response.result === 'success' && response.data && response.data.gratitude_wall) {
+                        const existingNotes = GratitudeManager.getData();
+                        const notes = response.data.gratitude_wall.map(row => {
+                            const existing = existingNotes.find(n => n.id.toString() === row.id.toString());
+                            return {
+                                id: row.id.toString(),
+                                content: row.message,
+                                timestamp: new Date(row.date).getTime() || Date.now(),
+                                reactions: existing ? existing.reactions : 0
+                            };
+                        });
+                        
+                        // Reverse so newest entries (which are appended to the sheet) show up first
+                        notes.reverse();
+                        GratitudeManager.saveData(notes);
+                    }
+                    this.render();
+                    this.bindEvents();
+                })
+                .catch(err => {
+                    console.error('Error fetching gratitude wall data:', err);
+                    this.render();
+                    this.bindEvents();
+                });
+        } else {
+            this.render();
+            this.bindEvents();
+        }
     },
 
     bindEvents() {
