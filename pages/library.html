@@ -87,7 +87,8 @@
                                 <polyline points="9 11 12 14 22 4"></polyline>
                                 <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                             </svg><span data-i18n="nav_tasks">Tasks</span></a></li>
-                    <li><a href="#" class="logout-btn" id="logoutBtn"><span data-i18n="nav_logout">Logout</span></a></li>
+                    <li><a href="#" class="logout-btn" id="logoutBtn"><span data-i18n="nav_logout">Logout</span></a>
+                    </li>
                 </ul>
             </div>
         </aside>
@@ -154,76 +155,79 @@
 
             <div class="page-container animate-fade-in">
                 <header class="library-header" style="margin-bottom: 32px;">
-                    <h1 style="color: var(--color-text-main); font-size: 2.2rem; font-weight: 800; margin: 0 0 4px 0;" data-i18n="library_title">
+                    <h1 style="color: var(--color-text-main); font-size: 2.2rem; font-weight: 800; margin: 0 0 4px 0;"
+                        data-i18n="library_title">
                         Education</h1>
-                    <p style="color: var(--color-text-muted); font-size: 1.25rem; font-weight: 500; margin: 0;" data-i18n="library_subtitle">Time to
+                    <p style="color: var(--color-text-muted); font-size: 1.25rem; font-weight: 500; margin: 0;"
+                        data-i18n="library_subtitle">Time to
                         upgrade your knowledge!</p>
                 </header>
 
                 <section class="library-grid">
-
-                    <article class="card article-card">
-                        <div class="article-image img-gradient-1"></div>
-                        <div class="article-content">
-                            <span class="article-tag" data-i18n="library_art1_tag">Astronomy</span>
-                            <h3 data-i18n="library_art1_title">Artemis II Moon Finale</h3>
-                            <p class="article-summary" data-i18n="library_art1_summary">The ambitious Artemis II mission that will bring humans close to
-                                the moon once again after a long time.</p>
-                            <a href="https://www.sciencenews.org/article/artemis-ii-moon-finale" target="_blank"
-                                class="article-link"><span data-i18n="library_read_more">Read More</span> &rarr;</a>
-                        </div>
-                    </article>
-
-                    <article class="card article-card">
-                        <div class="article-image img-gradient-2"></div>
-                        <div class="article-content">
-                            <span class="article-tag" data-i18n="library_art2_tag">Cosmology</span>
-                            <h3 data-i18n="library_art2_title">Primitive Star Galaxy in the Early Universe</h3>
-                            <p class="article-summary" data-i18n="library_art2_summary">The discovery of ancient galaxies that unveils the origins of our
-                                universe.</p>
-                            <a href="https://www.sciencenews.org/article/primitive-star-galaxy-early-universe"
-                                target="_blank" class="article-link"><span data-i18n="library_read_more">Read More</span> &rarr;</a>
-                        </div>
-                    </article>
-
-                    <article class="card article-card">
-                        <div class="article-image img-gradient-3"></div>
-                        <div class="article-content">
-                            <span class="article-tag" data-i18n="library_art3_tag">Astrophysics</span>
-                            <h3 data-i18n="library_art3_title">Polar Structure of Galaxies and Stars Disks</h3>
-                            <p class="article-summary" data-i18n="library_art3_summary">The unique structure of galaxies that helps scientists understand
-                                the dynamics of millions of stars.</p>
-                            <a href="https://www.sciencenews.org/article/polar-structure-galaxies-stars-disks"
-                                target="_blank" class="article-link"><span data-i18n="library_read_more">Read More</span> &rarr;</a>
-                        </div>
-                    </article>
-
-                    <article class="card article-card">
-                        <div class="article-image img-gradient-4"></div>
-                        <div class="article-content">
-                            <span class="article-tag" data-i18n="library_art4_tag">Biology</span>
-                            <h3 data-i18n="library_art4_title">Every Living Creature Organ Transplant</h3>
-                            <p class="article-summary" data-i18n="library_art4_summary">A closer look at scientific achievements in organ transplantation
-                                that revolutionizes life.</p>
-                            <a href="https://www.sciencenews.org/article/every-living-creature-organ-transplant"
-                                target="_blank" class="article-link"><span data-i18n="library_read_more">Read More</span> &rarr;</a>
-                        </div>
-                    </article>
-
+                    <!-- Dynamic Articles will be loaded here -->
                 </section>
             </div>
         </main>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const articleLinks = document.querySelectorAll('.article-link');
-            articleLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    if (typeof AppState !== 'undefined') {
-                        AppState.checkAndCompleteTask('education');
+            const grid = document.querySelector('.library-grid');
+            if (!grid) return;
+
+            grid.innerHTML = '<p style="text-align: center; color: var(--color-text-muted); grid-column: 1 / -1; padding: 40px;">Loading articles...</p>';
+
+            if (typeof KatakitaAPI === 'undefined') {
+                grid.innerHTML = '<p style="text-align: center; color: var(--color-text-muted); grid-column: 1 / -1; padding: 40px;">API not available.</p>';
+                return;
+            }
+
+            KatakitaAPI.request('get_data', { tables: ['education'] })
+                .then(response => {
+                    if (response && response.result === 'success' && response.data && response.data.education) {
+                        const articles = response.data.education;
+                        if (articles.length === 0) {
+                            grid.innerHTML = '<p style="text-align: center; color: var(--color-text-muted); grid-column: 1 / -1; padding: 40px;">No articles available.</p>';
+                            return;
+                        }
+
+                        grid.innerHTML = '';
+                        articles.forEach(art => {
+                            const card = document.createElement('article');
+                            card.className = 'card article-card';
+
+                            const imgClass = art.image_class || 'img-gradient-1';
+                            const link = art.link || '#';
+                            const tag = art.tag || 'General';
+                            const title = art.title || 'Untitled Article';
+                            const summary = art.summary || '';
+
+                            card.innerHTML = `
+                                <div class="article-image ${imgClass}"></div>
+                                <div class="article-content">
+                                    <span class="article-tag">${tag}</span>
+                                    <h3>${title}</h3>
+                                    <p class="article-summary">${summary}</p>
+                                    <a href="${link}" target="_blank" class="article-link"><span>Read More</span> &rarr;</a>
+                                </div>
+                            `;
+
+                            const readMoreLink = card.querySelector('.article-link');
+                            readMoreLink.addEventListener('click', () => {
+                                if (typeof AppState !== 'undefined') {
+                                    AppState.checkAndCompleteTask('education');
+                                }
+                            });
+
+                            grid.appendChild(card);
+                        });
+                    } else {
+                        grid.innerHTML = '<p style="text-align: center; color: var(--color-text-muted); grid-column: 1 / -1; padding: 40px;">No articles yet.</p>';
                     }
+                })
+                .catch(err => {
+                    console.error('Error fetching articles:', err);
+                    grid.innerHTML = '<p style="text-align: center; color: var(--color-text-muted); grid-column: 1 / -1; padding: 40px;">Error loading articles.</p>';
                 });
-            });
         });
     </script>
 </body>
