@@ -1,4 +1,10 @@
 function doPost(e) {
+  try {
+    initializeSpreadsheet();
+  } catch (initError) {
+    console.error("Initialization failed: " + initError.toString());
+  }
+
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var body = JSON.parse(e.postData.contents);
   var action = body.action;
@@ -169,6 +175,36 @@ function doPost(e) {
         .setMimeType(ContentService.MimeType.JSON);
     }
     
+    if (action == 'get_data') {
+        var tables = body.tables;
+        var responseData = {};
+        for(var t = 0; t < tables.length; t++) {
+            var tableName = tables[t];
+            var sheet = ss.getSheetByName(tableName);
+            if (sheet) {
+                var values = sheet.getDataRange().getValues();
+                if (values.length <= 1) {
+                    responseData[tableName] = [];
+                    continue;
+                }
+                var headers = values[0];
+                var rows = [];
+                for (var i = 1; i < values.length; i++) {
+                    var row = {};
+                    for (var j = 0; j < headers.length; j++) {
+                        row[headers[j]] = values[i][j];
+                    }
+                    rows.push(row);
+                }
+                responseData[tableName] = rows;
+            } else {
+                responseData[tableName] = [];
+            }
+        }
+        return ContentService.createTextOutput(JSON.stringify({ "result": "success", "data": responseData }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
     return ContentService.createTextOutput(JSON.stringify({ "result": "error", "message": "Invalid action" }))
     .setMimeType(ContentService.MimeType.JSON);
 
@@ -179,5 +215,74 @@ function doPost(e) {
 }
 
 function doGet(e) {
-    return ContentService.createTextOutput("Backend is running. Please use POST to submit data.");
+    try {
+        initializeSpreadsheet();
+        return ContentService.createTextOutput("Backend is running. Spreadsheet has been successfully initialized/verified. Please use POST to submit data.");
+    } catch(err) {
+        return ContentService.createTextOutput("Backend is running, but spreadsheet initialization failed: " + err.toString());
+    }
+}
+
+/**
+ * Initializes the spreadsheet by creating missing sheets and their header columns.
+ * Can be run manually from the Apps Script editor or triggered automatically on request.
+ */
+function initializeSpreadsheet() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var expectedSheets = {
+    'user': ["id", "username", "password", "profile_picture", "display_name", "language", "mode", "notification", "skor"],
+    'diary': ["id", "username", "diary", "date"],
+    'mood_tracker': ["id", "username", "mood", "date"],
+    'gratitude_wall': ["id", "message", "date"],
+    'saved_items': ["id", "username", "items", "date"],
+    'kindness_feeds_comments': ["id", "story_id", "comment", "date"],
+    'kindness_feeds': ["id", "username", "story", "hugs"],
+    'tasks': ["id", "task", "skor", "date"],
+    'education': ["id", "tag", "title", "summary", "link", "image_class", "date"],
+    'comfort_messages': ["id", "message"],
+    'heartfelt_voices': ["id", "title", "narrator"]
+  };
+
+  for (var sheetName in expectedSheets) {
+    var sheet = ss.getSheetByName(sheetName);
+    var headers = expectedSheets[sheetName];
+    
+    if (!sheet) {
+      sheet = ss.insertSheet(sheetName);
+      sheet.appendRow(headers);
+      sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold");
+      sheet.setFrozenRows(1);
+    } else {
+      var lastColumn = sheet.getLastColumn();
+      if (lastColumn === 0) {
+        sheet.appendRow(headers);
+        sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold");
+        sheet.setFrozenRows(1);
+      } else {
+        var existingHeaders = sheet.getRange(1, 1, 1, lastColumn).getValues()[0];
+        var isHeaderMatch = true;
+        if (existingHeaders.length < headers.length) {
+          isHeaderMatch = false;
+        } else {
+          for (var i = 0; i < headers.length; i++) {
+            if (existingHeaders[i] !== headers[i]) {
+              isHeaderMatch = false;
+              break;
+            }
+          }
+        }
+        if (!isHeaderMatch) {
+          sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+          sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold");
+          sheet.setFrozenRows(1);
+        }
+      }
+    }
+  }
+
+  // Delete default Sheet1 if empty and other sheets exist
+  var defaultSheet = ss.getSheetByName("Sheet1");
+  if (defaultSheet && ss.getSheets().length > 1 && defaultSheet.getLastRow() === 0 && defaultSheet.getLastColumn() === 0) {
+    ss.deleteSheet(defaultSheet);
+  }
 }
