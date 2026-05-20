@@ -40,6 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Avatar Selection
     const avatarItems = document.querySelectorAll('.avatar-item');
+    const avatarUrlInput = document.getElementById('avatarUrlInput');
+    
     const updateAvatarUI = (selected) => {
         avatarItems.forEach(item => {
             if (item.getAttribute('data-avatar') === selected) {
@@ -49,14 +51,40 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     };
+    
+    // Initialize UI
     updateAvatarUI(pendingState.avatar);
+    if (avatarUrlInput) {
+        if (pendingState.avatar && (pendingState.avatar.startsWith('http://') || pendingState.avatar.startsWith('https://'))) {
+            avatarUrlInput.value = pendingState.avatar;
+            updateAvatarUI(''); // Deselect preset avatars
+        } else {
+            avatarUrlInput.value = '';
+        }
+    }
 
     avatarItems.forEach(item => {
         item.addEventListener('click', () => {
             pendingState.avatar = item.getAttribute('data-avatar');
             updateAvatarUI(pendingState.avatar);
+            if (avatarUrlInput) {
+                avatarUrlInput.value = '';
+            }
         });
     });
+
+    if (avatarUrlInput) {
+        avatarUrlInput.addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            if (val) {
+                pendingState.avatar = val;
+                updateAvatarUI(''); // Deselect preset avatars
+            } else {
+                pendingState.avatar = 'avatar1';
+                updateAvatarUI('avatar1');
+            }
+        });
+    }
 
     // 3. Language Dropdown
     const langSelect = document.getElementById('languageSelect');
