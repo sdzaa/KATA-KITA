@@ -4,18 +4,11 @@
  */
 
 const ComfortManager = {
-    MESSAGES: [
-        "You have done your best today. It's okay to take a short break.",
-        "Take it easy, every small step means a lot for your growth.",
-        "You are precious, you are loved, and the world is more beautiful with you in it.",
-        "Don't be too hard on yourself. You are making progress, and that is amazing.",
-        "Take a deep breath... Exhale slowly. Let the calmness surround you.",
-        "Whatever you're feeling right now, know that it's valid and will pass.",
-        "You are strong, more than you think. Thank you for holding on until now.",
-        "Tomorrow is a new opportunity. For today, let yourself rest peacefully."
-    ],
+    MESSAGES: [],
 
     getRandomMessage(currentText) {
+        if (this.MESSAGES.length === 0) return "No sweet messages available.";
+        if (this.MESSAGES.length === 1) return this.MESSAGES[0];
         let newMessage;
         const cleanCurrent = currentText?.replace(/"/g, '').trim();
         do {
@@ -113,6 +106,7 @@ const SavedManager = {
         }
     },
     loadTrack(title) {
+        if (AudioPlayerUI.tracks.length === 0) return;
         const trackIdx = AudioPlayerUI.tracks.findIndex(t => t.title === title);
         if (trackIdx !== -1) {
             AudioPlayerUI.state.currentTrackIndex = trackIdx;
@@ -125,14 +119,7 @@ const SavedManager = {
 };
 
 const AudioPlayerUI = {
-    tracks: [
-        { title: "Finding Stillness", narrator: "Exia" },
-        { title: "Peaceful Mind", narrator: "Nayya" },
-        { title: "Calming Breath", narrator: "Exia" },
-        { title: "Inner Strength", narrator: "Nayya" },
-        { title: "Morning Serenity", narrator: "Nayya" },
-        { title: "Deep Sleep Guide", narrator: "Exia" }
-    ],
+    tracks: [],
     state: {
         isPlaying: false,
         currentTrackIndex: 0
@@ -162,6 +149,15 @@ const AudioPlayerUI = {
     },
 
     updateTrackUI() {
+        if (this.tracks.length === 0) {
+            if (this.elements.audioTitle) {
+                this.elements.audioTitle.innerHTML = "No audio tracks available.";
+            }
+            if (this.elements.progressBar) {
+                this.elements.progressBar.style.width = '0%';
+            }
+            return;
+        }
         const track = this.tracks[this.state.currentTrackIndex];
         if (this.elements.audioTitle) {
             this.elements.audioTitle.innerHTML = `"${track.title}" - Narrated by ${track.narrator}`;
@@ -177,6 +173,7 @@ const AudioPlayerUI = {
     },
 
     handleSaveTrack() {
+        if (this.tracks.length === 0) return;
         const track = this.tracks[this.state.currentTrackIndex];
         if (SavedManager.saveTrack(track)) {
             this.elements.saveTrackBtn.style.color = '#E93B81'; // pink active
@@ -191,18 +188,21 @@ const AudioPlayerUI = {
     },
 
     nextTrack() {
+        if (this.tracks.length === 0) return;
         this.state.currentTrackIndex = (this.state.currentTrackIndex + 1) % this.tracks.length;
         this.updateTrackUI();
         this.animateButtonClick(this.elements.nextBtn);
     },
 
     prevTrack() {
+        if (this.tracks.length === 0) return;
         this.state.currentTrackIndex = (this.state.currentTrackIndex - 1 + this.tracks.length) % this.tracks.length;
         this.updateTrackUI();
         this.animateButtonClick(this.elements.prevBtn);
     },
 
     togglePlayback() {
+        if (this.tracks.length === 0) return;
         this.state.isPlaying = !this.state.isPlaying;
         const { playIcon, pauseIcon, audioStatus, audioCard, progressBar } = this.elements;
 
@@ -277,8 +277,50 @@ const ComfortUI = {
 
     init() {
         this.bindEvents();
-        AudioPlayerUI.init();
         MoodSelector.init();
+
+        if (this.elements.messageText) {
+            this.elements.messageText.textContent = "Loading sweet messages...";
+        }
+        if (AudioPlayerUI.elements.audioTitle) {
+            AudioPlayerUI.elements.audioTitle.textContent = "Loading tracks...";
+        }
+
+        if (typeof KatakitaAPI !== 'undefined') {
+            KatakitaAPI.request('get_data', { tables: ['comfort_messages', 'heartfelt_voices'] })
+                .then(response => {
+                    if (response && response.result === 'success' && response.data) {
+                        if (response.data.comfort_messages) {
+                            ComfortManager.MESSAGES = response.data.comfort_messages.map(m => m.message);
+                        }
+                        if (response.data.heartfelt_voices) {
+                            AudioPlayerUI.tracks = response.data.heartfelt_voices.map(v => ({ title: v.title, narrator: v.narrator }));
+                        }
+                    }
+
+                    if (this.elements.messageText) {
+                        if (ComfortManager.MESSAGES.length > 0) {
+                            this.elements.messageText.textContent = `"${ComfortManager.MESSAGES[0]}"`;
+                        } else {
+                            this.elements.messageText.textContent = "No sweet messages available.";
+                        }
+                    }
+
+                    AudioPlayerUI.init();
+                })
+                .catch(err => {
+                    console.error('Error loading Comfort Zone data:', err);
+                    if (this.elements.messageText) {
+                        this.elements.messageText.textContent = "Error loading sweet messages.";
+                    }
+                    AudioPlayerUI.init();
+                });
+        } else {
+            if (this.elements.messageText) {
+                this.elements.messageText.textContent = "API not available.";
+            }
+            AudioPlayerUI.init();
+        }
     },
 
     bindEvents() {
