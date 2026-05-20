@@ -1,3 +1,82 @@
+function createJSONResponse(data) {
+  return ContentService
+    .createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function fetchArticleMetadata(url) {
+  try {
+    var response = UrlFetchApp.fetch(url, { muteHttpExceptions: true, timeout: 10000 });
+    var html = response.getContentText();
+    
+    var title = '';
+    var summary = '';
+    var image = '';
+    
+    // Extract Open Graph title
+    var ogTitle = html.match(/<meta[^>]*property=[\"']og:title[\"'][^>]*content=[\"']([^\"']*)[\"']/i);
+    if (ogTitle) title = ogTitle[1];
+    
+    // Fallback to page title
+    if (!title) {
+      var pageTitle = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+      if (pageTitle) title = pageTitle[1];
+    }
+    
+    // Extract Open Graph description
+    var ogDesc = html.match(/<meta[^>]*property=[\"']og:description[\"'][^>]*content=[\"']([^\"']*)[\"']/i);
+    if (ogDesc) summary = ogDesc[1];
+    
+    // Fallback to meta description
+    if (!summary) {
+      var metaDesc = html.match(/<meta[^>]*name=[\"']description[\"'][^>]*content=[\"']([^\"']*)[\"']/i);
+      if (metaDesc) summary = metaDesc[1];
+    }
+    
+    // Extract Open Graph image
+    var ogImage = html.match(/<meta[^>]*property=[\"']og:image[\"'][^>]*content=[\"']([^\"']*)[\"']/i);
+    if (ogImage) image = ogImage[1];
+    // Fallback: first <img src=> on the page
+    if (!image) {
+      var imgTag = html.match(/<img[^>]*src=[\"']([^\"']+)[\"']/i);
+      if (imgTag) image = imgTag[1];
+    }
+
+    // Normalize relative URLs to absolute using the page origin
+    if (image) {
+      try {
+        // If protocol-relative (//example.com/..), add https:
+        if (/^\\/\\//.test(image)) {
+          image = 'https:' + image;
+        } else if (!/^https?:\/\//i.test(image)) {
+          // relative path -> prepend origin from url
+          var originMatch = url.match(/^(https?:\/\/[^\/]+)/i);
+          var origin = originMatch ? originMatch[1] : '';
+          if (image.charAt(0) === '/') {
+            image = origin + image;
+          } else {
+            image = origin + '/' + image;
+          }
+        }
+      } catch (e) {
+        // ignore normalization errors
+      }
+    }
+    
+    return {
+      title: title || 'Untitled',
+      summary: summary || 'No description available',
+      image_url: image || ''
+    };
+  } catch (e) {
+    return {
+      title: 'Error loading article',
+      summary: 'Could not fetch article content',
+      image_url: ''
+    };
+  }
+}
+
 function doPost(e) {
   try {
     initializeSpreadsheet();
@@ -32,8 +111,7 @@ function doPost(e) {
       var data = sheet.getDataRange().getValues();
       for(var i=1; i<data.length; i++) {
           if(data[i][1] == username) {
-              return ContentService.createTextOutput(JSON.stringify({ "result": "error", "message": "Username already exists" }))
-              .setMimeType(ContentService.MimeType.JSON);
+              return createJSONResponse({ "result": "error", "message": "Username already exists" });
           }
       }
 
@@ -46,8 +124,7 @@ function doPost(e) {
       var skor = 0;
 
       sheet.appendRow([newId, username, password, profile_picture, display_name, language, mode, notification, skor]);
-      return ContentService.createTextOutput(JSON.stringify({ "result": "success", "id": newId }))
-      .setMimeType(ContentService.MimeType.JSON);
+      return createJSONResponse({ "result": "success", "id": newId });
     }
 
     if (action == 'login') {
@@ -58,7 +135,7 @@ function doPost(e) {
       var data = sheet.getDataRange().getValues();
       for(var i=1; i<data.length; i++) {
           if(data[i][1] == username && data[i][2] == password) {
-              return ContentService.createTextOutput(JSON.stringify({ 
+              return createJSONResponse({ 
                   "result": "success", 
                   "user": {
                       "id": data[i][0],
@@ -70,11 +147,10 @@ function doPost(e) {
                       "notification": data[i][7],
                       "points": data[i][8]
                   }
-              })).setMimeType(ContentService.MimeType.JSON);
+              });
           }
       }
-      return ContentService.createTextOutput(JSON.stringify({ "result": "error", "message": "Invalid username or password" }))
-      .setMimeType(ContentService.MimeType.JSON);
+      return createJSONResponse({ "result": "error", "message": "Invalid username or password" });
     }
     
     if (action == 'update_settings') {
@@ -100,8 +176,7 @@ function doPost(e) {
           }
       }
       if(!found) throw new Error("User not found");
-      return ContentService.createTextOutput(JSON.stringify({ "result": "success" }))
-      .setMimeType(ContentService.MimeType.JSON);
+      return createJSONResponse({ "result": "success" });
     }
     
     if (action == 'insert') {
@@ -132,8 +207,7 @@ function doPost(e) {
       }
       
       sheet.appendRow(rowData);
-      return ContentService.createTextOutput(JSON.stringify({ "result": "success", "id": newId }))
-      .setMimeType(ContentService.MimeType.JSON);
+      return createJSONResponse({ "result": "success", "id": newId });
     }
 
     if (action == 'update_skor') {
@@ -152,8 +226,7 @@ function doPost(e) {
             }
         }
         if(!found) throw new Error("User not found");
-        return ContentService.createTextOutput(JSON.stringify({ "result": "success" }))
-        .setMimeType(ContentService.MimeType.JSON);
+        return createJSONResponse({ "result": "success" });
     }
     
     if (action == 'add_hug') {
@@ -171,8 +244,37 @@ function doPost(e) {
             }
         }
         if(!found) throw new Error("Story not found");
-        return ContentService.createTextOutput(JSON.stringify({ "result": "success" }))
-        .setMimeType(ContentService.MimeType.JSON);
+        return createJSONResponse({ "result": "success" });
+    }
+    
+    if (action == 'fetch_article_metadata') {
+        var url = body.url;
+        var articleId = body.article_id;
+        
+        if (!url) {
+            return createJSONResponse({ "result": "error", "message": "URL is required" });
+        }
+        
+        var metadata = fetchArticleMetadata(url);
+        
+        // Optional: Update the education sheet with fetched metadata
+        if (articleId) {
+            var sheet = ss.getSheetByName('education');
+            var data = sheet.getDataRange().getValues();
+            for(var i=1; i<data.length; i++) {
+                if(parseInt(data[i][0]) == articleId) {
+                    sheet.getRange(i+1, 3).setValue(metadata.title);  // col C
+                    sheet.getRange(i+1, 4).setValue(metadata.summary); // col D
+                    sheet.getRange(i+1, 5).setValue(metadata.image_url); // col E
+                    break;
+                }
+            }
+        }
+        
+        return createJSONResponse({ 
+            "result": "success", 
+            "data": metadata
+        });
     }
     
     if (action == 'get_data') {
@@ -201,25 +303,22 @@ function doPost(e) {
                 responseData[tableName] = [];
             }
         }
-        return ContentService.createTextOutput(JSON.stringify({ "result": "success", "data": responseData }))
-        .setMimeType(ContentService.MimeType.JSON);
+        return createJSONResponse({ "result": "success", "data": responseData });
     }
     
-    return ContentService.createTextOutput(JSON.stringify({ "result": "error", "message": "Invalid action" }))
-    .setMimeType(ContentService.MimeType.JSON);
+    return createJSONResponse({ "result": "error", "message": "Invalid action" });
 
   } catch(e) {
-    return ContentService.createTextOutput(JSON.stringify({ "result": "error", "message": e.toString() }))
-    .setMimeType(ContentService.MimeType.JSON);
+    return createJSONResponse({ "result": "error", "message": e.toString() });
   }
 }
 
 function doGet(e) {
     try {
         initializeSpreadsheet();
-        return ContentService.createTextOutput("Backend is running. Spreadsheet has been successfully initialized/verified. Please use POST to submit data.");
+        return createJSONResponse({ "result": "success", "message": "Backend is running. Spreadsheet has been successfully initialized/verified. Please use POST to submit data." });
     } catch(err) {
-        return ContentService.createTextOutput("Backend is running, but spreadsheet initialization failed: " + err.toString());
+        return createJSONResponse({ "result": "error", "message": "Backend is running, but spreadsheet initialization failed: " + err.toString() });
     }
 }
 
@@ -238,7 +337,7 @@ function initializeSpreadsheet() {
     'kindness_feeds_comments': ["id", "story_id", "comment", "date"],
     'kindness_feeds': ["id", "username", "story", "hugs"],
     'tasks': ["id", "task", "skor", "date"],
-    'education': ["id", "tag", "title", "summary", "link", "image_class", "date"],
+    'education': ["id", "url", "title", "summary", "image_url"],
     'comfort_messages': ["id", "message"],
     'heartfelt_voices': ["id", "title", "narrator"]
   };
