@@ -63,9 +63,8 @@ const PostManager = {
     getPosts() {
         const raw = localStorage.getItem(this.STORAGE_KEY);
         if (!raw) {
-            const defaults = this.getDefaultPosts();
-            this.savePosts(defaults);
-            return defaults;
+            this.savePosts([]);
+            return [];
         }
         return JSON.parse(raw);
     },
@@ -215,8 +214,53 @@ const FeedUI = {
     },
 
     init() {
-        this.render();
-        this.bindEvents();
+        if (this.elements.feedContainer) {
+            this.elements.feedContainer.innerHTML = '<p style="text-align: center; color: var(--color-text-muted); padding: 40px;">Loading posts...</p>';
+        }
+
+        if (typeof KatakitaAPI !== 'undefined') {
+            KatakitaAPI.request('get_data', { tables: ['kindness_feeds', 'kindness_feeds_comments'] })
+                .then(response => {
+                    if (response && response.result === 'success' && response.data) {
+                        const feeds = response.data.kindness_feeds || [];
+                        const comments = response.data.kindness_feeds_comments || [];
+                        
+                        const posts = feeds.map(feed => {
+                            const postComments = comments
+                                .filter(c => c.story_id && c.story_id.toString() === feed.id.toString())
+                                .map(c => ({
+                                    id: c.id.toString(),
+                                    content: c.comment,
+                                    timestamp: new Date(c.date).getTime() || Date.now(),
+                                    replies: []
+                                }));
+
+                            return {
+                                id: feed.id.toString(),
+                                author: feed.username,
+                                content: feed.story && feed.story.startsWith('"') ? feed.story : `"${feed.story || ''}"`,
+                                mood: 'comfort',
+                                timestamp: Date.now(),
+                                likes: parseInt(feed.hugs) || 0,
+                                comments: postComments
+                            };
+                        });
+                        
+                        posts.reverse();
+                        ForumData.savePosts(posts);
+                    }
+                    this.render();
+                    this.bindEvents();
+                })
+                .catch(err => {
+                    console.error('Error fetching forum data:', err);
+                    this.render();
+                    this.bindEvents();
+                });
+        } else {
+            this.render();
+            this.bindEvents();
+        }
     },
 
     bindEvents() {
@@ -468,9 +512,11 @@ const FeedUI = {
         this.elements.feedContainer.innerHTML = '';
 
         if (posts.length === 0) {
+            const lang = (typeof AppState !== 'undefined') ? AppState.getLanguage() : 'id';
+            const emptyFeedMsg = (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[lang]['forum_empty_feed']) || "There's no story yet.";
             this.elements.feedContainer.innerHTML = `
                 <p style="text-align:center; color: var(--color-text-muted); padding: 40px; grid-column: 1 / -1;">
-                    No posts yet. Be the first to share kindness!
+                    ${emptyFeedMsg}
                 </p>`;
             return;
         }
