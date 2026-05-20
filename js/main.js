@@ -56,9 +56,15 @@ const AppState = {
         const avatar = AppState.getAvatar();
         const avatarEls = document.querySelectorAll('#headerAvatar, .profile-avatar');
         if (avatar && avatarEls.length > 0) {
-            const ext = avatar.startsWith('avatar') ? 'jpg' : 'png';
             avatarEls.forEach(el => {
-                el.innerHTML = `<img src="../images/avatars/${avatar}.${ext}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+                let src;
+                if (avatar.startsWith('http://') || avatar.startsWith('https://')) {
+                    src = avatar;
+                } else {
+                    const ext = avatar.startsWith('avatar') ? 'jpg' : 'png';
+                    src = `../images/avatars/${avatar}.${ext}`;
+                }
+                el.innerHTML = `<img src="${src}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
             });
         }
     },
