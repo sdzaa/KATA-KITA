@@ -17,6 +17,22 @@ const ContentFilter = {
         if (foundWord) {
             if (typeof showModal === 'function') {
                 showModal(
+                    'Inappropriate Content',
+                    'Your message contains words that are not allowed in this space. Let\'s keep this community kind and safe! ❤️',
+                    '⚠️'
+                );
+            } else {
+                alert('Inappropriate content detected. Please be kind!');
+            }
+            return false;
+        }
+        return true;
+    }
+        const lowerText = text.toLowerCase();
+        const foundWord = this.FORBIDDEN_WORDS.find(word => lowerText.includes(word));
+        if (foundWord) {
+            if (typeof showModal === 'function') {
+                showModal(
                     'Inappropriate Content', 
                     'Your message contains words that are not allowed in this space. Let\'s keep this community kind and safe! ❤️', 
                     '⚠️'
