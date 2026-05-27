@@ -8,7 +8,7 @@ const APP_PREFIX = 'katakita_';
 // State Management Functions
 const AppState = {
     getUser: () => localStorage.getItem(`${APP_PREFIX}user`),
-    setUser: (nickname) => localStorage.setItem(`${APP_PREFIX}user`, nickname),
+    setUser: (username) => localStorage.setItem(`${APP_PREFIX}user`, username),
     removeUser: () => localStorage.removeItem(`${APP_PREFIX}user`),
 
     getPoints: () => parseInt(localStorage.getItem(`${APP_PREFIX}points`)) || 0,
