@@ -2,7 +2,21 @@
  * settings.js - Logic for the Settings page
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    const fetchDisplayName = async (username) => {
+        if (!username || typeof KatakitaAPI === 'undefined') return '';
+
+        try {
+            const response = await KatakitaAPI.request('get_data', { tables: ['user'] });
+            const users = (response && response.data && response.data.user) || [];
+            const found = users.find(user => user.username === username);
+            return found && found.display_name ? found.display_name : '';
+        } catch (error) {
+            console.error('Unable to fetch user display_name:', error);
+            return '';
+        }
+    };
+
     // Current state from AppState (initial)
     const initialState = {
         username: AppState.getUser() || 'User',
@@ -10,11 +24,17 @@ document.addEventListener('DOMContentLoaded', () => {
         language: AppState.getLanguage(),
         theme: AppState.getTheme(),
         notif_email: localStorage.getItem('katakita_notif_email') !== 'false',
-        notif_push: localStorage.getItem('katakita_notif_push') !== 'false'
+        notif_push: localStorage.getItem('katakita_notif_push') !== 'false',
+        display_name: ''
     };
 
     // Pending changes (working state)
     let pendingState = { ...initialState };
+
+    const fetchedDisplayName = await fetchDisplayName(initialState.username);
+    if (fetchedDisplayName) {
+        pendingState.display_name = fetchedDisplayName;
+    }
 
     // 1. Tab Switching Navigation
     const sidebarItems = document.querySelectorAll('.settings-sidebar li');
@@ -40,7 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Avatar Selection
     const avatarItems = document.querySelectorAll('.avatar-item');
-    const avatarUrlInput = document.getElementById('avatarUrlInput');
     
     const updateAvatarUI = (selected) => {
         avatarItems.forEach(item => {
@@ -52,39 +71,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
     
-    // Initialize UI
+    // Initialize UI with current avatar
     updateAvatarUI(pendingState.avatar);
-    if (avatarUrlInput) {
-        if (pendingState.avatar && (pendingState.avatar.startsWith('http://') || pendingState.avatar.startsWith('https://'))) {
-            avatarUrlInput.value = pendingState.avatar;
-            updateAvatarUI(''); // Deselect preset avatars
-        } else {
-            avatarUrlInput.value = '';
-        }
-    }
 
     avatarItems.forEach(item => {
         item.addEventListener('click', () => {
             pendingState.avatar = item.getAttribute('data-avatar');
             updateAvatarUI(pendingState.avatar);
-            if (avatarUrlInput) {
-                avatarUrlInput.value = '';
-            }
         });
     });
-
-    if (avatarUrlInput) {
-        avatarUrlInput.addEventListener('input', (e) => {
-            const val = e.target.value.trim();
-            if (val) {
-                pendingState.avatar = val;
-                updateAvatarUI(''); // Deselect preset avatars
-            } else {
-                pendingState.avatar = 'avatar1';
-                updateAvatarUI('avatar1');
-            }
-        });
-    }
 
     // 3. Language Dropdown
     const langSelect = document.getElementById('languageSelect');
@@ -178,11 +173,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 6. Username Input
-    const usernameInput = document.getElementById('usernameInput');
-    if (usernameInput) {
-        usernameInput.value = pendingState.username;
-        usernameInput.addEventListener('input', (e) => {
-            pendingState.username = e.target.value;
+    const displayNameInput = document.getElementById('displayNameInput');
+    if (displayNameInput) {
+        displayNameInput.value = pendingState.display_name;
+        displayNameInput.placeholder = 'Enter display name';
+        displayNameInput.addEventListener('input', (e) => {
+            pendingState.display_name = e.target.value;
         });
     }
 
@@ -209,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
             KatakitaAPI.sync('update_settings', {
                 username: pendingState.username, // using username as the identifier
                 avatar: pendingState.avatar,
-                display_name: pendingState.username,
+                display_name: pendingState.display_name,
                 language: pendingState.language,
                 theme: pendingState.theme,
                 notification: pendingState.notif_push ? 1 : 0
