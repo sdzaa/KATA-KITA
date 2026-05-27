@@ -3,6 +3,7 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
     
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
+    const displayName = document.getElementById('display_name').value.trim();
     const confirmPassword = document.getElementById('confirm_password').value;
     const errorMessage = document.getElementById('errorMessage');
     const submitBtn = document.getElementById('submitBtn');
@@ -20,7 +21,8 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
     try {
         const response = await KatakitaAPI.request('signup', {
             username: username,
-            password: password
+            password: password,
+            displayName: displayName
         });
         
         // Handling the Apps Script response.
