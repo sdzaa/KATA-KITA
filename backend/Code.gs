@@ -107,6 +107,7 @@ function doPost(e) {
       var sheet = ss.getSheetByName('user');
       var username = body.username;
       var password = body.password;
+      var display_name = body.display_name
       
       var data = sheet.getDataRange().getValues();
       for(var i=1; i<data.length; i++) {
@@ -117,7 +118,6 @@ function doPost(e) {
 
       var newId = getNextId(sheet);
       var profile_picture = "avatar1";
-      var display_name = username;
       var language = "id";
       var mode = "light"; // changed to match localstorage
       var notification = 1; 
