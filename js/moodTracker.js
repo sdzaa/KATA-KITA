@@ -4,35 +4,68 @@
  */
 
 const MoodManager = {
-    HISTORY_KEY: 'katakita_mood_history',
     DIARY_KEY: 'katakita_diary_content',
+    _history: [],
+
+    MOOD_MAP: {
+        'bahagia': { label: 'bahagia', emoji: '🤩', value: 5 },
+        'senang': { label: 'senang', emoji: '😊', value: 4 },
+        'biasa': { label: 'biasa', emoji: '😐', value: 3 },
+        'cemas': { label: 'cemas', emoji: '😖', value: 2 },
+        'marah': { label: 'marah', emoji: '😡', value: 1 },
+        'sedih': { label: 'sedih', emoji: '😭', value: 0 }
+    },
 
     getHistory() {
-        return JSON.parse(localStorage.getItem(this.HISTORY_KEY)) || [];
+        return this._history || [];
+    },
+
+    async loadHistory() {
+        const user = (typeof AppState !== 'undefined' ? AppState.getUser() : localStorage.getItem('katakita_user')) || 'Friend';
+        if (typeof KatakitaAPI === 'undefined') {
+            this._history = [];
+            return this._history;
+        }
+
+        try {
+            const response = await KatakitaAPI.request('get_data', { tables: ['mood_tracker'] });
+            const rows = (response && response.data && response.data.mood_tracker) || [];
+            this._history = rows
+                .filter(entry => entry.username === user)
+                .map(entry => {
+                    const moodValue = parseInt(entry.mood, 10);
+                    const mood = Object.values(this.MOOD_MAP).find(m => m.value === moodValue) || this.MOOD_MAP.biasa;
+                    return {
+                        id: entry.id,
+                        username: entry.username,
+                        label: mood.label,
+                        emoji: mood.emoji,
+                        mood: moodValue,
+                        timestamp: Date.parse(entry.date) || Date.now()
+                    };
+                })
+                .sort((a, b) => b.timestamp - a.timestamp);
+            return this._history;
+        } catch (error) {
+            console.error('Failed to load mood history from database:', error);
+            this._history = [];
+            return this._history;
+        }
     },
 
     saveMood(moodObj) {
-        const history = this.getHistory();
         const newEntry = {
             ...moodObj,
             timestamp: Date.now()
         };
-        history.unshift(newEntry);
-        // Keep at least 31 entries to fill a full month calendar
-        localStorage.setItem(this.HISTORY_KEY, JSON.stringify(history.slice(0, 50)));
 
-        // Sync with backend Google Sheet
-        const moodMap = {
-            'bahagia': 5,
-            'senang': 4,
-            'biasa': 3,
-            'cemas': 2,
-            'marah': 1,
-            'sedih': 0
-        };
-        const moodInt = moodMap[moodObj.label] !== undefined ? moodMap[moodObj.label] : 3;
+        this._history.unshift(newEntry);
+        this._history = this._history.slice(0, 50);
+
+        const moodInt = this.MOOD_MAP[moodObj.label]?.value ?? 3;
+
         if (typeof KatakitaAPI !== 'undefined') {
-            const user = localStorage.getItem('katakita_user') || 'Friend';
+            const user = (typeof AppState !== 'undefined' ? AppState.getUser() : localStorage.getItem('katakita_user')) || 'Friend';
             KatakitaAPI.sync('insert', {
                 tableName: 'mood_tracker',
                 username: user,
@@ -56,9 +89,8 @@ const MoodManager = {
         diary.unshift(newEntry);
         localStorage.setItem(this.DIARY_KEY, JSON.stringify(diary.slice(0, 50)));
 
-        // Sync with backend Google Sheet
         if (typeof KatakitaAPI !== 'undefined') {
-            const user = localStorage.getItem('katakita_user') || 'Friend';
+            const user = (typeof AppState !== 'undefined' ? AppState.getUser() : localStorage.getItem('katakita_user')) || 'Friend';
             KatakitaAPI.sync('insert', {
                 tableName: 'diary',
                 username: user,
@@ -92,8 +124,9 @@ const MySpaceUI = {
         };
     },
 
-    init() {
+    async init() {
         this.queryElements();
+        await MoodManager.loadHistory();
         this.setupHeader();
         this.highlightTodayMood();
         this.renderCalendar();
@@ -343,7 +376,7 @@ const MySpaceUI = {
         const marahCount = counts.marah;
         const sedihCount = counts.sedih;
 
-        let weightedIndex = 0.5; // Default middle
+        let weightedIndex = 0.0; // Default to 0 if no moods recorded
         if (total > 0) {
             weightedIndex = (bahagiaCount * 1 + senangCount * 0.7 + biasaCount * 0.5 + cemasCount * 0.3 + marahCount * 0.1 + sedihCount * 0) / total;
         }
