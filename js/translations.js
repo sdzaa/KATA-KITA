@@ -19,8 +19,8 @@ const TRANSLATIONS = {
 
         // Login Page (index.html)
         'login_welcome_to': 'Selamat datang di',
-        'login_nickname_label': 'Nama Panggilan',
-        'login_nickname_placeholder': 'Masukkan nama panggilan Anda',
+        'login_username_label': 'Username',
+        'login_username_placeholder': 'Masukkan username Anda',
         'login_password_label': 'Kata Sandi',
         'login_password_placeholder': 'Masukkan kata sandi Anda',
         'login_button': 'Masuk',
@@ -174,7 +174,6 @@ const TRANSLATIONS = {
         'settings_light_mode': '☀️ Mode Terang',
         'settings_dark_mode': '🌙 Mode Gelap',
         'settings_avatar_label': 'Ubah Foto Profil',
-        'settings_avatar_url': 'URL Foto Profil (Drive / Web)'
     },
     en: {
         // Sidebar
@@ -196,8 +195,8 @@ const TRANSLATIONS = {
 
         // Login Page (index.html)
         'login_welcome_to': 'Welcome to',
-        'login_nickname_label': 'Nickname',
-        'login_nickname_placeholder': 'Enter your nickname',
+        'login_username_label': 'Username',
+        'login_username_placeholder': 'Enter your username',
         'login_password_label': 'Password',
         'login_password_placeholder': 'Enter your password',
         'login_button': 'Login',
@@ -351,6 +350,5 @@ const TRANSLATIONS = {
         'settings_light_mode': '☀️ Light Mode',
         'settings_dark_mode': '🌙 Dark Mode',
         'settings_avatar_label': 'Edit Profile Picture',
-        'settings_avatar_url': 'Profile Picture URL (Drive / Web)'
     }
 };
