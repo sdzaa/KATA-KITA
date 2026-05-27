@@ -28,22 +28,6 @@ const ContentFilter = {
         }
         return true;
     }
-        const lowerText = text.toLowerCase();
-        const foundWord = this.FORBIDDEN_WORDS.find(word => lowerText.includes(word));
-        if (foundWord) {
-            if (typeof showModal === 'function') {
-                showModal(
-                    'Inappropriate Content', 
-                    'Your message contains words that are not allowed in this space. Let\'s keep this community kind and safe! ❤️', 
-                    '⚠️'
-                );
-            } else {
-                alert('Inappropriate content detected. Please be kind!');
-            }
-            return false;
-        }
-        return true;
-    }
 };
 
 const PostManager = {
@@ -211,6 +195,7 @@ const PostManager = {
 const FeedUI = {
     postToDelete: null,
     postToEdit: null,
+    userHighlight: null,
     elements: {
         feedContainer: document.getElementById('feedPosts'),
         postForm: document.getElementById('postForm'),
@@ -235,12 +220,47 @@ const FeedUI = {
         }
 
         if (typeof KatakitaAPI !== 'undefined') {
-            KatakitaAPI.request('get_data', { tables: ['kindness_feeds', 'kindness_feeds_comments'] })
+            KatakitaAPI.request('get_data', { tables: ['kindness_feeds', 'kindness_feeds_comments', 'user'] })
                 .then(response => {
                     if (response && response.result === 'success' && response.data) {
-                        const feeds = response.data.kindness_feeds || [];
+                        let feeds = response.data.kindness_feeds || [];
                         const comments = response.data.kindness_feeds_comments || [];
-                        
+                        const users = response.data.user || [];
+
+                        // build username -> display_name map
+                        const userMap = {};
+                        users.forEach(u => {
+                            if (u && u.username) {
+                                userMap[u.username.toString()] = (u.display_name && u.display_name.toString()) || u.username.toString();
+                            }
+                        });
+
+                        // Use the current user's last feed as the highlight (if logged in)
+                        const currentUser = (typeof AppState !== 'undefined' && AppState.getUser()) || null;
+                        this.userHighlight = null;
+                        if (currentUser) {
+                            const userFeeds = feeds.filter(f => f.username && f.username.toString() === currentUser.toString());
+                            if (userFeeds.length > 0) {
+                                const lastFeed = userFeeds.reduce((a, b) => (parseInt(a.id) > parseInt(b.id) ? a : b));
+                                const lastComments = comments
+                                    .filter(c => c.story_id && c.story_id.toString() === lastFeed.id.toString())
+                                    .map(c => ({ id: c.id.toString(), content: c.comment, timestamp: new Date(c.date).getTime() || Date.now(), replies: [] }));
+
+                                this.userHighlight = {
+                                    id: lastFeed.id.toString(),
+                                    author: userMap[lastFeed.username] || lastFeed.username,
+                                    content: lastFeed.story && lastFeed.story.startsWith('"') ? lastFeed.story : `"${lastFeed.story || ''}"`,
+                                    mood: 'comfort',
+                                    timestamp: Date.now(),
+                                    likes: parseInt(lastFeed.hugs) || 0,
+                                    comments: lastComments
+                                };
+
+                                // remove highlight feed from list to avoid duplicate rendering
+                                feeds = feeds.filter(f => f.id.toString() !== lastFeed.id.toString());
+                            }
+                        }
+
                         const posts = feeds.map(feed => {
                             const postComments = comments
                                 .filter(c => c.story_id && c.story_id.toString() === feed.id.toString())
@@ -253,7 +273,7 @@ const FeedUI = {
 
                             return {
                                 id: feed.id.toString(),
-                                author: feed.username,
+                                author: userMap[feed.username] || feed.username,
                                 content: feed.story && feed.story.startsWith('"') ? feed.story : `"${feed.story || ''}"`,
                                 mood: 'comfort',
                                 timestamp: Date.now(),
@@ -261,9 +281,9 @@ const FeedUI = {
                                 comments: postComments
                             };
                         });
-                        
+
                         posts.reverse();
-                        ForumData.savePosts(posts);
+                        PostManager.savePosts(posts);
                     }
                     this.render();
                     this.bindEvents();
@@ -538,10 +558,10 @@ const FeedUI = {
         }
 
         // Render Highlight if applicable
-        if (filter === 'all' && posts.length > 0) {
-            const highlightPost = posts[0];
-            this.elements.feedContainer.appendChild(this.createHighlightNode(highlightPost));
-            posts = posts.slice(1);
+        if (filter === 'all') {
+            if (this.userHighlight) {
+                this.elements.feedContainer.appendChild(this.createHighlightNode(this.userHighlight, 'Your last story'));
+            }
         }
 
         // Render remaining posts
@@ -550,12 +570,12 @@ const FeedUI = {
         });
     },
 
-    createHighlightNode(post) {
+    createHighlightNode(post, titleText = 'Your last story') {
         const div = document.createElement('div');
         div.className = 'card post highlight-post';
         div.style.cssText = 'background-color: var(--color-bg-primary); border: 1px solid var(--color-border);';
         div.innerHTML = `
-            <div style="font-weight: 700; margin-bottom: 16px; color: var(--color-text-main);">Your last story</div>
+            <div style="font-weight: 700; margin-bottom: 16px; color: var(--color-text-main);">${titleText}</div>
             <div style="background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: var(--shadow-sm); margin-bottom: 16px;">
                 <div class="post-content" style="margin-bottom: 12px; font-style: italic;">${post.content}</div>
                 <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--color-text-muted);">
