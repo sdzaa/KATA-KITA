@@ -224,7 +224,8 @@
                         });
                         
                         function renderArticleCard(art) {
-                            const link = art.url || '#';
+                            const urlCandidates = [art.url, art.URL, art.link, art.Link, art.href, art.HREF];
+                            const link = urlCandidates.find(u => typeof u === 'string' && u.trim().length > 0) || '#';
                             const title = art.title || 'Untitled Article';
                             const summary = art.summary || 'Read more to discover...';
                             const imageUrl = art.image_url || '';
