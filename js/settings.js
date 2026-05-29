@@ -195,6 +195,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // PERSIST EVERYTHING
             AppState.setUser(pendingState.username);
+            AppState.setDisplayName(pendingState.display_name);
             AppState.setAvatar(pendingState.avatar);
             AppState.setLanguage(pendingState.language);
             AppState.setTheme(pendingState.theme);
