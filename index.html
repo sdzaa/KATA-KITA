@@ -282,6 +282,7 @@
                         const user = response.user;
                         // Save user data to local storage
                         localStorage.setItem('katakita_user', user.username);
+                        localStorage.setItem('katakita_display_name', user.display_name || 'Anonymous');
                         localStorage.setItem('katakita_avatar', user.avatar || 'avatar1');
                         localStorage.setItem('katakita_theme', user.theme || 'light');
                         localStorage.setItem('katakita_language', user.language || 'id');
