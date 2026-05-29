@@ -276,6 +276,7 @@ const FeedUI = {
 
                             return {
                                 id: feed.id.toString(),
+                                username: feed.username,
                                 author: userMap[feed.username] || feed.username,
                                 content: feed.story && feed.story.startsWith('"') ? feed.story : `"${feed.story || ''}"`,
                                 mood: 'comfort',
@@ -601,7 +602,7 @@ const FeedUI = {
     createPostNode(post) {
         const isLiked = localStorage.getItem(PostManager.LIKED_KEY_PREFIX + post.id);
         const currentUser = (typeof AppState !== 'undefined' && AppState.getUser()) || null;
-        const isAuthor = currentUser && post.author === currentUser;
+        const isAuthor = currentUser && post.username && post.username === currentUser;
         
         let actionButtons = '';
         if (isAuthor) {
