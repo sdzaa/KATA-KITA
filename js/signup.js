@@ -22,7 +22,7 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
         const response = await KatakitaAPI.request('signup', {
             username: username,
             password: password,
-            displayName: displayName
+            display_name: displayName
         });
         
         // Handling the Apps Script response.
@@ -31,6 +31,7 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
         if (data.result === 'success') {
             // Set initial local storage values to maintain the existing app state functionality
             localStorage.setItem('katakita_user', username);
+            localStorage.setItem('katakita_display_name', displayName || 'Anonymous');
             localStorage.setItem('katakita_points', '0');
             localStorage.setItem('katakita_theme', 'light');
             localStorage.setItem('katakita_language', 'id');
