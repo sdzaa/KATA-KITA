@@ -75,9 +75,12 @@ const PostManager = {
 
     addPost(mood, content) {
         const posts = this.getPosts();
+        const currentUser = (typeof AppState !== 'undefined' && AppState.getUser());
+        const displayName = (typeof AppState !== 'undefined' && AppState.getDisplayName()) || 'Anonymous';
         const newPost = {
             id: Date.now().toString(),
-            author: (typeof AppState !== 'undefined' && AppState.getUser()) || 'Anonymous',
+            author: displayName,
+            username: currentUser,
             content: `"${content}"`,
             mood,
             timestamp: Date.now(),
@@ -91,7 +94,7 @@ const PostManager = {
         if (typeof KatakitaAPI !== 'undefined') {
             KatakitaAPI.sync('insert', {
                 tableName: 'kindness_feeds',
-                username: newPost.author,
+                username: newPost.username,
                 story: content
             });
         }
