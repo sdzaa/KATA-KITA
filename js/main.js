@@ -11,6 +11,10 @@ const AppState = {
     setUser: (username) => localStorage.setItem(`${APP_PREFIX}user`, username),
     removeUser: () => localStorage.removeItem(`${APP_PREFIX}user`),
 
+    getDisplayName: () => localStorage.getItem(`${APP_PREFIX}display_name`) || 'Anonymous',
+    setDisplayName: (displayName) => localStorage.setItem(`${APP_PREFIX}display_name`, displayName),
+    removeDisplayName: () => localStorage.removeItem(`${APP_PREFIX}display_name`),
+
     getPoints: () => parseInt(localStorage.getItem(`${APP_PREFIX}points`)) || 0,
     addPoints: (amount) => {
         const current = AppState.getPoints();
@@ -45,8 +49,9 @@ const AppState = {
             MySpaceUI.updateRewards();
         }
 
-        // Update username display in profile if exists
+        // Update user display name in profile if exists
         const user = AppState.getUser();
+        const displayName = AppState.getDisplayName();
         const nameEl = document.getElementById('userNameProfile');
         if (nameEl && user) {
             nameEl.textContent = user;
@@ -119,7 +124,7 @@ const AppState = {
         const nameGreeting = document.getElementById('homeNameGreeting');
         if (nameGreeting) {
             const greeting = TRANSLATIONS[lang]['home_greeting'] || 'Hello, ';
-            const user = AppState.getUser() || 'User';
+            const user = AppState.getUser();
             nameGreeting.textContent = `${greeting}${user}!`;
         }
     },
