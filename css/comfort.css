@@ -41,7 +41,7 @@
 }
 
 [data-theme="dark"] .mood-selector {
-    background: #1e293b; 
+    background: #1e293b;
     border: 1px solid #334155;
 }
 
@@ -55,7 +55,8 @@
     justify-content: center;
     border-radius: 12px;
     transition: all 0.2s ease;
-    background: #94A3B8; /* Default greyish */
+    background: #94A3B8;
+    /* Default greyish */
 }
 
 .mood-selector span:hover {
@@ -64,16 +65,33 @@
 
 .mood-selector span.active {
     transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Individual Mood Colors */
-.mood-selector span[title="Sangat Sedih"] { background: #94A3B8; }
-.mood-selector span[title="Cemas"] { background: #86EFAC; }
-.mood-selector span[title="Marah"] { background: #FB923C; }
-.mood-selector span[title="Netral"] { background: #7DD3FC; }
-.mood-selector span[title="Senang"] { background: #FBCFE8; }
-.mood-selector span[title="Bersemangat"] { background: #FDE047; }
+.mood-selector span[title="Sangat Sedih"] {
+    background: #94A3B8;
+}
+
+.mood-selector span[title="Cemas"] {
+    background: #86EFAC;
+}
+
+.mood-selector span[title="Marah"] {
+    background: #FB923C;
+}
+
+.mood-selector span[title="Netral"] {
+    background: #7DD3FC;
+}
+
+.mood-selector span[title="Senang"] {
+    background: #FBCFE8;
+}
+
+.mood-selector span[title="Bersemangat"] {
+    background: #FDE047;
+}
 
 /* Grid Layout */
 .comfort-grid {
@@ -96,15 +114,21 @@
     border: none;
 }
 
-.card-yellow { background: #FEF3C7; }
-.card-green { background: #DCFCE7; }
+.card-yellow {
+    background: #FEF3C7;
+}
 
-[data-theme="dark"] .card-yellow { 
-    background: #24221a; 
+.card-green {
+    background: #DCFCE7;
+}
+
+[data-theme="dark"] .card-yellow {
+    background: #24221a;
     border: 1px solid #3d351a;
 }
-[data-theme="dark"] .card-green { 
-    background: #1a241f; 
+
+[data-theme="dark"] .card-green {
+    background: #1a241f;
     border: 1px solid #1a3d24;
 }
 
@@ -121,7 +145,8 @@
 
 .mood-badge {
     display: inline-flex;
-    background: #FBCFE8; /* Light pink from screenshot */
+    background: #FBCFE8;
+    /* Light pink from screenshot */
     color: #1F2937;
     padding: 12px 24px;
     border-radius: 12px;
@@ -150,7 +175,8 @@
 }
 
 /* Quote Box */
-.quote-box, .audio-box {
+.quote-box,
+.audio-box {
     background: #FFFFFF;
     padding: 40px 30px;
     border-radius: 16px;
@@ -164,7 +190,7 @@
     border: 1px solid #FBCFE8;
 }
 
-[data-theme="dark"] .quote-box, 
+[data-theme="dark"] .quote-box,
 [data-theme="dark"] .audio-box {
     background: #1a202c;
     border-color: #2d3748;
