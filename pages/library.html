@@ -191,43 +191,42 @@
                         }
 
                         grid.innerHTML = '';
-                        
+
                         // Process each article
                         articles.forEach((art, index) => {
                             const needsMetadata = !art.title || !art.summary;
-                            
+
                             // If metadata is missing, fetch it
                             if (needsMetadata) {
                                 KatakitaAPI.request('fetch_article_metadata', {
                                     url: art.url,
                                     article_id: art.id
                                 })
-                                .then(metaResponse => {
-                                    console.log('Fetched metadata for', art.url, metaResponse);
-                                    if (metaResponse && metaResponse.result === 'success') {
-                                        // Update article object with fetched metadata
-                                        art.title = metaResponse.data.title;
-                                        art.summary = metaResponse.data.summary;
-                                        art.image_url = metaResponse.data.image_url;
+                                    .then(metaResponse => {
+                                        console.log('Fetched metadata for', art.url, metaResponse);
+                                        if (metaResponse && metaResponse.result === 'success') {
+                                            // Update article object with fetched metadata
+                                            art.title = metaResponse.data.title;
+                                            art.summary = metaResponse.data.summary;
+                                            art.image_url = metaResponse.data.image_url;
+                                            renderArticleCard(art);
+                                        } else {
+                                            renderArticleCard(art);
+                                        }
+                                    })
+                                    .catch(() => {
+                                        // If fetch fails, still render with empty metadata
                                         renderArticleCard(art);
-                                    } else {
-                                        renderArticleCard(art);
-                                    }
-                                })
-                                .catch(() => {
-                                    // If fetch fails, still render with empty metadata
-                                    renderArticleCard(art);
-                                });
+                                    });
                             } else {
                                 renderArticleCard(art);
                             }
                         });
-                        
+
                         function renderArticleCard(art) {
                             const urlCandidates = [art.url, art.URL, art.link, art.Link, art.href, art.HREF];
                             const link = urlCandidates.find(u => typeof u === 'string' && u.trim().length > 0) || '#';
                             const title = art.title || 'Untitled Article';
-                            const summary = art.summary || 'Read more to discover...';
                             const imageUrl = art.image_url || '';
                             // Build image HTML
                             let imageHTML = '';

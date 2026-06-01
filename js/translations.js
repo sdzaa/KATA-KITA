@@ -276,7 +276,6 @@ const TRANSLATIONS = {
         // Library (Education)
         'library_title': 'Education',
         'library_subtitle': 'Time to upgrade your knowledge!',
-        'library_read_more': 'Read More',
         'library_art1_tag': 'Astronomy',
         'library_art1_title': 'Artemis II Moon Finale',
         'library_art1_summary': 'The ambitious Artemis II mission that will bring humans close to the moon once again after a long time.',
