@@ -134,8 +134,13 @@ const PostManager = {
         const index = posts.findIndex(p => p.id === postId);
         if (index === -1) return null;
 
+        const currentUser = (typeof AppState !== 'undefined' && AppState.getUser());
+        const displayName = (typeof AppState !== 'undefined' && AppState.getDisplayName()) || 'Anonymous';
+
         const newComment = {
             id: Date.now().toString(),
+            author: displayName,
+            username: currentUser,
             content,
             timestamp: Date.now(),
             replies: []
@@ -182,8 +187,13 @@ const PostManager = {
         const comment = post.comments.find(c => c.id === commentId);
         if (!comment) return null;
 
+        const currentUser = (typeof AppState !== 'undefined' && AppState.getUser());
+        const displayName = (typeof AppState !== 'undefined' && AppState.getDisplayName()) || 'Anonymous';
+
         const newReply = {
             id: Date.now().toString(),
+            author: displayName,
+            username: currentUser,
             content,
             timestamp: Date.now()
         };
@@ -662,7 +672,7 @@ const FeedUI = {
         }
         return comments.map(c => `
             <div class="comment-item" style="background: var(--color-bg-light); padding: 12px; border-radius: 12px; margin-bottom: 8px;">
-                <div style="font-weight: 600; color: var(--color-text-main); font-size: 0.9rem;">Anonymous</div>
+                <div style="font-weight: 600; color: var(--color-text-main); font-size: 0.9rem;">${c.author || c.username || 'Anonymous'}</div>
                 <div style="color: var(--color-text-muted); font-size: 0.9rem; margin: 4px 0;">${c.content}</div>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div style="font-size: 0.75rem; color: #aaa;">${this.formatTime(c.timestamp)}</div>
@@ -673,7 +683,7 @@ const FeedUI = {
                 <div class="replies-list" style="margin-top: 8px; padding-left: 12px; border-left: 2px solid var(--color-border);">
                     ${c.replies.map(r => `
                         <div class="reply-item" style="margin-bottom: 6px;">
-                            <div style="font-weight: 600; color: var(--color-text-main); font-size: 0.85rem;">Anonymous</div>
+                            <div style="font-weight: 600; color: var(--color-text-main); font-size: 0.85rem;">${r.author || r.username || 'Anonymous'}</div>
                             <div style="color: var(--color-text-muted); font-size: 0.85rem; margin: 2px 0;">${r.content}</div>
                             <div style="font-size: 0.7rem; color: #aaa;">${this.formatTime(r.timestamp)}</div>
                         </div>
