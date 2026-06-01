@@ -195,9 +195,18 @@
                         // Process each article
                         articles.forEach((art, index) => {
                             const needsMetadata = !art.title || !art.summary;
+                            
+                            // Workaround for Google Sheet column misalignment where URL might be in image_url
+                            let actualUrl = art.url;
+                            if (!actualUrl && art.image_url && art.image_url.includes('http')) {
+                                actualUrl = art.image_url;
+                                // clear image_url so it fetches a real image
+                                art.image_url = ''; 
+                            }
+                            art.url = actualUrl;
 
                             // If metadata is missing, fetch it
-                            if (needsMetadata) {
+                            if (needsMetadata && art.url) {
                                 KatakitaAPI.request('fetch_article_metadata', {
                                     url: art.url,
                                     article_id: art.id
@@ -227,7 +236,7 @@
                             const urlCandidates = [art.url, art.URL, art.link, art.Link, art.href, art.HREF];
                             const link = urlCandidates.find(u => typeof u === 'string' && u.trim().length > 0) || '#';
                             const title = art.title || 'Untitled Article';
-                            const summary = art.summary || 'Read more to discover...';
+                            const summary = art.summary || '';
                             const imageUrl = art.image_url || '';
                             // Build image HTML
                             let imageHTML = '';
