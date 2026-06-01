@@ -214,10 +214,12 @@
                                     .then(metaResponse => {
                                         console.log('Fetched metadata for', art.url, metaResponse);
                                         if (metaResponse && metaResponse.result === 'success') {
-                                            // Update article object with fetched metadata
-                                            art.title = metaResponse.data.title;
-                                            art.summary = metaResponse.data.summary;
-                                            art.image_url = metaResponse.data.image_url;
+                                            // Only update if it wasn't an error fetch
+                                            if (metaResponse.data.title !== 'Error loading article') {
+                                                art.title = art.title || metaResponse.data.title;
+                                                art.summary = art.summary || metaResponse.data.summary;
+                                                art.image_url = art.image_url || metaResponse.data.image_url;
+                                            }
                                             renderArticleCard(art);
                                         } else {
                                             renderArticleCard(art);
