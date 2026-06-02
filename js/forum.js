@@ -268,9 +268,6 @@ const FeedUI = {
                                     likes: parseInt(lastFeed.hugs) || 0,
                                     comments: lastComments
                                 };
-
-                                // remove highlight feed from list to avoid duplicate rendering
-                                feeds = feeds.filter(f => f.id.toString() !== lastFeed.id.toString());
                             }
                         }
 
@@ -574,12 +571,16 @@ const FeedUI = {
         // Render Highlight if applicable
         if (filter === 'all') {
             if (this.userHighlight) {
-                this.elements.feedContainer.appendChild(this.createHighlightNode(this.userHighlight, 'Your last story'));
+                const currentHighlightPost = posts.find(p => p.id === this.userHighlight.id) || this.userHighlight;
+                this.elements.feedContainer.appendChild(this.createHighlightNode(currentHighlightPost, 'Your last story'));
             }
         }
 
         // Render remaining posts
         posts.forEach(post => {
+            if (this.userHighlight && post.id === this.userHighlight.id) {
+                return; // Skip rendering the highlight post again
+            }
             this.elements.feedContainer.appendChild(this.createPostNode(post));
         });
     },
@@ -604,7 +605,16 @@ const FeedUI = {
                         Hugs (${post.likes})
                     </span>
                 </div>
-                <button class="btn btn-primary" style="padding: 8px 24px; border-radius: 20px; font-weight: 600;">See Details</button>
+                <button class="btn btn-primary comment-btn" data-id="${post.id}" style="padding: 8px 24px; border-radius: 20px; font-weight: 600;">See Details</button>
+            </div>
+            <div class="comment-section" id="comment-section-${post.id}" style="display: none; padding-top: 16px; border-top: 1px solid var(--color-border); margin-top: 16px;">
+                <div class="comment-list" id="comment-list-${post.id}">
+                    ${this.templateCommentList(post.id, post.comments || [])}
+                </div>
+                <form class="comment-form" data-id="${post.id}" style="display: flex; gap: 8px; margin-top: 12px;">
+                    <input type="text" placeholder="Write a comment..." required style="flex:1; padding: 10px; border-radius: 20px; border: 1px solid var(--color-border); background: var(--color-bg-light); color: var(--color-text-main);">
+                    <button type="submit" class="btn btn-primary" style="padding: 10px 20px; border-radius: 20px; font-weight: 600;">Send</button>
+                </form>
             </div>`;
         return div;
     },
