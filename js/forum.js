@@ -605,7 +605,7 @@ const FeedUI = {
                         Hugs (${post.likes})
                     </span>
                 </div>
-                <button class="btn btn-primary comment-btn" data-id="${post.id}" style="padding: 8px 24px; border-radius: 20px; font-weight: 600;">See Details</button>
+                <button class="btn btn-primary" onclick="FeedUI.toggleComments('${post.id}')" style="padding: 8px 24px; border-radius: 20px; font-weight: 600; cursor: pointer; position: relative; z-index: 10;">See Details</button>
             </div>
             <div class="comment-section" id="comment-section-${post.id}" style="display: none; padding-top: 16px; border-top: 1px solid var(--color-border); margin-top: 16px;">
                 <div class="comment-list" id="comment-list-${post.id}">
