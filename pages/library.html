@@ -253,8 +253,13 @@
                             card.target = '_blank';
                             card.rel = 'noopener noreferrer';
                             card.addEventListener('click', (e) => {
-                                if (typeof AppState !== 'undefined' && typeof AppState.addPoints === 'function') {
-                                    AppState.addPoints(5);
+                                if (typeof AppState !== 'undefined') {
+                                    if (typeof AppState.addPoints === 'function') {
+                                        AppState.addPoints(5);
+                                    }
+                                    if (typeof AppState.checkAndCompleteTask === 'function') {
+                                        AppState.checkAndCompleteTask('education');
+                                    }
                                 }
                                 // default navigation via href proceeds automatically
                             });
