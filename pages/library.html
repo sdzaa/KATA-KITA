@@ -252,7 +252,7 @@
                             card.href = link;
                             card.target = '_blank';
                             card.rel = 'noopener noreferrer';
-                            card.addEventListener('click', (e) => {
+                            card.onclick = () => {
                                 if (typeof AppState !== 'undefined') {
                                     if (typeof AppState.addPoints === 'function') {
                                         AppState.addPoints(5);
@@ -260,9 +260,12 @@
                                     if (typeof AppState.checkAndCompleteTask === 'function') {
                                         AppState.checkAndCompleteTask('education');
                                     }
+                                    // Force UI update to ensure they see the points immediately
+                                    if (typeof AppState.updatePointsDisplay === 'function') {
+                                        AppState.updatePointsDisplay();
+                                    }
                                 }
-                                // default navigation via href proceeds automatically
-                            });
+                            };
                             card.innerHTML = `
     <div class="article-image" style="position: relative; width: 100%; height: 200px; overflow: hidden; border-radius: 8px 8px 0 0;">
         ${imageHTML}
