@@ -155,7 +155,9 @@ const PostManager = {
             KatakitaAPI.sync('insert', {
                 tableName: 'kindness_feeds_comments',
                 story_id: postId,
-                comment: content
+                comment: content,
+                username: currentUser || '',
+                display_name: displayName || ''
             });
         }
 
@@ -257,11 +259,18 @@ const FeedUI = {
                                 const lastFeed = userFeeds.reduce((a, b) => (parseInt(a.id) > parseInt(b.id) ? a : b));
                                 const lastComments = comments
                                     .filter(c => c.story_id && c.story_id.toString() === lastFeed.id.toString())
-                                    .map(c => ({ id: c.id.toString(), content: c.comment, timestamp: new Date(c.date).getTime() || Date.now(), replies: [] }));
+                                    .map(c => ({
+                                        id: c.id.toString(),
+                                        content: c.comment,
+                                        timestamp: new Date(c.date).getTime() || Date.now(),
+                                        username: c.username || '',
+                                        author: c.display_name || 'Anonymous',
+                                        replies: []
+                                    }));
 
                                 this.userHighlight = {
                                     id: lastFeed.id.toString(),
-                                    author: userMap[lastFeed.username] || lastFeed.username,
+                                    author: lastFeed.display_name || 'Anonymous',
                                     content: lastFeed.story && lastFeed.story.startsWith('"') ? lastFeed.story : `"${lastFeed.story || ''}"`,
                                     mood: 'comfort',
                                     timestamp: Date.now(),
@@ -281,13 +290,15 @@ const FeedUI = {
                                     id: c.id.toString(),
                                     content: c.comment,
                                     timestamp: new Date(c.date).getTime() || Date.now(),
+                                    username: c.username || '',
+                                    author: c.display_name || 'Anonymous',
                                     replies: []
                                 }));
 
                             return {
                                 id: feed.id.toString(),
                                 username: feed.username,
-                                author: userMap[feed.username] || feed.username,
+                                author: feed.display_name || 'Anonymous',
                                 content: feed.story && feed.story.startsWith('"') ? feed.story : `"${feed.story || ''}"`,
                                 mood: 'comfort',
                                 timestamp: Date.now(),
