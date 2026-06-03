@@ -192,15 +192,17 @@ function doPost(e) {
 
         var rowData = [];
         if (tableName == 'diary') {
-            rowData = [newId, body.username, body.diary, date];
+          rowData = [newId, body.username, body.diary, date];
         } else if (tableName == 'mood_tracker') {
-            rowData = [newId, body.username, body.mood, date];
+          rowData = [newId, body.username, body.mood, date];
         } else if (tableName == 'gratitude_wall') {
-            rowData = [newId, body.message, date];
+          rowData = [newId, body.message, date];
         } else if (tableName == 'saved_items') {
-            rowData = [newId, body.username, body.items, date];
+          rowData = [newId, body.username, body.items, date];
         } else if (tableName == 'kindness_feeds_comments') {
-            rowData = [newId, body.story_id, body.comment, date];
+          var commentUsername = body.username || '';
+          var commentDisplayName = body.display_name || '';
+          rowData = [newId, body.story_id, commentUsername, commentDisplayName, body.comment, date];
         } else if (tableName == 'kindness_feeds') {
             rowData = [newId, body.username, body.story, 0];
         } else if (tableName == 'tasks') {
@@ -335,7 +337,7 @@ function initializeSpreadsheet() {
     'mood_tracker': ["id", "username", "mood", "date"],
     'gratitude_wall': ["id", "message", "date"],
     'saved_items': ["id", "username", "items", "date"],
-    'kindness_feeds_comments': ["id", "story_id", "comment", "date"],
+    'kindness_feeds_comments': ["id", "story_id", "username", "display_name", "comment", "date"],
     'kindness_feeds': ["id", "username", "story", "hugs"],
     'tasks': ["id", "task", "skor", "date"],
     'education': ["id", "url", "title", "summary", "image_url"],
