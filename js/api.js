@@ -5,7 +5,7 @@
 
 const KatakitaAPI = {
     // ⚠️ REPLACE THIS WITH YOUR DEPLOYED APPS SCRIPT WEB APP URL ⚠️
-    URL: 'https://script.google.com/macros/s/AKfycbye4-bA1hj_OXmBBZKFwVnOJ_vADylaQd8GzHP7rPHQaSepIHurY2T710pltIp7EvUB/exec',
+    URL: 'https://script.google.com/macros/s/AKfycbxwZr5nt-CKV8RX3KcxWx4_1LhX484aYj2aPIJxWy7lH_ijyGqKesGMvzKsjjevJXI/exec',
 
     /**
      * Send a background sync request to the API without blocking the UI
