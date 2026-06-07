@@ -341,8 +341,8 @@ function initializeSpreadsheet() {
     'kindness_feeds': ["id", "username", "story", "hugs"],
     'tasks': ["id", "task", "skor", "date"],
     'education': ["id", "url", "title", "summary", "image_url"],
-    'comfort_messages': ["id", "message"],
-    'heartfelt_voices': ["id", "title", "narrator"]
+    'comfort_messages': ["id", "message", "mood"],
+    'heartfelt_voices': ["id", "title", "narrator", "url", "mood"]
   };
 
   for (var sheetName in expectedSheets) {
