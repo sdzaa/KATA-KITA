@@ -6,14 +6,26 @@
 const ComfortManager = {
     MESSAGES: [],
 
-    getRandomMessage(currentText) {
-        if (this.MESSAGES.length === 0) return "No sweet messages available.";
-        if (this.MESSAGES.length === 1) return this.MESSAGES[0];
+    getMessagesByMood(mood) {
+        const normalizedMood = (mood || 'neutral').toString().toLowerCase();
+        const filtered = this.MESSAGES.filter(item => {
+            return (item.mood || 'neutral').toString().toLowerCase() === normalizedMood;
+        });
+        return filtered.length > 0 ? filtered : this.MESSAGES;
+    },
+
+    getRandomMessage(currentText, mood) {
+        const messages = this.getMessagesByMood(mood);
+        if (messages.length === 0) return "No sweet messages available.";
+        if (messages.length === 1) return messages[0].message;
+
         let newMessage;
         const cleanCurrent = currentText?.replace(/"/g, '').trim();
         do {
-            newMessage = this.MESSAGES[Math.floor(Math.random() * this.MESSAGES.length)];
-        } while (newMessage === cleanCurrent);
+            const candidate = messages[Math.floor(Math.random() * messages.length)];
+            newMessage = candidate.message;
+        } while (newMessage === cleanCurrent && messages.length > 1);
+
         return newMessage;
     }
 };
@@ -124,6 +136,8 @@ const AudioPlayerUI = {
         isPlaying: false,
         currentTrackIndex: 0
     },
+    selectedMood: 'anxious',
+    audio: null,
 
     elements: {
         playBtn: document.getElementById('playBtn'),
@@ -138,6 +152,9 @@ const AudioPlayerUI = {
     },
 
     init() {
+        this.audio = new Audio();
+        this.audio.preload = 'metadata';
+        this.audio.addEventListener('ended', () => this.nextTrack());
         this.updateTrackUI();
         this.bindEvents();
     },
@@ -148,33 +165,100 @@ const AudioPlayerUI = {
         this.elements.saveTrackBtn?.addEventListener('click', () => this.handleSaveTrack());
     },
 
+    getFilteredTracks() {
+        const normalizedMood = (this.selectedMood || 'neutral').toString().toLowerCase();
+        const filtered = this.tracks.filter(track => {
+            return (track.mood || 'neutral').toString().toLowerCase() === normalizedMood;
+        });
+        return filtered.length > 0 ? filtered : this.tracks;
+    },
+
+    getCurrentTrack() {
+        const filteredTracks = this.getFilteredTracks();
+        if (filteredTracks.length === 0) return null;
+        const index = this.state.currentTrackIndex % filteredTracks.length;
+        return filteredTracks[index];
+    },
+
+    normalizeUrl(url) {
+        if (!url || typeof url !== 'string') return '';
+        const trimmed = url.trim();
+        const driveRegex = /drive\.google\.com\/(?:file\/d\/([\w-]+)|open\?id=([\w-]+)|uc\?export=download&id=([\w-]+))/i;
+        const match = trimmed.match(driveRegex);
+        if (match) {
+            const fileId = match[1] || match[2] || match[3];
+            return fileId ? `https://drive.google.com/uc?export=download&id=${fileId}` : trimmed;
+        }
+        return trimmed;
+    },
+
+    applyCurrentTrackSource() {
+        const track = this.getCurrentTrack();
+        const trackUrl = track ? this.normalizeUrl(track.url) : '';
+        if (!track || !trackUrl) {
+            if (this.audio) {
+                this.audio.pause();
+                this.audio.src = '';
+            }
+            return;
+        }
+
+        if (this.audio && this.audio.src !== trackUrl) {
+            this.audio.src = trackUrl;
+            this.audio.load();
+        }
+    },
+
     updateTrackUI() {
-        if (this.tracks.length === 0) {
+        const track = this.getCurrentTrack();
+        if (!track) {
             if (this.elements.audioTitle) {
-                this.elements.audioTitle.innerHTML = "No audio tracks available.";
+                this.elements.audioTitle.innerHTML = "No audio tracks available for this mood.";
+            }
+            if (this.elements.progressBar) {
+                this.elements.progressBar.style.width = '0%';
+            }
+            if (this.elements.playBtn) {
+                this.elements.playBtn.disabled = true;
+                this.elements.playBtn.style.cursor = 'not-allowed';
+            }
+            return;
+        }
+
+        const normalizedUrl = this.normalizeUrl(track.url);
+        if (!normalizedUrl) {
+            if (this.elements.audioTitle) {
+                this.elements.audioTitle.innerHTML = `"${track.title}" - Narrated by ${track.narrator} (No playable audio URL found)`;
+            }
+            if (this.elements.playBtn) {
+                this.elements.playBtn.disabled = true;
+                this.elements.playBtn.style.cursor = 'not-allowed';
             }
             if (this.elements.progressBar) {
                 this.elements.progressBar.style.width = '0%';
             }
             return;
         }
-        const track = this.tracks[this.state.currentTrackIndex];
+
         if (this.elements.audioTitle) {
             this.elements.audioTitle.innerHTML = `"${track.title}" - Narrated by ${track.narrator}`;
         }
-        // Randomize progress for visual effect
+        if (this.elements.playBtn) {
+            this.elements.playBtn.disabled = false;
+            this.elements.playBtn.style.cursor = 'pointer';
+        }
         if (this.elements.progressBar) {
             this.elements.progressBar.style.width = this.state.isPlaying ? '40%' : '0%';
         }
-        // Reset save icon color
         if (this.elements.saveTrackBtn) {
             this.elements.saveTrackBtn.style.color = '';
         }
+        this.applyCurrentTrackSource();
     },
 
     handleSaveTrack() {
-        if (this.tracks.length === 0) return;
-        const track = this.tracks[this.state.currentTrackIndex];
+        const track = this.getCurrentTrack();
+        if (!track) return;
         if (SavedManager.saveTrack(track)) {
             this.elements.saveTrackBtn.style.color = '#E93B81'; // pink active
             if (typeof showModal === 'function') {
@@ -188,25 +272,37 @@ const AudioPlayerUI = {
     },
 
     nextTrack() {
-        if (this.tracks.length === 0) return;
-        this.state.currentTrackIndex = (this.state.currentTrackIndex + 1) % this.tracks.length;
+        const filteredTracks = this.getFilteredTracks();
+        if (filteredTracks.length === 0) return;
+        this.state.currentTrackIndex = (this.state.currentTrackIndex + 1) % filteredTracks.length;
         this.updateTrackUI();
-        this.animateButtonClick(this.elements.nextBtn);
+        this.animateButtonClick(this.elements.nextTrackBtn);
     },
 
     prevTrack() {
-        if (this.tracks.length === 0) return;
-        this.state.currentTrackIndex = (this.state.currentTrackIndex - 1 + this.tracks.length) % this.tracks.length;
+        const filteredTracks = this.getFilteredTracks();
+        if (filteredTracks.length === 0) return;
+        this.state.currentTrackIndex = (this.state.currentTrackIndex - 1 + filteredTracks.length) % filteredTracks.length;
         this.updateTrackUI();
-        this.animateButtonClick(this.elements.prevBtn);
+        this.animateButtonClick(this.elements.nextTrackBtn);
     },
 
     togglePlayback() {
-        if (this.tracks.length === 0) return;
+        const track = this.getCurrentTrack();
+        if (!track || !track.url) return;
+
         this.state.isPlaying = !this.state.isPlaying;
         const { playIcon, pauseIcon, audioStatus, audioCard, progressBar } = this.elements;
 
         if (this.state.isPlaying) {
+            this.applyCurrentTrackSource();
+            this.audio.play().catch(err => {
+                console.error('Audio playback failed:', err);
+                this.state.isPlaying = false;
+                if (playIcon) playIcon.style.display = 'block';
+                if (pauseIcon) pauseIcon.style.display = 'none';
+                if (audioStatus) audioStatus.textContent = 'Playback failed';
+            });
             if (playIcon) playIcon.style.display = 'none';
             if (pauseIcon) pauseIcon.style.display = 'block';
             if (audioStatus) audioStatus.textContent = 'Now Playing';
@@ -214,6 +310,7 @@ const AudioPlayerUI = {
             audioCard?.classList.add('playing');
             if (typeof AppState !== 'undefined') AppState.checkAndCompleteTask('comfort');
         } else {
+            if (this.audio) this.audio.pause();
             if (playIcon) playIcon.style.display = 'block';
             if (pauseIcon) pauseIcon.style.display = 'none';
             if (audioStatus) audioStatus.textContent = 'Paused';
@@ -234,11 +331,17 @@ const MoodSelector = {
         spans: document.querySelectorAll('.mood-selector span'),
         moodBadges: document.querySelectorAll('.mood-badge')
     },
+    selectedMood: 'anxious',
 
     init() {
+        const activeSpan = Array.from(this.elements.spans).find(span => span.classList.contains('active'));
+        if (activeSpan) {
+            this.selectedMood = activeSpan.getAttribute('data-mood') || this.selectedMood;
+        }
         this.elements.spans.forEach(span => {
             span.addEventListener('click', () => this.handleMoodChange(span));
         });
+        this.renderMoodState();
     },
 
     handleMoodChange(clickedSpan) {
@@ -246,20 +349,21 @@ const MoodSelector = {
         this.elements.spans.forEach(s => s.classList.remove('active'));
         clickedSpan.classList.add('active');
 
-        // 2. Update all mood badges on the page
-        const moodKey = clickedSpan.getAttribute('data-mood');
-        const moodEmoji = clickedSpan.textContent;
+        this.selectedMood = clickedSpan.getAttribute('data-mood') || this.selectedMood;
+        this.renderMoodState();
+        ComfortUI.applyMood(this.selectedMood);
+    },
 
+    renderMoodState() {
+        const moodKey = this.selectedMood;
+        const moodSpan = Array.from(this.elements.spans).find(span => span.getAttribute('data-mood') === moodKey);
+        const moodEmoji = moodSpan ? moodSpan.textContent : '';
         const currentLang = (typeof AppState !== 'undefined' && AppState.getLanguage()) || 'en';
         const moodLabel = (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[currentLang]['comfort_mood_label']) || 'Mood';
-        const translatedMoodName = (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[currentLang][`mood_${moodKey}`]) || clickedSpan.getAttribute('title');
+        const translatedMoodName = moodSpan ? (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[currentLang][`mood_${moodKey}`]) || moodSpan.getAttribute('title') : moodKey;
 
         this.elements.moodBadges.forEach(badge => {
             badge.innerHTML = `<span data-i18n="comfort_mood_label">${moodLabel}</span>: <span data-i18n="mood_${moodKey}">${translatedMoodName}</span> ${moodEmoji}`;
-        });
-
-        // 3. Optional: Add a little animation to badges
-        this.elements.moodBadges.forEach(badge => {
             badge.style.transform = 'scale(1.1)';
             setTimeout(() => badge.style.transform = '', 200);
         });
@@ -291,21 +395,22 @@ const ComfortUI = {
                 .then(response => {
                     if (response && response.result === 'success' && response.data) {
                         if (response.data.comfort_messages) {
-                            ComfortManager.MESSAGES = response.data.comfort_messages.map(m => m.message);
+                            ComfortManager.MESSAGES = response.data.comfort_messages.map(m => ({
+                                message: m.message || '',
+                                mood: (m.mood || 'neutral').toString().toLowerCase()
+                            }));
                         }
                         if (response.data.heartfelt_voices) {
-                            AudioPlayerUI.tracks = response.data.heartfelt_voices.map(v => ({ title: v.title, narrator: v.narrator }));
+                            AudioPlayerUI.tracks = response.data.heartfelt_voices.map(v => ({
+                                title: v.title || 'Untitled Voice',
+                                narrator: v.narrator || 'Unknown',
+                                url: v.url || v.Voices || v.voices || v.voice || '',
+                                mood: (v.mood || 'neutral').toString().toLowerCase()
+                            }));
                         }
                     }
 
-                    if (this.elements.messageText) {
-                        if (ComfortManager.MESSAGES.length > 0) {
-                            this.elements.messageText.textContent = `"${ComfortManager.MESSAGES[0]}"`;
-                        } else {
-                            this.elements.messageText.textContent = "No sweet messages available.";
-                        }
-                    }
-
+                    this.applyMood(MoodSelector.selectedMood);
                     AudioPlayerUI.init();
                 })
                 .catch(err => {
@@ -321,6 +426,21 @@ const ComfortUI = {
             }
             AudioPlayerUI.init();
         }
+    },
+
+    applyMood(mood) {
+        const messageText = this.elements.messageText;
+        if (messageText) {
+            if (ComfortManager.MESSAGES.length > 0) {
+                const text = ComfortManager.getRandomMessage('', mood);
+                messageText.textContent = `"${text}"`;
+            } else {
+                messageText.textContent = "No sweet messages available.";
+            }
+        }
+        AudioPlayerUI.selectedMood = mood;
+        AudioPlayerUI.state.currentTrackIndex = 0;
+        AudioPlayerUI.updateTrackUI();
     },
 
     bindEvents() {
@@ -347,13 +467,14 @@ const ComfortUI = {
         const { messageText, messageCard, saveMessageBtn } = this.elements;
         if (!messageText) return;
 
+        const mood = MoodSelector.selectedMood;
         // Transition out
         messageText.style.opacity = '0';
         messageText.style.transform = 'translateY(10px)';
         if (saveMessageBtn) saveMessageBtn.style.color = '';
 
         setTimeout(() => {
-            const newMessage = ComfortManager.getRandomMessage(messageText.textContent);
+            const newMessage = ComfortManager.getRandomMessage(messageText.textContent, mood);
             messageText.textContent = `"${newMessage}"`;
 
             // Transition in
