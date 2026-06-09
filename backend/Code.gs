@@ -202,7 +202,24 @@ function doPost(e) {
         } else if (tableName == 'kindness_feeds_comments') {
           var commentUsername = body.username || '';
           var commentDisplayName = body.display_name || '';
-          rowData = [newId, body.story_id, commentUsername, commentDisplayName, body.comment, date];
+          // Validate story_id exists in kindness_feeds to avoid mis-assigned comments
+          var storyIdRaw = body.story_id;
+          var storyId = parseInt(storyIdRaw);
+          if (isNaN(storyId)) {
+            throw new Error('Invalid story_id for comment insert');
+          }
+          var kfSheet = ss.getSheetByName('kindness_feeds');
+          if (!kfSheet) throw new Error('kindness_feeds sheet not found');
+          var kfData = kfSheet.getDataRange().getValues();
+          var storyFound = false;
+          for (var si = 1; si < kfData.length; si++) {
+            if (parseInt(kfData[si][0]) == storyId) {
+              storyFound = true;
+              break;
+            }
+          }
+          if (!storyFound) throw new Error('Story not found when inserting comment');
+          rowData = [newId, storyId, commentUsername, commentDisplayName, body.comment, date];
         } else if (tableName == 'kindness_feeds') {
             rowData = [newId, body.username, body.story, 0];
         } else if (tableName == 'tasks') {
