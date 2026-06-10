@@ -42,25 +42,59 @@
 
 /* Soft Pastel Backgrounds matching Figma - Light Mode */
 [data-theme="light"] .article-card:nth-child(6n+1),
-:root:not([data-theme="dark"]) .article-card:nth-child(6n+1) { background: #FDE8E8; }
+:root:not([data-theme="dark"]) .article-card:nth-child(6n+1) {
+    background: #FDE8E8;
+}
+
 [data-theme="light"] .article-card:nth-child(6n+2),
-:root:not([data-theme="dark"]) .article-card:nth-child(6n+2) { background: #FEF3C7; }
+:root:not([data-theme="dark"]) .article-card:nth-child(6n+2) {
+    background: #FEF3C7;
+}
+
 [data-theme="light"] .article-card:nth-child(6n+3),
-:root:not([data-theme="dark"]) .article-card:nth-child(6n+3) { background: #E0F2FE; }
+:root:not([data-theme="dark"]) .article-card:nth-child(6n+3) {
+    background: #E0F2FE;
+}
+
 [data-theme="light"] .article-card:nth-child(6n+4),
-:root:not([data-theme="dark"]) .article-card:nth-child(6n+4) { background: #F3E8FF; }
+:root:not([data-theme="dark"]) .article-card:nth-child(6n+4) {
+    background: #F3E8FF;
+}
+
 [data-theme="light"] .article-card:nth-child(6n+5),
-:root:not([data-theme="dark"]) .article-card:nth-child(6n+5) { background: #FFEDD5; }
+:root:not([data-theme="dark"]) .article-card:nth-child(6n+5) {
+    background: #FFEDD5;
+}
+
 [data-theme="light"] .article-card:nth-child(6n+6),
-:root:not([data-theme="dark"]) .article-card:nth-child(6n+6) { background: #DCFCE7; }
+:root:not([data-theme="dark"]) .article-card:nth-child(6n+6) {
+    background: #DCFCE7;
+}
 
 /* Dark Mode Backgrounds - Deeper jewel tones for contrast */
-[data-theme="dark"] .article-card:nth-child(6n+1) { background: #3D2222; }
-[data-theme="dark"] .article-card:nth-child(6n+2) { background: #3D351A; }
-[data-theme="dark"] .article-card:nth-child(6n+3) { background: #1A2D3D; }
-[data-theme="dark"] .article-card:nth-child(6n+4) { background: #2D1A3D; }
-[data-theme="dark"] .article-card:nth-child(6n+5) { background: #3D2D1A; }
-[data-theme="dark"] .article-card:nth-child(6n+6) { background: #1A3D24; }
+[data-theme="dark"] .article-card:nth-child(6n+1) {
+    background: #3D2222;
+}
+
+[data-theme="dark"] .article-card:nth-child(6n+2) {
+    background: #3D351A;
+}
+
+[data-theme="dark"] .article-card:nth-child(6n+3) {
+    background: #1A2D3D;
+}
+
+[data-theme="dark"] .article-card:nth-child(6n+4) {
+    background: #2D1A3D;
+}
+
+[data-theme="dark"] .article-card:nth-child(6n+5) {
+    background: #3D2D1A;
+}
+
+[data-theme="dark"] .article-card:nth-child(6n+6) {
+    background: #1A3D24;
+}
 
 .img-gradient-1 {
     background: url('https://www.sciencenews.org/wp-content/uploads/sites/2/2026/04/041026_LG_artemis_Fridaysplashdown_main_ac43ab.jpg') center/cover;
