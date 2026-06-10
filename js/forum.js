@@ -270,7 +270,7 @@ const FeedUI = {
 
                                 this.userHighlight = {
                                     id: lastFeed.id.toString(),
-                                    author: lastFeed.display_name || 'Anonymous',
+                                    author: userMap[lastFeed.username] || lastFeed.display_name || 'Anonymous',
                                     content: lastFeed.story && lastFeed.story.startsWith('"') ? lastFeed.story : `"${lastFeed.story || ''}"`,
                                     mood: 'comfort',
                                     timestamp: Date.now(),
@@ -295,7 +295,7 @@ const FeedUI = {
                             return {
                                 id: feed.id.toString(),
                                 username: feed.username,
-                                author: feed.display_name || 'Anonymous',
+                                author: userMap[feed.username] || feed.display_name || 'Anonymous',
                                 content: feed.story && feed.story.startsWith('"') ? feed.story : `"${feed.story || ''}"`,
                                 mood: 'comfort',
                                 timestamp: Date.now(),
