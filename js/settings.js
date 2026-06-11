@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Update sidebar UI
             sidebarItems.forEach(i => i.classList.remove('active'));
             item.classList.add('active');
-            
+
             // Show corresponding section
             const sectionId = item.getAttribute('data-section');
             settingsSections.forEach(section => {
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 2. Avatar Selection
     const avatarItems = document.querySelectorAll('.avatar-item');
-    
+
     const updateAvatarUI = (selected) => {
         avatarItems.forEach(item => {
             if (item.getAttribute('data-avatar') === selected) {
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     };
-    
+
     // Initialize UI with current avatar
     updateAvatarUI(pendingState.avatar);
 
@@ -85,14 +85,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const langSelect = document.getElementById('languageSelect');
     const langDropdown = document.getElementById('languageDropdown');
     const selectedLangText = document.getElementById('selectedLanguage');
-    
+
     if (langSelect && langDropdown) {
         langSelect.addEventListener('click', () => {
             langDropdown.style.display = langDropdown.style.display === 'none' ? 'block' : 'none';
         });
 
         const langOptions = langDropdown.querySelectorAll('.option');
-        
+
         const updateLanguageUI = (lang) => {
             const opt = Array.from(langOptions).find(o => o.getAttribute('data-lang') === lang);
             if (opt) {
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 pendingState.language = lang;
                 updateLanguageUI(lang);
                 langDropdown.style.display = 'none';
-                
+
                 // Live preview language change
                 if (window.TRANSLATIONS) {
                     const elements = document.querySelectorAll('[data-i18n]');
@@ -134,13 +134,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 4. Theme Switching
     const lightBtn = document.getElementById('lightModeBtn');
     const darkBtn = document.getElementById('darkModeBtn');
-    
+
     const updateThemeUI = (theme) => {
         if (!lightBtn || !darkBtn) return;
         [lightBtn, darkBtn].forEach(b => b.classList.remove('active'));
         if (theme === 'light') lightBtn.classList.add('active');
         else if (theme === 'dark') darkBtn.classList.add('active');
-        
+
         // Live preview theme
         document.documentElement.setAttribute('data-theme', theme);
     };
@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // Refresh displays
             AppState.updatePointsDisplay();
-            
+
             // Visual Success State
             const originalText = saveBtn.textContent;
             saveBtn.textContent = 'Changes Saved! ✨';
@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 saveBtn.textContent = originalText;
                 saveBtn.classList.remove('success-btn');
                 saveBtn.disabled = false;
-                
+
                 // Redirect after save for a better flow
                 window.location.href = 'beranda.html';
             }, 1000);

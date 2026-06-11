@@ -75,7 +75,7 @@
             letter-spacing: -2px;
             text-transform: uppercase;
         }
-        
+
         .subtitle {
             color: #888;
             margin-bottom: 32px;
@@ -166,7 +166,7 @@
         .link-text a:hover {
             text-decoration: underline;
         }
-        
+
         .error-message {
             color: #E53E3E;
             font-size: 0.85rem;
@@ -208,21 +208,24 @@
                     <!-- New Display Name Field -->
                     <div class="input-group" style="margin-top: 16px;">
                         <label for="display_name">Display Name</label>
-                        <input type="text" id="display_name" placeholder="Enter display name" required autocomplete="off">
+                        <input type="text" id="display_name" placeholder="Enter display name" required
+                            autocomplete="off">
                     </div>
                     <div class="input-group" style="margin-top: 16px;">
                         <label for="password">Password</label>
-                        <input type="password" id="password" placeholder="Create a password" required autocomplete="new-password">
+                        <input type="password" id="password" placeholder="Create a password" required
+                            autocomplete="new-password">
                     </div>
                     <div class="input-group" style="margin-top: 16px;">
                         <label for="confirm_password">Confirm Password</label>
-                        <input type="password" id="confirm_password" placeholder="Confirm your password" required autocomplete="new-password">
+                        <input type="password" id="confirm_password" placeholder="Confirm your password" required
+                            autocomplete="new-password">
                     </div>
-                    
+
                     <div id="errorMessage" class="error-message">Passwords do not match.</div>
 
                     <button type="submit" id="submitBtn" class="login-btn" style="margin-top: 24px;">Sign Up</button>
-                    
+
                     <div class="link-text">
                         Already have an account? <a href="../index.html">Log In</a>
                     </div>
@@ -232,7 +235,7 @@
     </div>
 
     <script src="../js/signup.js"></script>
-<script src="../js/api.js"></script>
+    <script src="../js/api.js"></script>
 </body>
 
 </html>

@@ -355,12 +355,12 @@ const FeedUI = {
         // Modal Logic
         this.elements.openModalBtn?.addEventListener('click', () => this.toggleModal(true));
         this.elements.closeModalBtn?.addEventListener('click', () => this.toggleModal(false));
-        
+
         this.elements.cancelDeleteBtn?.addEventListener('click', () => this.toggleDeleteModal(false));
         this.elements.confirmDeleteBtn?.addEventListener('click', () => this.confirmDelete());
-        
+
         this.elements.closeEditModalBtn?.addEventListener('click', () => this.toggleEditModal(false));
-        
+
         window.addEventListener('click', (e) => {
             if (e.target === this.elements.modal) this.toggleModal(false);
             if (e.target === this.elements.deleteModal) this.toggleDeleteModal(false);
@@ -372,7 +372,7 @@ const FeedUI = {
             e.preventDefault();
             this.handlePostSubmit();
         });
-        
+
         this.elements.editPostForm?.addEventListener('submit', (e) => {
             e.preventDefault();
             this.confirmEdit();
@@ -431,14 +431,14 @@ const FeedUI = {
         const posts = PostManager.getPosts();
         const post = posts.find(p => p.id === postId);
         if (!post) return;
-        
+
         this.postToEdit = postId;
         this.toggleEditModal(true, post.content);
     },
 
     confirmEdit() {
         if (!this.postToEdit) return;
-        
+
         const content = this.elements.editPostContent?.value.trim();
         if (content) {
             if (!ContentFilter.validate(content)) return;
@@ -446,7 +446,7 @@ const FeedUI = {
             const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
             this.render(activeFilter);
         }
-        
+
         this.toggleEditModal(false);
     },
 
@@ -634,7 +634,7 @@ const FeedUI = {
         const isLiked = localStorage.getItem(PostManager.LIKED_KEY_PREFIX + post.id);
         const currentUser = (typeof AppState !== 'undefined' && AppState.getUser()) || null;
         const isAuthor = currentUser && post.username && post.username === currentUser;
-        
+
         let actionButtons = '';
         if (isAuthor) {
             actionButtons = `

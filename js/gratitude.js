@@ -122,7 +122,7 @@ const GratitudeUI = {
                                 reactions: existing ? existing.reactions : 0
                             };
                         });
-                        
+
                         // Reverse so newest entries (which are appended to the sheet) show up first
                         notes.reverse();
                         GratitudeManager.saveData(notes);
@@ -147,7 +147,7 @@ const GratitudeUI = {
         this.elements.closeBtn?.addEventListener('click', () => this.toggleModal(false));
         this.elements.openHistoryBtn?.addEventListener('click', () => this.toggleHistoryModal(true));
         this.elements.closeHistoryBtn?.addEventListener('click', () => this.toggleHistoryModal(false));
-        
+
         window.addEventListener('click', (e) => {
             if (e.target === this.elements.modal) this.toggleModal(false);
             if (e.target === this.elements.deleteModal) this.toggleDeleteModal(false);
@@ -175,7 +175,7 @@ const GratitudeUI = {
         this.elements.wall?.addEventListener('click', (e) => {
             const reactBtn = e.target.closest('.react-btn');
             const deleteBtn = e.target.closest('.delete-btn');
-            
+
             if (reactBtn) this.handleReaction(reactBtn);
             if (deleteBtn) this.handleDelete(deleteBtn);
         });
@@ -235,7 +235,7 @@ const GratitudeUI = {
         const notes = GratitudeManager.getData().sort((a, b) => b.timestamp - a.timestamp);
         const lang = (typeof AppState !== 'undefined') ? AppState.getLanguage() : 'id';
         const locale = lang === 'id' ? 'id-ID' : 'en-US';
-        
+
         if (notes.length === 0) {
             const emptyHistoryMsg = (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[lang]['gratitude_empty_history']) || 'No gratitude history yet.';
             this.elements.historyList.innerHTML = `<p style="text-align:center; color: var(--color-text-muted); padding: 20px;">${emptyHistoryMsg}</p>`;

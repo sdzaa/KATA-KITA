@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Handle Task Button Clicks (all buttons, allow repeatable)
     const taskButtons = document.querySelectorAll('.task-btn');
-    
+
     taskButtons.forEach(btn => {
         btn.addEventListener('click', (e) => {
             const card = btn.closest('.task-card');

@@ -21,13 +21,13 @@ const AppState = {
         const newTotal = current + amount;
         localStorage.setItem(`${APP_PREFIX}points`, newTotal);
         AppState.updatePointsDisplay();
-        
+
         // Sync points update to Apps Script database
         const user = AppState.getUser();
         if (user && typeof KatakitaAPI !== 'undefined') {
             KatakitaAPI.sync('update_skor', { username: user, points: amount });
         }
-        
+
         return newTotal;
     },
 
@@ -147,7 +147,7 @@ const AppState = {
         const pending = AppState.getPendingTask();
         if (pending && pending.type === taskType) {
             AppState.addPoints(pending.stars);
-            
+
             // Sync task completion to Google Sheets tasks database
             if (typeof KatakitaAPI !== 'undefined') {
                 KatakitaAPI.sync('insert', {

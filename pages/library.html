@@ -195,13 +195,13 @@
                         // Process each article
                         articles.forEach((art, index) => {
                             const needsMetadata = !art.title || !art.summary;
-                            
+
                             // Workaround for Google Sheet column misalignment where URL might be in image_url
                             let actualUrl = art.url;
                             if (!actualUrl && art.image_url && art.image_url.includes('http')) {
                                 actualUrl = art.image_url;
                                 // clear image_url so it fetches a real image
-                                art.image_url = ''; 
+                                art.image_url = '';
                             }
                             art.url = actualUrl;
 
