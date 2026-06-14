@@ -97,9 +97,14 @@ function doPost(e) {
   var getNextId = function(sheet) {
     var data = sheet.getDataRange().getValues();
     if (data.length <= 1) return 1;
-    var lastRow = data[data.length - 1];
-    var lastId = parseInt(lastRow[0]);
-    return isNaN(lastId) ? 1 : lastId + 1;
+    var maxId = 0;
+    for (var i = 1; i < data.length; i++) {
+      var idValue = parseInt(data[i][0]);
+      if (!isNaN(idValue) && idValue > maxId) {
+        maxId = idValue;
+      }
+    }
+    return maxId + 1;
   };
 
   var getCurrentDate = function() {
