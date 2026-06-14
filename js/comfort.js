@@ -155,6 +155,22 @@ const AudioPlayerUI = {
         this.audio = new Audio();
         this.audio.preload = 'metadata';
         this.audio.addEventListener('ended', () => this.nextTrack());
+        this.audio.addEventListener('error', () => {
+            if (this.elements.audioStatus) {
+                this.elements.audioStatus.style.display = 'block';
+                this.elements.audioStatus.textContent = 'Audio source unavailable. Please try a different track.';
+            }
+            if (this.elements.playBtn) {
+                this.elements.playBtn.disabled = true;
+                this.elements.playBtn.style.cursor = 'not-allowed';
+            }
+        });
+        this.audio.addEventListener('canplaythrough', () => {
+            if (this.elements.audioStatus) {
+                this.elements.audioStatus.style.display = 'none';
+                this.elements.audioStatus.textContent = '';
+            }
+        });
         this.updateTrackUI();
         this.bindEvents();
     },
@@ -183,13 +199,18 @@ const AudioPlayerUI = {
     normalizeUrl(url) {
         if (!url || typeof url !== 'string') return '';
         const trimmed = url.trim();
-        const driveRegex = /drive\.google\.com\/(?:file\/d\/([\w-]+)|open\?id=([\w-]+)|uc\?export=download&id=([\w-]+))/i;
+        // Support Google Drive links - convert to direct download
+        const driveRegex = /(?:drive\.google\.com\/(?:file\/d\/([\w-]+)(?:\/view(?:\?[^#]*)?)?|open\?id=([\w-]+)|uc\?export=download&id=([\w-]+))|docs\.google\.com\/uc\?export=download&id=([\w-]+))/i;
         const match = trimmed.match(driveRegex);
         if (match) {
-            const fileId = match[1] || match[2] || match[3];
-            return fileId ? `https://drive.google.com/uc?export=download&id=${fileId}` : trimmed;
+            const fileId = match[1] || match[2] || match[3] || match[4];
+            return fileId ? `https://docs.google.com/uc?export=download&id=${fileId}` : trimmed;
         }
-        return trimmed;
+        // Return any other URL as-is (Firebase, Supabase, direct URLs, etc.)
+        if (/^https?:\/\//.test(trimmed)) {
+            return trimmed;
+        }
+        return '';
     },
 
     applyCurrentTrackSource() {
@@ -204,6 +225,7 @@ const AudioPlayerUI = {
         }
 
         if (this.audio && this.audio.src !== trackUrl) {
+            this.audio.crossOrigin = 'anonymous';
             this.audio.src = trackUrl;
             this.audio.load();
         }
