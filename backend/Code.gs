@@ -226,7 +226,7 @@ function doPost(e) {
           if (!storyFound) throw new Error('Story not found when inserting comment');
           rowData = [newId, storyId, commentUsername, commentDisplayName, body.comment, date];
         } else if (tableName == 'kindness_feeds') {
-            rowData = [newId, body.username, body.story, 0];
+            rowData = [newId, body.username, body.story, 0, date];
         } else if (tableName == 'tasks') {
             rowData = [newId, body.task, body.skor, date];
         } else if (tableName == 'education') {
@@ -360,7 +360,7 @@ function initializeSpreadsheet() {
     'gratitude_wall': ["id", "message", "date"],
     'saved_items': ["id", "username", "items", "date"],
     'kindness_feeds_comments': ["id", "story_id", "username", "display_name", "comment", "date"],
-    'kindness_feeds': ["id", "username", "story", "hugs"],
+    'kindness_feeds': ["id", "username", "story", "hugs", "date"],
     'tasks': ["id", "task", "skor", "date"],
     'education': ["id", "url", "title", "summary", "image_url"],
     'comfort_messages': ["id", "message", "mood"],
@@ -399,6 +399,18 @@ function initializeSpreadsheet() {
           sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
           sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold");
           sheet.setFrozenRows(1);
+          
+          // Backfill: Populate missing date column for kindness_feeds
+          if (sheetName === 'kindness_feeds' && lastColumn < 5) {
+            var allData = sheet.getDataRange().getValues();
+            var now = new Date().toISOString();
+            for (var bi = 1; bi < allData.length; bi++) {
+              // If date cell (column 5) is empty or doesn't exist, fill it
+              if (!allData[bi][4]) {
+                sheet.getRange(bi+1, 5).setValue(now);
+              }
+            }
+          }
         }
       }
     }
