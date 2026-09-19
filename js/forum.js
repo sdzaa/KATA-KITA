@@ -211,6 +211,7 @@ const FeedUI = {
     postToDelete: null,
     postToEdit: null,
     userHighlight: null,
+    timeRefreshInterval: null,
     elements: {
         feedContainer: document.getElementById('feedPosts'),
         postForm: document.getElementById('postForm'),
@@ -235,7 +236,13 @@ const FeedUI = {
         }
 
         if (typeof KatakitaAPI !== 'undefined') {
-            KatakitaAPI.request('get_data', { tables: ['kindness_feeds', 'kindness_feeds_comments', 'user'] })
+            KatakitaAPI.request('get_feed', { limit: 100 })
+                // Keep the feed usable until the updated Apps Script deployment
+                // is published. The old endpoint can still return feed rows only.
+                .then(response => {
+                    if (response && response.result === 'success') return response;
+                    return KatakitaAPI.request('get_data', { tables: ['kindness_feeds'] });
+                })
                 .then(response => {
                     if (response && response.result === 'success' && response.data) {
                         let feeds = response.data.kindness_feeds || [];
@@ -250,35 +257,19 @@ const FeedUI = {
                             }
                         });
 
-                        // Use the current user's last feed as the highlight (if logged in)
-                        const currentUser = (typeof AppState !== 'undefined' && AppState.getUser()) || null;
-                        this.userHighlight = null;
-                        if (currentUser) {
-                            const userFeeds = feeds.filter(f => f.username && f.username.toString() === currentUser.toString());
-                            if (userFeeds.length > 0) {
-                                const lastFeed = userFeeds.reduce((a, b) => (parseInt(a.id) > parseInt(b.id) ? a : b));
-                                const lastComments = comments
-                                    .filter(c => c.story_id && c.story_id.toString() === lastFeed.id.toString())
-                                    .map(c => ({
-                                        id: c.id.toString(),
-                                        content: c.comment,
-                                        timestamp: new Date(c.date).getTime() || Date.now(),
-                                        username: c.username || '',
-                                        author: c.display_name || 'Anonymous',
-                                        replies: []
-                                    }));
+                        // Normalize sheet dates. Older rows from the previous sheet
+                        // schema have no `date`, so retain that fact instead of treating
+                        // them as a newly-created post.
+                        const toTimestamp = (value) => {
+                            if (typeof value === 'number') return value;
+                            if (!value) return null;
+                            const parsed = Date.parse(value);
+                            return Number.isNaN(parsed) ? null : parsed;
+                        };
 
-                                this.userHighlight = {
-                                    id: lastFeed.id.toString(),
-                                    author: userMap[lastFeed.username] || lastFeed.display_name || 'Anonymous',
-                                    content: lastFeed.story && lastFeed.story.startsWith('"') ? lastFeed.story : `"${lastFeed.story || ''}"`,
-                                    mood: 'comfort',
-                                    timestamp: (lastFeed.date ? new Date(lastFeed.date).getTime() : Date.now()),
-                                    likes: parseInt(lastFeed.hugs) || 0,
-                                    comments: lastComments
-                                };
-                            }
-                        }
+                        // Keep the latest post at the top. The old highlight card always
+                        // appeared first, even when it was older than other posts.
+                        this.userHighlight = null;
 
                         const posts = feeds.map(feed => {
                             const postComments = comments
@@ -286,7 +277,7 @@ const FeedUI = {
                                 .map(c => ({
                                     id: c.id.toString(),
                                     content: c.comment,
-                                    timestamp: new Date(c.date).getTime() || Date.now(),
+                                    timestamp: toTimestamp(c.date),
                                     username: c.username || '',
                                     author: c.display_name || 'Anonymous',
                                     replies: []
@@ -298,26 +289,34 @@ const FeedUI = {
                                 author: userMap[feed.username] || feed.display_name || 'Anonymous',
                                 content: feed.story && feed.story.startsWith('"') ? feed.story : `"${feed.story || ''}"`,
                                 mood: 'comfort',
-                                timestamp: (feed.date ? new Date(feed.date).getTime() : Date.now()),
+                                timestamp: toTimestamp(feed.date),
                                 likes: parseInt(feed.hugs) || 0,
                                 comments: postComments
                             };
                         });
 
-                        posts.reverse();
+                        // IDs are generated sequentially by Apps Script. Prioritizing
+                        // them keeps legacy rows without a date in their real append order.
+                        posts.sort((a, b) => Number(b.id) - Number(a.id) || (b.timestamp || 0) - (a.timestamp || 0));
                         PostManager.savePosts(posts);
                     }
                     this.render();
                     this.bindEvents();
+                    this.startTimeRefresh();
                 })
                 .catch(err => {
                     console.error('Error fetching forum data:', err);
-                    this.render();
+                    // Do not silently show an old local cache as if it were current.
+                    if (this.elements.feedContainer) {
+                        this.elements.feedContainer.innerHTML = '<p style="text-align: center; color: var(--color-text-muted); padding: 40px;">Posting terbaru tidak dapat dimuat. Periksa koneksi lalu muat ulang halaman.</p>';
+                    }
                     this.bindEvents();
+                    this.startTimeRefresh();
                 });
         } else {
             this.render();
             this.bindEvents();
+            this.startTimeRefresh();
         }
     },
 
@@ -385,6 +384,18 @@ const FeedUI = {
                 btn.classList.add('active');
                 this.render(btn.dataset.filter);
             });
+        });
+    },
+
+    startTimeRefresh() {
+        if (this.timeRefreshInterval) return;
+        this.refreshTimeLabels();
+        this.timeRefreshInterval = window.setInterval(() => this.refreshTimeLabels(), 30000);
+    },
+
+    refreshTimeLabels() {
+        document.querySelectorAll('[data-relative-time]').forEach((element) => {
+            element.textContent = this.formatTime(Number(element.dataset.relativeTime));
         });
     },
 
@@ -554,13 +565,13 @@ const FeedUI = {
     render(filter = 'all') {
         if (!this.elements.feedContainer) return;
 
-        let posts = PostManager.getPosts();
+        let posts = PostManager.getPosts().slice();
 
         // Sort & Filter
         if (filter === 'popular') {
             posts.sort((a, b) => b.likes - a.likes);
         } else {
-            posts.sort((a, b) => b.timestamp - a.timestamp);
+            posts.sort((a, b) => Number(b.id) - Number(a.id) || (b.timestamp || 0) - (a.timestamp || 0));
         }
 
         if (filter !== 'all' && filter !== 'popular') {
@@ -664,7 +675,7 @@ const FeedUI = {
                 ${actionButtons}
             </div>
             <div class="post-content">${post.content}</div>
-            <div class="post-time" style="margin-bottom: 16px;">${this.formatTime(post.timestamp)}</div>
+            <div class="post-time" data-relative-time="${post.timestamp}" style="margin-bottom: 16px;">${this.formatTime(post.timestamp)}</div>
             <div class="post-footer">
                 <button class="action-btn like-btn ${isLiked ? 'liked' : ''}" data-id="${post.id}">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${isLiked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
@@ -696,7 +707,7 @@ const FeedUI = {
                 <div style="font-weight: 600; color: var(--color-text-main); font-size: 0.9rem;">${c.author || c.username || 'Anonymous'}</div>
                 <div style="color: var(--color-text-muted); font-size: 0.9rem; margin: 4px 0;">${c.content}</div>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div style="font-size: 0.75rem; color: #aaa;">${this.formatTime(c.timestamp)}</div>
+                    <div data-relative-time="${c.timestamp}" style="font-size: 0.75rem; color: #aaa;">${this.formatTime(c.timestamp)}</div>
                     <button class="action-btn reply-btn" data-comment-id="${c.id}" style="font-size: 0.75rem; padding: 0;">Reply</button>
                 </div>
                 
@@ -706,7 +717,7 @@ const FeedUI = {
                         <div class="reply-item" style="margin-bottom: 6px;">
                             <div style="font-weight: 600; color: var(--color-text-main); font-size: 0.85rem;">${r.author || r.username || 'Anonymous'}</div>
                             <div style="color: var(--color-text-muted); font-size: 0.85rem; margin: 2px 0;">${r.content}</div>
-                            <div style="font-size: 0.7rem; color: #aaa;">${this.formatTime(r.timestamp)}</div>
+                            <div data-relative-time="${r.timestamp}" style="font-size: 0.7rem; color: #aaa;">${this.formatTime(r.timestamp)}</div>
                         </div>
                     `).join('')}
                 </div>
@@ -721,11 +732,12 @@ const FeedUI = {
     },
 
     formatTime(timestamp) {
-        const diff = Date.now() - timestamp;
+        if (!Number.isFinite(timestamp) || timestamp <= 0) return 'Waktu tidak tersedia';
+        const diff = Math.max(0, Date.now() - timestamp);
         const mins = Math.floor(diff / 60000);
         const hours = Math.floor(mins / 60);
-        if (hours > 0) return `${hours} hours ago`;
-        if (mins > 0) return `${mins} mins ago`;
+        if (hours > 0) return `${hours} ${hours === 1 ? 'hour' : 'hours'} ago`;
+        if (mins > 0) return `${mins} ${mins === 1 ? 'minute' : 'minutes'} ago`;
         return 'Just now';
     }
 };
