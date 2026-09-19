@@ -112,6 +112,22 @@ function doPost(e) {
     return d.toISOString();
   };
 
+  var getRowsAsObjects = function(sheet) {
+    if (!sheet) return [];
+    var values = sheet.getDataRange().getValues();
+    if (values.length <= 1) return [];
+    var headers = values[0];
+    var rows = [];
+    for (var rowIndex = 1; rowIndex < values.length; rowIndex++) {
+      var row = {};
+      for (var columnIndex = 0; columnIndex < headers.length; columnIndex++) {
+        row[headers[columnIndex]] = values[rowIndex][columnIndex];
+      }
+      rows.push(row);
+    }
+    return rows;
+  };
+
   try {
     if (action == 'signup') {
       var sheet = ss.getSheetByName('user');
@@ -227,6 +243,11 @@ function doPost(e) {
           rowData = [newId, storyId, commentUsername, commentDisplayName, body.comment, date];
         } else if (tableName == 'kindness_feeds') {
             rowData = [newId, body.username, body.story, 0, date];
+        } else if (tableName == 'bug_reports') {
+            if (!body.message || !body.message.toString().trim()) {
+              throw new Error('Bug report message is required');
+            }
+            rowData = [newId, body.username || 'Anonymous', date, body.message.toString().trim()];
         } else if (tableName == 'tasks') {
             rowData = [newId, body.task, body.skor, date];
         } else if (tableName == 'education') {
@@ -301,6 +322,37 @@ function doPost(e) {
         
         return createJSONResponse({ result: 'success', data: metadata });
     }
+
+    if (action == 'get_feed') {
+        // Sending every historical post and comment can make the web-app
+        // response too large. Return only the newest feed window instead.
+        var requestedLimit = parseInt(body.limit, 10);
+        var feedLimit = isNaN(requestedLimit) ? 100 : Math.min(Math.max(requestedLimit, 1), 100);
+        var feedRows = getRowsAsObjects(ss.getSheetByName('kindness_feeds'));
+        feedRows.sort(function(a, b) {
+          return (parseInt(b.id, 10) || 0) - (parseInt(a.id, 10) || 0);
+        });
+        feedRows = feedRows.slice(0, feedLimit);
+
+        var visibleStoryIds = {};
+        for (var feedIndex = 0; feedIndex < feedRows.length; feedIndex++) {
+          visibleStoryIds[String(feedRows[feedIndex].id)] = true;
+        }
+
+        var commentRows = getRowsAsObjects(ss.getSheetByName('kindness_feeds_comments'));
+        commentRows = commentRows.filter(function(comment) {
+          return visibleStoryIds[String(comment.story_id)] === true;
+        });
+
+        return createJSONResponse({
+          result: 'success',
+          data: {
+            kindness_feeds: feedRows,
+            kindness_feeds_comments: commentRows,
+            user: getRowsAsObjects(ss.getSheetByName('user'))
+          }
+        });
+    }
     
     if (action == 'get_data') {
         var tables = body.tables || [];
@@ -361,6 +413,7 @@ function initializeSpreadsheet() {
     'saved_items': ["id", "username", "items", "date"],
     'kindness_feeds_comments': ["id", "story_id", "username", "display_name", "comment", "date"],
     'kindness_feeds': ["id", "username", "story", "hugs", "date"],
+    'bug_reports': ["id", "username", "date", "message"],
     'tasks': ["id", "task", "skor", "date"],
     'education': ["id", "url", "title", "summary", "image_url"],
     'comfort_messages': ["id", "message", "mood"],
@@ -400,17 +453,10 @@ function initializeSpreadsheet() {
           sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold");
           sheet.setFrozenRows(1);
           
-          // Backfill: Populate missing date column for kindness_feeds
-          if (sheetName === 'kindness_feeds' && lastColumn < 5) {
-            var allData = sheet.getDataRange().getValues();
-            var now = new Date().toISOString();
-            for (var bi = 1; bi < allData.length; bi++) {
-              // If date cell (column 5) is empty or doesn't exist, fill it
-              if (!allData[bi][4]) {
-                sheet.getRange(bi+1, 5).setValue(now);
-              }
-            }
-          }
+          // Do not invent dates for legacy Kindness Feed rows. Their real
+          // creation time is unknown; the client uses the sequential ID for
+          // their order and labels the timestamp as unavailable. New rows are
+          // always written with a proper ISO date in doPost.
         }
       }
     }
