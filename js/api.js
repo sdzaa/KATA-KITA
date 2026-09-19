@@ -48,7 +48,10 @@ const KatakitaAPI = {
         try {
             const response = await fetch(this.URL, {
                 method: 'POST',
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
+                // Feed data must always come from the latest Apps Script response,
+                // not from a browser or intermediary cache.
+                cache: 'no-store'
             });
             return await response.json();
         } catch (error) {
