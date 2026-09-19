@@ -207,6 +207,17 @@ function setupGlobals() {
     // Apply initial language
     AppState.applyLanguage();
 
+    // Make the bug-report page reachable from every dashboard page without
+    // duplicating the same sidebar markup in each HTML file.
+    const reportLinkExists = document.querySelector('.sidebar-nav a[href="bug-report.html"]');
+    const logoutItem = document.querySelector('.sidebar-footer .logout-btn')?.closest('li');
+    if (!reportLinkExists && logoutItem) {
+        const reportItem = document.createElement('li');
+        const reportLabel = AppState.getLanguage() === 'id' ? 'Laporkan Bug' : 'Report a Bug';
+        reportItem.innerHTML = `<a href="bug-report.html"><span>${reportLabel}</span></a>`;
+        logoutItem.parentNode.insertBefore(reportItem, logoutItem);
+    }
+
     // Setup Logout Listeners
     const logoutBtns = document.querySelectorAll('.logout-btn');
     logoutBtns.forEach(btn => {
