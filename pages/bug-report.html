@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lapor Bug - KATA-KITA</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/bug-report.css">
+    <script src="../js/translations.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/main.js" defer></script>
+    <script src="../js/bug-report.js" defer></script>
+    <script>
+        document.documentElement.setAttribute('data-theme', localStorage.getItem('katakita_theme') || 'light');
+    </script>
+</head>
+
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-logo"><img src="../images/KATA-KITA.png" alt="KATA-KITA Logo"></div>
+            <div class="nav-section">
+                <ul class="sidebar-nav">
+                    <li><a href="myspace.html"><span class="dot green"></span><span>My Space</span></a></li>
+                    <li><a href="library.html"><span class="dot orange"></span><span>Edukasi</span></a></li>
+                    <li><a href="gratitude.html"><span class="dot purple"></span><span>Gratitude Wall</span></a></li>
+                    <li><a href="comfort.html"><span class="dot blue"></span><span>Comfort Zone</span></a></li>
+                    <li><a href="beranda.html"><span class="dot pink"></span><span>Kindness Feed</span></a></li>
+                </ul>
+            </div>
+            <div class="sidebar-footer">
+                <ul class="sidebar-nav">
+                    <li><a href="settings.html"><span>Pengaturan</span></a></li>
+                    <li><a href="rules.html"><span>Rules</span></a></li>
+                    <li><a href="tasks.html"><span>Tasks</span></a></li>
+                    <li><a href="bug-report.html" class="active"><span>Laporkan Bug</span></a></li>
+                    <li><a href="#" class="logout-btn"><span>Keluar</span></a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="main-view">
+            <header class="top-header">
+                <div class="header-center header-title">KATA-KITA</div>
+                <div class="header-right">
+                    <div class="user-profile" onclick="window.location.href='settings.html'">
+                        <div class="user-info"><div class="user-name" id="userNameProfile">User</div></div>
+                        <div class="profile-avatar">👤</div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-container">
+                <section class="card report-card">
+                    <h1>Laporkan Bug</h1>
+                    <p>Jelaskan masalah yang kamu alami. Laporan akan dikirim ke tim KATA-KITA.</p>
+                    <form id="bugReportForm" class="report-form">
+                        <label for="bugMessage">Pesan laporan</label>
+                        <textarea id="bugMessage" maxlength="2000" required placeholder="Contoh: Saat menekan tombol ..., halaman tidak merespons."></textarea>
+                        <button type="submit" class="btn btn-primary report-submit">Kirim Laporan</button>
+                        <p id="bugReportStatus" class="report-status" role="status" aria-live="polite"></p>
+                    </form>
+                </section>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
