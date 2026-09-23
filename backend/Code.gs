@@ -260,6 +260,34 @@ function doPost(e) {
         return createJSONResponse({ result: 'success', id: newId });
     }
 
+    if (action == 'delete_record') {
+        var deleteTable = body.tableName;
+        var deleteId = String(body.id || '');
+        var allowedDeleteTables = ['kindness_feeds_comments', 'gratitude_wall'];
+        if (allowedDeleteTables.indexOf(deleteTable) === -1 || !deleteId) {
+          throw new Error('Unsupported delete request');
+        }
+
+        var deleteSheet = ss.getSheetByName(deleteTable);
+        if (!deleteSheet) throw new Error('Table not found: ' + deleteTable);
+        var deleteValues = deleteSheet.getDataRange().getValues();
+        var deleteRow = -1;
+        for (var deleteIndex = 1; deleteIndex < deleteValues.length; deleteIndex++) {
+          if (String(deleteValues[deleteIndex][0]) === deleteId) {
+            // A Kindness Feed comment can only be deleted by its author.
+            if (deleteTable === 'kindness_feeds_comments' &&
+                String(deleteValues[deleteIndex][2] || '') !== String(body.username || '')) {
+              throw new Error('You can only delete your own comment');
+            }
+            deleteRow = deleteIndex + 1;
+            break;
+          }
+        }
+        if (deleteRow === -1) throw new Error('Record not found');
+        deleteSheet.deleteRow(deleteRow);
+        return createJSONResponse({ result: 'success' });
+    }
+
     if (action == 'update_skor') {
         var sheet = ss.getSheetByName('user');
         var username = body.username;
