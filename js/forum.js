@@ -129,7 +129,7 @@ const PostManager = {
         return { likes: posts[index].likes, isLiked: !isLiked };
     },
 
-    addComment(postId, content) {
+    async addComment(postId, content) {
         const posts = this.getPosts();
         const index = posts.findIndex(p => p.id === postId);
         if (index === -1) return null;
@@ -138,7 +138,7 @@ const PostManager = {
         const displayName = (typeof AppState !== 'undefined' && AppState.getDisplayName()) || 'Anonymous';
 
         const newComment = {
-            id: Date.now().toString(),
+            id: `local_${Date.now()}`,
             author: displayName,
             username: currentUser,
             content,
@@ -150,18 +150,38 @@ const PostManager = {
         posts[index].comments.push(newComment);
         this.savePosts(posts);
 
-        // Sync comment with Google Sheets backend
+        // Store synchronously so the local comment receives the same ID as
+        // its spreadsheet row and can be deleted immediately afterwards.
         if (typeof KatakitaAPI !== 'undefined') {
-            KatakitaAPI.sync('insert', {
-                tableName: 'kindness_feeds_comments',
-                story_id: postId,
-                comment: content,
-                username: currentUser || '',
-                display_name: displayName || ''
-            });
+            try {
+                const response = await KatakitaAPI.request('insert', {
+                    tableName: 'kindness_feeds_comments',
+                    story_id: postId,
+                    comment: content,
+                    username: currentUser || '',
+                    display_name: displayName || ''
+                });
+                if (response && response.result === 'success' && response.id !== undefined) {
+                    newComment.id = String(response.id);
+                    this.savePosts(posts);
+                }
+            } catch (error) {
+                console.error('Failed to save comment to the server:', error);
+            }
         }
 
         return newComment;
+    },
+
+    deleteComment(postId, commentId) {
+        const posts = this.getPosts();
+        const post = posts.find(p => p.id === postId);
+        if (!post || !post.comments) return false;
+        const originalLength = post.comments.length;
+        post.comments = post.comments.filter(comment => comment.id !== commentId);
+        if (post.comments.length === originalLength) return false;
+        this.savePosts(posts);
+        return true;
     },
 
     deletePost(id) {
@@ -337,6 +357,8 @@ const FeedUI = {
                 this.handleEdit(postId);
             } else if (target.classList.contains('reply-btn')) {
                 this.toggleReplyForm(target.dataset.commentId);
+            } else if (target.classList.contains('delete-comment-btn')) {
+                this.handleDeleteComment(target.dataset.postId, target.dataset.commentId);
             }
         });
 
@@ -532,7 +554,7 @@ const FeedUI = {
         }
     },
 
-    handleCommentSubmit(form) {
+    async handleCommentSubmit(form) {
         const postId = form.dataset.id;
         const input = form.querySelector('input');
         const content = input.value.trim();
@@ -540,11 +562,30 @@ const FeedUI = {
         if (!content) return;
         if (!ContentFilter.validate(content)) return;
 
-        const newComment = PostManager.addComment(postId, content);
+        const newComment = await PostManager.addComment(postId, content);
         if (newComment) {
             if (typeof AppState !== 'undefined') AppState.addPoints(5);
             input.value = '';
             this.updateCommentListUI(postId);
+        }
+    },
+
+    async handleDeleteComment(postId, commentId) {
+        if (!window.confirm('Hapus komentar ini?')) return;
+        const username = (typeof AppState !== 'undefined' && AppState.getUser()) || '';
+        try {
+            if (!String(commentId).startsWith('local_')) {
+                const response = await KatakitaAPI.request('delete_record', {
+                    tableName: 'kindness_feeds_comments',
+                    id: commentId,
+                    username
+                });
+                if (!response || response.result !== 'success') throw new Error(response?.message || 'Delete failed');
+            }
+            if (PostManager.deleteComment(postId, commentId)) this.updateCommentListUI(postId);
+        } catch (error) {
+            console.error('Failed to delete comment:', error);
+            alert('Komentar tidak dapat dihapus. Silakan coba lagi.');
         }
     },
 
@@ -702,13 +743,19 @@ const FeedUI = {
         if (comments.length === 0) {
             return '<p class="no-comments" style="text-align: center; color: #aaa; font-size: 0.85rem;">No comments yet.</p>';
         }
-        return comments.map(c => `
+        const currentUser = (typeof AppState !== 'undefined' && AppState.getUser()) || '';
+        return comments.map(c => {
+            const canDelete = currentUser && c.username && String(c.username) === String(currentUser);
+            return `
             <div class="comment-item" style="background: var(--color-bg-light); padding: 12px; border-radius: 12px; margin-bottom: 8px;">
                 <div style="font-weight: 600; color: var(--color-text-main); font-size: 0.9rem;">${c.author || c.username || 'Anonymous'}</div>
                 <div style="color: var(--color-text-muted); font-size: 0.9rem; margin: 4px 0;">${c.content}</div>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div data-relative-time="${c.timestamp}" style="font-size: 0.75rem; color: #aaa;">${this.formatTime(c.timestamp)}</div>
-                    <button class="action-btn reply-btn" data-comment-id="${c.id}" style="font-size: 0.75rem; padding: 0;">Reply</button>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="action-btn reply-btn" data-comment-id="${c.id}" style="font-size: 0.75rem; padding: 0;">Reply</button>
+                        ${canDelete ? `<button class="action-btn delete-comment-btn" data-post-id="${postId}" data-comment-id="${c.id}" style="font-size: 0.75rem; padding: 0; color: #ef4444;">Hapus</button>` : ''}
+                    </div>
                 </div>
                 
                 ${c.replies && c.replies.length > 0 ? `
@@ -728,7 +775,8 @@ const FeedUI = {
                     <button type="submit" class="btn btn-primary" style="padding: 6px 12px; border-radius: 16px; font-weight: 600; font-size: 0.85rem;">Reply</button>
                 </form>
             </div>
-        `).join('');
+        `;
+        }).join('');
     },
 
     formatTime(timestamp) {
