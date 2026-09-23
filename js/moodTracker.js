@@ -6,6 +6,7 @@
 const MoodManager = {
     DIARY_KEY: 'katakita_diary_content',
     _history: [],
+    _diaryHistory: [],
 
     MOOD_MAP: {
         'bahagia': { label: 'bahagia', emoji: '🤩', value: 5 },
@@ -53,6 +54,35 @@ const MoodManager = {
         }
     },
 
+    async loadDiaryHistory() {
+        const user = (typeof AppState !== 'undefined' ? AppState.getUser() : localStorage.getItem('katakita_user')) || 'Friend';
+        const localDiary = this.getDiary();
+        if (typeof KatakitaAPI === 'undefined') return localDiary;
+
+        try {
+            const response = await KatakitaAPI.request('get_data', { tables: ['diary'] });
+            const rows = (response && response.data && response.data.diary) || [];
+            const serverDiary = rows
+                .filter(entry => String(entry.username) === String(user))
+                .map(entry => ({
+                    id: String(entry.id),
+                    content: entry.diary || '',
+                    timestamp: Date.parse(entry.date) || 0
+                }));
+
+            // The server is authoritative for saved entries; retain only an
+            // optimistic local entry that has not received a server ID yet.
+            const pendingLocal = localDiary.filter(entry => String(entry.id || '').startsWith('local_'));
+            this._diaryHistory = serverDiary.concat(pendingLocal)
+                .sort((a, b) => b.timestamp - a.timestamp || Number(b.id) - Number(a.id));
+            localStorage.setItem(this.getDiaryKey(), JSON.stringify(this._diaryHistory.slice(0, 50)));
+        } catch (error) {
+            console.error('Failed to load diary history from database:', error);
+            this._diaryHistory = localDiary;
+        }
+        return this._diaryHistory;
+    },
+
     saveMood(moodObj) {
         const newEntry = {
             ...moodObj,
@@ -76,18 +106,26 @@ const MoodManager = {
         return newEntry;
     },
 
+    getDiaryKey() {
+        const user = (typeof AppState !== 'undefined' ? AppState.getUser() : localStorage.getItem('katakita_user')) || 'guest';
+        return `${this.DIARY_KEY}_${user}`;
+    },
+
     getDiary() {
-        return JSON.parse(localStorage.getItem(this.DIARY_KEY)) || [];
+        const raw = localStorage.getItem(this.getDiaryKey());
+        return raw ? JSON.parse(raw) : [];
     },
 
     saveDiary(content) {
         const diary = this.getDiary();
         const newEntry = {
+            id: `local_${Date.now()}`,
             content,
             timestamp: Date.now()
         };
         diary.unshift(newEntry);
-        localStorage.setItem(this.DIARY_KEY, JSON.stringify(diary.slice(0, 50)));
+        this._diaryHistory = diary.slice(0, 50);
+        localStorage.setItem(this.getDiaryKey(), JSON.stringify(this._diaryHistory));
 
         if (typeof KatakitaAPI !== 'undefined') {
             const user = (typeof AppState !== 'undefined' ? AppState.getUser() : localStorage.getItem('katakita_user')) || 'Friend';
@@ -126,7 +164,7 @@ const MySpaceUI = {
 
     async init() {
         this.queryElements();
-        await MoodManager.loadHistory();
+        await Promise.all([MoodManager.loadHistory(), MoodManager.loadDiaryHistory()]);
         this.setupHeader();
         this.highlightTodayMood();
         this.renderCalendar();
