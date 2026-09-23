@@ -75,11 +75,6 @@ const GratitudeManager = {
         return null;
     },
 
-    deleteNote(id) {
-        let data = this.getData();
-        data = data.filter(n => n.id !== id);
-        this.saveData(data);
-    }
 };
 
 const GratitudeUI = {
@@ -90,17 +85,10 @@ const GratitudeUI = {
         openBtn: document.getElementById('openGratitudeBtn'),
         closeBtn: document.getElementById('closeGratitudeModal'),
         contentInput: document.getElementById('gratitudeContent'),
-        deleteModal: document.getElementById('deleteConfirmModal'),
-        cancelDeleteBtn: document.getElementById('cancelDeleteBtn'),
-        confirmDeleteBtn: document.getElementById('confirmDeleteBtn'),
         historyModal: document.getElementById('historyModal'),
         openHistoryBtn: document.getElementById('openHistoryBtn'),
         closeHistoryBtn: document.getElementById('closeHistoryModal'),
         historyList: document.getElementById('historyList')
-    },
-
-    state: {
-        pendingDeleteId: null
     },
 
     init() {
@@ -112,19 +100,17 @@ const GratitudeUI = {
             KatakitaAPI.request('get_data', { tables: ['gratitude_wall'] })
                 .then(response => {
                     if (response && response.result === 'success' && response.data && response.data.gratitude_wall) {
-                        const existingNotes = GratitudeManager.getData();
                         const notes = response.data.gratitude_wall.map(row => {
-                            const existing = existingNotes.find(n => n.id.toString() === row.id.toString());
+                            const parsedDate = Date.parse(row.date);
                             return {
                                 id: row.id.toString(),
                                 content: row.message,
-                                timestamp: new Date(row.date).getTime() || Date.now(),
-                                reactions: existing ? existing.reactions : 0
+                                timestamp: Number.isNaN(parsedDate) ? 0 : parsedDate,
+                                reactions: 0
                             };
                         });
 
-                        // Reverse so newest entries (which are appended to the sheet) show up first
-                        notes.reverse();
+                        notes.sort((a, b) => Number(b.id) - Number(a.id) || b.timestamp - a.timestamp);
                         GratitudeManager.saveData(notes);
                     }
                     this.render();
@@ -150,19 +136,7 @@ const GratitudeUI = {
 
         window.addEventListener('click', (e) => {
             if (e.target === this.elements.modal) this.toggleModal(false);
-            if (e.target === this.elements.deleteModal) this.toggleDeleteModal(false);
             if (e.target === this.elements.historyModal) this.toggleHistoryModal(false);
-        });
-
-        // Delete Modal logic
-        this.elements.cancelDeleteBtn?.addEventListener('click', () => this.toggleDeleteModal(false));
-        this.elements.confirmDeleteBtn?.addEventListener('click', () => {
-            if (this.state.pendingDeleteId) {
-                GratitudeManager.deleteNote(this.state.pendingDeleteId);
-                this.state.pendingDeleteId = null;
-                this.toggleDeleteModal(false);
-                this.render();
-            }
         });
 
         // Form submission
@@ -171,13 +145,11 @@ const GratitudeUI = {
             this.handleSubmit();
         });
 
-        // Event delegation for reactions and deletions
+        // Event delegation for reactions
         this.elements.wall?.addEventListener('click', (e) => {
             const reactBtn = e.target.closest('.react-btn');
-            const deleteBtn = e.target.closest('.delete-btn');
 
             if (reactBtn) this.handleReaction(reactBtn);
-            if (deleteBtn) this.handleDelete(deleteBtn);
         });
     },
 
@@ -185,12 +157,6 @@ const GratitudeUI = {
         if (!this.elements.modal) return;
         this.elements.modal.style.display = show ? 'flex' : 'none';
         if (show) this.elements.contentInput?.focus();
-    },
-
-    toggleDeleteModal(show) {
-        if (!this.elements.deleteModal) return;
-        this.elements.deleteModal.style.display = show ? 'flex' : 'none';
-        if (!show) this.state.pendingDeleteId = null;
     },
 
     toggleHistoryModal(show) {
@@ -225,14 +191,9 @@ const GratitudeUI = {
         }
     },
 
-    handleDelete(btn) {
-        this.state.pendingDeleteId = btn.dataset.id;
-        this.toggleDeleteModal(true);
-    },
-
     renderHistory() {
         if (!this.elements.historyList) return;
-        const notes = GratitudeManager.getData().sort((a, b) => b.timestamp - a.timestamp);
+        const notes = GratitudeManager.getData().slice().sort((a, b) => Number(b.id) - Number(a.id) || b.timestamp - a.timestamp);
         const lang = (typeof AppState !== 'undefined') ? AppState.getLanguage() : 'id';
         const locale = lang === 'id' ? 'id-ID' : 'en-US';
 
@@ -256,7 +217,7 @@ const GratitudeUI = {
 
     render() {
         if (!this.elements.wall) return;
-        const notes = GratitudeManager.getData().sort((a, b) => b.timestamp - a.timestamp);
+        const notes = GratitudeManager.getData().slice().sort((a, b) => Number(b.id) - Number(a.id) || b.timestamp - a.timestamp);
         const lang = (typeof AppState !== 'undefined') ? AppState.getLanguage() : 'id';
         const locale = lang === 'id' ? 'id-ID' : 'en-US';
 
@@ -283,7 +244,6 @@ const GratitudeUI = {
 
         this.elements.wall.innerHTML = notes.map(note => `
             <div class="note animate-fade-in">
-                <button class="delete-btn" data-id="${note.id}" title="Hapus catatan">✕</button>
                 <div class="note-content">"${note.content}"</div>
                 <div class="note-footer">
                     <span class="note-date">${new Date(note.timestamp).toLocaleDateString(locale, { month: 'short', day: 'numeric' })}</span>
