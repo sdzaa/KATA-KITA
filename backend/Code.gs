@@ -263,7 +263,7 @@ function doPost(e) {
     if (action == 'delete_record') {
         var deleteTable = body.tableName;
         var deleteId = String(body.id || '');
-        var allowedDeleteTables = ['kindness_feeds_comments', 'gratitude_wall'];
+        var allowedDeleteTables = ['kindness_feeds_comments'];
         if (allowedDeleteTables.indexOf(deleteTable) === -1 || !deleteId) {
           throw new Error('Unsupported delete request');
         }
